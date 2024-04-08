@@ -1,0 +1,14 @@
+plugins {
+    id "org.springframework.boot"
+}
+
+description = 'Microsphere DevOps Service'
+
+dependencies {
+    implementation("org.apache.commons:commons-lang3")
+    implementation("org.slf4j:slf4j-api")
+}
+
+test {
+    useJUnitPlatform()
+}
