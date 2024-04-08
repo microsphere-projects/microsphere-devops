@@ -16,7 +16,7 @@ buildscript {
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
-        classpath "io.spring.gradle:dependency-management-plugin:$managementpluginVersion"
+        classpath "io.spring.gradle:dependency-management-plugin:$managementPluginVersion"
     }
 }
 
@@ -99,10 +99,10 @@ subprojects {
             mavenBom "org.springframework.boot:spring-boot-dependencies:$springBootVersion"
 
             // Spring Cloud
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springcloudVersion"
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
 
             // Spring Cloud Alibaba
-            mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:$springcloudalibabaVersion"
+            mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:$springCloudAlibabaVersion"
         }
 
         resolutionStrategy {
