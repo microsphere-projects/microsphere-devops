@@ -103,6 +103,9 @@ subprojects {
 
             // Spring Cloud Alibaba
             mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:$springCloudAlibabaVersion"
+
+            // Microsphere Spring Cloud
+            mavenBom "io.github.microsphere-projects:microsphere-spring-cloud-dependencies:$microsphereSpringCloudVersion"
         }
 
         resolutionStrategy {
