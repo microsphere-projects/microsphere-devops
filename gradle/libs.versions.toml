@@ -1,0 +1,43 @@
+[versions]
+springBootVersion = "3.3.0"
+springCloudAlibabaVersion = "2023.0.1.0"
+microsphereSpringCloudVersion = "0.0.1-SNAPSHOT"
+
+commonsLang3Version = "3.14.0"
+commonsIOVersion = "2.16.1"
+guavaVersion = "33.2.1-jre"
+
+fastjsonVersion = "2.0.39"
+
+log4j2Version = "2.23.1"
+log4j2ApiKotlinVersion = "1.4.0"
+
+annotationApiVersion = "1.3.2"
+
+apolloJavaVersion = "2.1.0"
+
+
+kotlin-gradle-plugin = "1.9.22"
+managementPluginVersion = "1.1.4"
+
+
+[libraries]
+spring-boot-dependencies = { group = "org.springframework.boot", name = "spring-boot-dependencies", version.ref = "springBootVersion" }
+spring-cloud-alibaba-dependencies = { group = "com.alibaba.cloud", name = "spring-cloud-alibaba-dependencies", version.ref = "springCloudAlibabaVersion" }
+microsphere-spring-cloud-dependencies = { group = "io.github.microsphere-projects.spring-cloud", name = "microsphere-spring-cloud-dependencies", version.ref = "microsphereSpringCloudVersion" }
+
+commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commonsLang3Version" }
+commons-io = { group = "commons-io", name = "commons-io", version.ref = "commonsIOVersion" }
+guava = { group = "com.google.guava", name = "guava", version.ref = "guavaVersion" }
+
+fastjson = { group = "com.alibaba", name = "fastjson", version.ref = "fastjsonVersion" }
+
+log4j2 = { group = "org.apache.logging.log4j", name = "log4j-api", version.ref = "log4j2Version" }
+log4j-api-kotlin = { group = ".apache.logging.log4j", name = "log4j-api-kotlin", version.ref = "log4j2ApiKotlinVersion" }
+
+apollo-java = { group = "com.ctrip.framework.apollo", name = "apollo-client", version.ref = "apolloJavaVersion" }
+apollo-openapi= { group = "com.ctrip.framework.apollo", name = "apollo-openapi", version.ref = "apolloJavaVersion" }
+
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-gradle-plugin" }
+
+[plugins]
