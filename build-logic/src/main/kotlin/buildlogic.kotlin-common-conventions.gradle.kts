@@ -9,6 +9,9 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
 }
 
+group = "io.microsphere"
+version = "1.0.0"
+
 repositories {
     // Use the plugin portal to apply community plugins in convention plugins.
     maven {
