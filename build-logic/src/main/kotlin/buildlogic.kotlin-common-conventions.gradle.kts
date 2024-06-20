@@ -9,20 +9,29 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
 }
 
+repositories {
+    // Use the plugin portal to apply community plugins in convention plugins.
+    maven {
+        url = uri("https://maven.aliyun.com/repository/public")
+    }
+    maven {
+        url = uri("https://maven.aliyun.com/repository/gradle-plugin")
+    }
+    maven {
+        url = uri("https://maven.aliyun.com/repository/spring-plugin")
+    }
+    mavenCentral()
+    gradlePluginPortal()
+}
+
 dependencies {
     constraints {
         // Define dependency versions as constraints
     }
 }
 
-testing {
-    suites {
-        // Configure the built-in test suite
-        val test by getting(JvmTestSuite::class) {
-            // Use JUnit Jupiter test framework
-            useJUnitJupiter("5.10.2")
-        }
-    }
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

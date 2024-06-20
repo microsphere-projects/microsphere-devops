@@ -10,6 +10,10 @@ plugins {
 }
 
 dependencies {
+    api(platform(libs.spring.boot.dependencies))
+
     implementation(libs.commons.lang3)
     implementation(libs.commons.io)
+    implementation("org.springframework.boot:spring-boot-starter-web")
+
 }

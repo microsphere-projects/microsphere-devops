@@ -12,5 +12,5 @@ plugins {
 
 dependencies {
     implementation(libs.commons.lang3)
-    implementation(":microsphere-devops-repository")
+    implementation(project(":microsphere-devops-repository"))
 }
