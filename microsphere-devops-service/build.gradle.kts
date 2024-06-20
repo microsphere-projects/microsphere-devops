@@ -6,11 +6,24 @@
 
 plugins {
     // Support convention plugins written in Kotlin. Convention plugins are build scripts in 'src/main' that automatically become available as plugins in the main build.
-    `kotlin-dsl`
     id("buildlogic.kotlin-application-conventions")
 }
 
 dependencies {
+
+    api(platform(libs.spring.boot.dependencies))
+    api(platform(libs.spring.cloud.dependencies))
+
     implementation(libs.commons.lang3)
+    implementation(libs.log4j2.core)
+
     implementation(project(":microsphere-devops-repository"))
+
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
