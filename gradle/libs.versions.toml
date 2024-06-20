@@ -1,5 +1,6 @@
 [versions]
 springBootVersion = "3.3.0"
+springCloudVersion ="2023.0.1"
 springCloudAlibabaVersion = "2023.0.1.0"
 microsphereSpringCloudVersion = "0.0.1-SNAPSHOT"
 
@@ -23,6 +24,7 @@ managementPluginVersion = "1.1.4"
 
 [libraries]
 spring-boot-dependencies = { group = "org.springframework.boot", name = "spring-boot-dependencies", version.ref = "springBootVersion" }
+spring-cloud-dependencies = { group = "org.springframework.cloud", name = "spring-cloud-dependencies", version.ref = "springCloudVersion" }
 spring-cloud-alibaba-dependencies = { group = "com.alibaba.cloud", name = "spring-cloud-alibaba-dependencies", version.ref = "springCloudAlibabaVersion" }
 microsphere-spring-cloud-dependencies = { group = "io.github.microsphere-projects.spring-cloud", name = "microsphere-spring-cloud-dependencies", version.ref = "microsphereSpringCloudVersion" }
 
@@ -33,6 +35,7 @@ guava = { group = "com.google.guava", name = "guava", version.ref = "guavaVersio
 fastjson = { group = "com.alibaba", name = "fastjson", version.ref = "fastjsonVersion" }
 
 log4j2 = { group = "org.apache.logging.log4j", name = "log4j-api", version.ref = "log4j2Version" }
+log4j2-core = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref = "log4j2Version" }
 log4j-api-kotlin = { group = ".apache.logging.log4j", name = "log4j-api-kotlin", version.ref = "log4j2ApiKotlinVersion" }
 
 apollo-java = { group = "com.ctrip.framework.apollo", name = "apollo-client", version.ref = "apolloJavaVersion" }
