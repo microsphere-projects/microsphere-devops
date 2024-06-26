@@ -13,5 +13,6 @@ rootProject.name = "microsphere-devops"
 include(
     "microsphere-devops-api",
     "microsphere-devops-repository",
-    "microsphere-devops-service"
+    "microsphere-devops-service",
+    "microsphere-devops-web",
 )

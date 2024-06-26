@@ -6,7 +6,8 @@
 
 plugins {
     // Support convention plugins written in Kotlin. Convention plugins are build scripts in 'src/main' that automatically become available as plugins in the main build.
-    id("buildlogic.kotlin-library-conventions")
+    id("buildlogic.kotlin-application-conventions")
+    id("org.springframework.boot") version "3.3.0"
 }
 
 
@@ -20,7 +21,7 @@ dependencies {
     implementation(libs.commons.lang3)
     implementation(libs.log4j2.core)
 
-    implementation(project(":microsphere-devops-repository"))
+    implementation(project(":microsphere-devops-service"))
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
