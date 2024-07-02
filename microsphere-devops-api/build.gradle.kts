@@ -5,6 +5,7 @@
  */
 plugins {
     id("buildlogic.kotlin-library-conventions")
+    kotlin("plugin.allopen") version "1.9.24"
 }
 
 dependencies {
@@ -14,7 +15,21 @@ dependencies {
     implementation(libs.commons.lang3)
     implementation(libs.commons.io)
 
+    // Jakarta EE
+    compileOnly("jakarta.validation:jakarta.validation-api")
+    compileOnly("jakarta.persistence:jakarta.persistence-api")
+    compileOnly("jakarta.transaction:jakarta.transaction-api")
+
     compileOnly("org.springframework.boot:spring-boot-starter-web")
     compileOnly("org.springframework.cloud:spring-cloud-commons")
+}
 
+allOpen {
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.Table")
+    annotation("jakarta.persistence.Column")
+    annotation("jakarta.persistence.Id")
+    annotation("jakarta.persistence.GeneratedValue")
+    annotation("jakarta.persistence.Embeddable")
+    annotation("jakarta.persistence.MappedSuperclass")
 }
