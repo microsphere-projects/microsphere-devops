@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "io.microsphere"
-version = "1.0.0"
+version = "1.0.0-SNAPSHOT"
 
 repositories {
     // Use the plugin portal to apply community plugins in convention plugins.
@@ -31,6 +31,9 @@ dependencies {
     constraints {
         // Define dependency versions as constraints
     }
+
+    // Testing dependencies
+    testImplementation(kotlin("test"))
 }
 
 tasks.withType<Test> {
@@ -42,4 +45,8 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
+}
+
+kotlin {
+    jvmToolchain(21)
 }
