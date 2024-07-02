@@ -2,6 +2,9 @@ package io.microsphere.devops.api.application
 
 import io.microsphere.devops.api.commons.Entity
 import io.microsphere.devops.api.commons.Named
+import jakarta.persistence.FetchType
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 
 /**
  * Application Namespace Entity Class
@@ -10,9 +13,11 @@ import io.microsphere.devops.api.commons.Named
  * @see Entity
  * @since 1.0.0
  */
-data class Namespace(override val id: Long, override var name: String, val type: ClusterType) : Entity, Named {
-
-    lateinit var cluster: Cluster;
-
-    lateinit var status : Status;
-}
+@jakarta.persistence.Entity
+@Table(name = "app_namespaces")
+open class Namespace(
+    override var name: String,
+    var status: Status = Status.ACTIVE,
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    var cluster: Cluster
+) : Entity(), Named

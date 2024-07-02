@@ -12,8 +12,4 @@ interface Named {
      * Name property
      */
     var name: String
-        get() = name;
-        set(value) {
-            name = value;
-        }
 }

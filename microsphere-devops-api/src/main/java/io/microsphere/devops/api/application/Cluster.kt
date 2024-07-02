@@ -2,6 +2,10 @@ package io.microsphere.devops.api.application
 
 import io.microsphere.devops.api.commons.Entity
 import io.microsphere.devops.api.commons.Named
+import jakarta.persistence.CascadeType
+import jakarta.persistence.FetchType
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
 
 /**
  * Application Cluster Entity Class
@@ -10,7 +14,17 @@ import io.microsphere.devops.api.commons.Named
  * @see Entity
  * @since 1.0.0
  */
-data class Cluster(override val id: Long, override var name: String, val type: ClusterType) : Entity, Named {
-
-    lateinit var url: String;
-}
+@jakarta.persistence.Entity
+@Table(name = "app_clusters")
+open class Cluster(
+    override var name: String,
+    var type: ClusterType? = ClusterType.KUBERNETES,
+    var url: String? = null,
+    @OneToMany(
+        mappedBy = "cluster",
+        fetch = FetchType.LAZY,
+        cascade = [CascadeType.ALL],
+        targetEntity = Namespace::class
+    )
+    var namespaces: MutableList<Namespace>? = mutableListOf()
+) : Entity(), Named

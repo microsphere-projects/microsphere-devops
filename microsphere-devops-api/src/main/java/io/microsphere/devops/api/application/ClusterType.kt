@@ -6,7 +6,8 @@ package io.microsphere.devops.api.application
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-enum class ClusterType(var value: String) {
+enum class ClusterType(open var label: String) {
+
     NACOS("Nacos"),
 
     EUREKA("Eureka"),
@@ -16,11 +17,4 @@ enum class ClusterType(var value: String) {
     CONSUL("Consul"),
 
     KUBERNETES("Kubernetes");
-
-    /**
-     * Get the value of application Cluster Type
-     */
-    fun getValue(): String {
-        return value;
-    }
 }
