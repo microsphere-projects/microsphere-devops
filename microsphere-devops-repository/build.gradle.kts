@@ -6,9 +6,42 @@
 
 plugins {
     id("buildlogic.kotlin-library-conventions")
+
+    kotlin("plugin.spring") version "1.9.24"
+    kotlin("plugin.jpa") version "1.9.24"
 }
 
 dependencies {
-    implementation(libs.commons.lang3)
-    implementation(project(":microsphere-devops-api"))
+    // Internal API
+    api(project(":microsphere-devops-api"))
+
+    // Kotlin
+    api("org.jetbrains.kotlin:kotlin-reflect")
+
+    // Spring Boot
+    api("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    // Common Utils
+    api(libs.commons.lang3)
+
+    // Bean Validation Vender - Hibernate Validator
+    api("org.hibernate.validator:hibernate-validator")
+
+    // JPA Vender - Hibernate
+    api("org.hibernate.orm:hibernate-core")
+
+    // H2 Database
+    runtimeOnly("com.h2database:h2")
+
+    // Testing
+    // Spring Boot Testing
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    // JPA Vender - Hibernate testing
+    testImplementation("org.hibernate.orm:hibernate-testing")
+
+}
+
+allOpen {
+    annotation("org.springframework.stereotype.Repository")
+    annotation("org.springframework.stereotype.Component")
 }
