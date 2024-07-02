@@ -17,7 +17,10 @@ annotationApiVersion = "1.3.2"
 
 apolloJavaVersion = "2.1.0"
 
-kotlin-gradle-plugin = "1.9.24"
+kotlinVersion = "1.9.24"
+
+kotlinPluginVersion = "1.9.24"
+
 managementPluginVersion = "1.1.4"
 
 
@@ -40,6 +43,8 @@ log4j-api-kotlin = { group = ".apache.logging.log4j", name = "log4j-api-kotlin",
 apollo-java = { group = "com.ctrip.framework.apollo", name = "apollo-client", version.ref = "apolloJavaVersion" }
 apollo-openapi= { group = "com.ctrip.framework.apollo", name = "apollo-openapi", version.ref = "apolloJavaVersion" }
 
-kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-gradle-plugin" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinPluginVersion" }
+kotlin-spring-plugin = { module = "org.jetbrains.kotlin:kotlin-spring-plugin", version.ref = "kotlinPluginVersion" }
+kotlin-jpa-plugin = { module = "org.jetbrains.kotlin:kotlin-jpa-plugin", version.ref = "kotlinPluginVersion" }
 
 [plugins]
