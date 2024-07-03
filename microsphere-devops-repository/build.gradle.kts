@@ -40,8 +40,3 @@ dependencies {
     testImplementation("org.hibernate.orm:hibernate-testing")
 
 }
-
-allOpen {
-    annotation("org.springframework.stereotype.Repository")
-    annotation("org.springframework.stereotype.Component")
-}
