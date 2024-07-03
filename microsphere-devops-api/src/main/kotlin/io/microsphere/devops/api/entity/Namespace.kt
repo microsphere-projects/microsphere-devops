@@ -1,7 +1,8 @@
-package io.microsphere.devops.api.application
+package io.microsphere.devops.api.entity
 
-import io.microsphere.devops.api.commons.Entity
+import io.microsphere.devops.api.enums.Status
 import io.microsphere.devops.api.commons.Named
+import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
@@ -13,11 +14,11 @@ import jakarta.persistence.Table
  * @see Entity
  * @since 1.0.0
  */
-@jakarta.persistence.Entity
+@Entity
 @Table(name = "app_namespaces")
 open class Namespace(
     override var name: String,
     var status: Status = Status.ACTIVE,
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     var cluster: Cluster
-) : Entity(), Named
+) : io.microsphere.devops.api.commons.Entity(), Named

@@ -1,6 +1,6 @@
 package io.microsphere.devops.repository
 
-import io.microsphere.devops.api.application.Cluster
+import io.microsphere.devops.api.entity.Cluster
 import org.springframework.data.repository.CrudRepository
 
 /**

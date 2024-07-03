@@ -1,6 +1,6 @@
 package io.microsphere.devops.repository
 
-import io.microsphere.devops.api.application.Namespace
+import io.microsphere.devops.api.entity.Namespace
 import org.springframework.data.repository.CrudRepository
 
 /**

@@ -1,12 +1,12 @@
 package io.microsphere.devops.api.enums
 
 /**
- * The enumeration of Cluster Kind
+ * The Application Cluster Type
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-enum class ClusterKind(val value: String, val description: String, val logo: String) {
+enum class ClusterType(val value: String, val description: String, val logo: String) {
     KUBERNETES("kubernetes",
         "Kubernetes 也称为 K8s, 是用于自动部署、扩缩和管理容器化应用程序的开源系统",
         "https://kubernetes.io/images/wheel.svg"),

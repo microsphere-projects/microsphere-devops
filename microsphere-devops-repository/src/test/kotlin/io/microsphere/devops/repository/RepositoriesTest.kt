@@ -1,9 +1,9 @@
 package io.microsphere.devops.repository
 
-import io.microsphere.devops.api.application.Cluster
-import io.microsphere.devops.api.application.ClusterType
-import io.microsphere.devops.api.application.Namespace
-import io.microsphere.devops.api.application.Status
+import io.microsphere.devops.api.entity.Cluster
+import io.microsphere.devops.api.entity.Namespace
+import io.microsphere.devops.api.enums.ClusterType
+import io.microsphere.devops.api.enums.Status
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,7 +33,7 @@ class RepositoriesTest @Autowired constructor(
 
     @Test
     fun testRepositories() {
-        var cluster: Cluster = Cluster("Nacos", ClusterType.NACOS);
+        var cluster = Cluster("Nacos", ClusterType.NACOS);
         cluster.description = "Cluster Description";
         cluster.url = "http://localhost:8848";
 

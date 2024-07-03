@@ -1,8 +1,9 @@
-package io.microsphere.devops.api.application
+package io.microsphere.devops.api.entity
 
-import io.microsphere.devops.api.commons.Entity
 import io.microsphere.devops.api.commons.Named
+import io.microsphere.devops.api.enums.ClusterType
 import jakarta.persistence.CascadeType
+import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
@@ -14,7 +15,7 @@ import jakarta.persistence.Table
  * @see Entity
  * @since 1.0.0
  */
-@jakarta.persistence.Entity
+@Entity
 @Table(name = "app_clusters")
 open class Cluster(
     override var name: String,
@@ -27,4 +28,4 @@ open class Cluster(
         targetEntity = Namespace::class
     )
     var namespaces: MutableList<Namespace>? = mutableListOf()
-) : Entity(), Named
+) : io.microsphere.devops.api.commons.Entity(), Named
