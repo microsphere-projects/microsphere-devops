@@ -3,6 +3,7 @@ package io.microsphere.devops.api.entity
 import io.microsphere.devops.api.commons.Entity
 import io.microsphere.devops.api.commons.Named
 import io.microsphere.devops.api.enums.ClusterType
+import jakarta.persistence.Column
 import jakarta.persistence.Table
 
 /**
@@ -15,6 +16,7 @@ import jakarta.persistence.Table
 @jakarta.persistence.Entity
 @Table(name = "app_clusters")
 open class Cluster(
+    @Column(unique = true, nullable = false)
     override var name: String,
     var type: ClusterType? = ClusterType.KUBERNETES,
     var url: String? = null,

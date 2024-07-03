@@ -1,6 +1,7 @@
 package io.microsphere.devops.repository
 
 import io.microsphere.devops.api.entity.Cluster
+import io.microsphere.devops.api.enums.ClusterType
 import org.springframework.data.repository.CrudRepository
 
 /**
@@ -10,4 +11,10 @@ import org.springframework.data.repository.CrudRepository
  * @see Cluster
  * @since 1.0.0
  */
-interface ClusterRepository : CrudRepository<Cluster, Long>
+interface ClusterRepository : CrudRepository<Cluster, Long> {
+
+    fun findByName(name: String): Cluster?;
+
+    fun findAllByType(type: ClusterType): List<Cluster>;
+}
+

@@ -6,6 +6,7 @@ import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.api.entity.Namespace
 import io.microsphere.devops.api.enums.ClusterType
 import io.microsphere.devops.api.enums.Status
+import junit.framework.TestCase.assertEquals
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -34,6 +35,29 @@ class RepositoriesTest @Autowired constructor(
     val applicationRepository: ApplicationRepository,
     val applicationInstanceRepository: ApplicationInstanceRepository
 ) {
+
+    @Test
+    fun `Test ClusterRepository CRUD Operations`() {
+        for (type in ClusterType.values()) {
+            var cluster = Cluster(type.value, type);
+            cluster.url = "http://127.0.0.1";
+            cluster.description = type.description;
+            clusterRepository.save(cluster);
+        }
+        entityManager.flush();
+
+        for (type in ClusterType.values()) {
+            var clusters = clusterRepository.findAllByType(type);
+            assertThat(clusters).isNotNull();
+            assertEquals(1, clusters.size);
+
+            var cluster = clusters[0];
+            assertEquals(type.value, cluster.name);
+
+            var namedCluster = clusterRepository.findByName(cluster.name);
+            assertThat(namedCluster).isEqualTo(cluster);
+        }
+    }
 
     @Test
     fun testRepositories() {
