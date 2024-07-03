@@ -6,15 +6,15 @@ package io.microsphere.devops.api.application
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-enum class ClusterType(open var label: String) {
+enum class ClusterType(open var label: String, open val url: String) {
 
-    NACOS("Nacos"),
+    NACOS("Nacos", "https://img.alicdn.com/imgextra/i1/O1CN01YjDURc26ODF5FQt4d_!!6000000007651-55-tps-123-24.svg"),
 
-    EUREKA("Eureka"),
+    EUREKA("Eureka", "TODO"),
 
-    ZOOKEEPER("Zookeeper"),
+    ZOOKEEPER("Zookeeper", "TODO"),
 
-    CONSUL("Consul"),
+    CONSUL("Consul", "TODO"),
 
-    KUBERNETES("Kubernetes");
+    KUBERNETES("Kubernetes", "https://kubernetes.io/images/wheel.svg");
 }
