@@ -10,5 +10,4 @@ import org.springframework.data.repository.CrudRepository
  * @see Cluster
  * @since 1.0.0
  */
-interface ClusterRepository : CrudRepository<Cluster, Long>{
-}
+interface ClusterRepository : CrudRepository<Cluster, Long>

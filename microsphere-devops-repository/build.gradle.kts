@@ -30,6 +30,9 @@ dependencies {
     // JPA Vender - Hibernate
     api("org.hibernate.orm:hibernate-core")
 
+    // Spring Cloud Commons
+    implementation("org.springframework.cloud:spring-cloud-commons")
+
     // H2 Database
     runtimeOnly("com.h2database:h2")
 

@@ -1,5 +1,7 @@
 package io.microsphere.devops.repository
 
+import io.microsphere.devops.api.entity.Application
+import io.microsphere.devops.api.entity.ApplicationInstance
 import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.api.entity.Namespace
 import io.microsphere.devops.api.enums.ClusterType
@@ -28,7 +30,9 @@ import org.springframework.test.context.ContextConfiguration
 class RepositoriesTest @Autowired constructor(
     val entityManager: TestEntityManager,
     val clusterRepository: ClusterRepository,
-    val namespaceRepository: NamespaceRepository
+    val namespaceRepository: NamespaceRepository,
+    val applicationRepository: ApplicationRepository,
+    val applicationInstanceRepository: ApplicationInstanceRepository
 ) {
 
     @Test
@@ -43,14 +47,27 @@ class RepositoriesTest @Autowired constructor(
         clusterRepository.save(cluster);
         namespaceRepository.save(namespace);
 
+        for (i in 1..10) {
+            val app = Application("test-app-${i}", namespace);
+            applicationRepository.save(app);
+            for (j in 1..10) {
+                var instance = ApplicationInstance(application = app);
+                instance.instanceId = "test-app-${i}-instance+${j}";
+                instance.host = "127.0.0.1";
+                instance.port = 8080;
+                applicationInstanceRepository.save(instance);
+            }
+        }
+
         entityManager.flush();
 
         var foundCluster = clusterRepository.findByIdOrNull(cluster.id as Long);
         var foundNamespace = namespaceRepository.findByIdOrNull(namespace.id as Long);
 
+
+
         assertThat(foundCluster).isEqualTo(cluster);
         assertThat(foundNamespace).isEqualTo(foundNamespace);
         assertThat(foundNamespace?.cluster).isEqualTo(cluster);
-        // assertThat(foundCluster?.namespaces?.get(0)).isEqualTo(foundNamespace);
     }
 }

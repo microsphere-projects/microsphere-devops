@@ -10,5 +10,4 @@ import org.springframework.data.repository.CrudRepository
  * @see Namespace
  * @since 1.0.0
  */
-interface NamespaceRepository : CrudRepository<Namespace, Long>{
-}
+interface NamespaceRepository : CrudRepository<Namespace, Long>
