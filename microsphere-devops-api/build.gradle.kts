@@ -6,6 +6,7 @@
 plugins {
     id("buildlogic.kotlin-library-conventions")
     kotlin("plugin.allopen") version "1.9.24"
+    kotlin("plugin.noarg") version "1.9.24"
 }
 
 dependencies {
@@ -20,8 +21,12 @@ dependencies {
     compileOnly("jakarta.persistence:jakarta.persistence-api")
     compileOnly("jakarta.transaction:jakarta.transaction-api")
 
-    compileOnly("org.springframework.boot:spring-boot-starter-web")
+    // Spring Cloud Commons
     compileOnly("org.springframework.cloud:spring-cloud-commons")
+}
+
+noArg {
+    annotation("jakarta.persistence.Entity")
 }
 
 allOpen {
