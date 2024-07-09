@@ -1,9 +1,9 @@
 package io.microsphere.devops.repository
 
 import io.microsphere.devops.api.entity.Application
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.repository.CrudRepository
-import org.springframework.data.repository.PagingAndSortingRepository
 
 /**
  * Spring Data Repository for {@link Application}
@@ -12,4 +12,8 @@ import org.springframework.data.repository.PagingAndSortingRepository
  * @see Application
  * @since 1.0.0
  */
-interface ApplicationRepository : JpaRepository<Application, Long>
+interface ApplicationRepository : JpaRepository<Application, Long> {
+
+    fun findAllByNamespaceId(namespaceId: Long, pageable: Pageable): Page<Application>;
+
+}
