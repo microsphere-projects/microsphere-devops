@@ -13,9 +13,22 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
  * @see EnableAutoConfiguration
  * @since 1.0.0
  */
-@EntityScan(basePackages = ["io.microsphere.devops.api.entity"])
-@EnableJpaRepositories(basePackages = ["io.microsphere.devops.repository"])
-@ComponentScan(basePackages = ["io.microsphere.devops.web.controller"])
+@EntityScan(
+    basePackages = [
+        "io.microsphere.devops.api"
+    ]
+)
+@EnableJpaRepositories(
+    basePackages = [
+        "io.microsphere.devops.repository"
+    ]
+)
+@ComponentScan(
+    basePackages = [
+        "io.microsphere.devops.service",
+        "io.microsphere.devops.web"
+    ]
+)
 @EnableAutoConfiguration
 open class Bootstrap
 
