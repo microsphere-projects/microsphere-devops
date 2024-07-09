@@ -21,6 +21,9 @@ dependencies {
     api(platform(libs.spring.cloud.alibaba.dependencies))
     api(platform(libs.microsphere.spring.cloud.dependencies))
 
+    // Bean Validation Vender - Hibernate Validator
+    api("org.hibernate.validator:hibernate-validator")
+
     // Spring Cloud Commons
     api("org.springframework.cloud:spring-cloud-commons")
 
