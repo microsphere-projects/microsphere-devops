@@ -3,8 +3,6 @@ package io.microsphere.devops.repository
 import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.api.enums.ClusterType
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.repository.CrudRepository
-import org.springframework.data.repository.PagingAndSortingRepository
 
 /**
  * Spring Data Repository for {@link Cluster}
