@@ -7,6 +7,8 @@
 plugins {
     // Support convention plugins written in Kotlin. Convention plugins are build scripts in 'src/main' that automatically become available as plugins in the main build.
     id("buildlogic.kotlin-library-conventions")
+    // Apply the spring plugin to add support for Spring specific features
+    kotlin("plugin.spring") version "1.9.24"
 }
 
 
