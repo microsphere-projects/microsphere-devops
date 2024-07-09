@@ -23,6 +23,7 @@ open class NamespaceService(
 
     @Transactional
     fun saveNamespace(namespace: Namespace, clusterId: Long): Namespace? {
+        // TODO Add the rule to limit the number of namespaces
         val cluster = clusterRepository.findByIdOrNull(clusterId);
         if (cluster == null) {
             return null;
