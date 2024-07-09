@@ -1,7 +1,8 @@
 package io.microsphere.devops.web.controller.application
 
 import io.microsphere.devops.api.entity.Application
-import io.microsphere.devops.repository.ApplicationRepository
+import io.microsphere.devops.service.application.ApplicationService
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 /**
@@ -22,20 +24,22 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController
 @RequestMapping("/api/app")
-class ApplicationController(private val applicationRepository: ApplicationRepository) {
+class ApplicationController(private val applicationService: ApplicationService) {
 
     @GetMapping("/applications")
-    fun queryApplications() = applicationRepository.findAll();
+    fun queryApplications(@RequestParam namespaceId: Long, pageable: Pageable) =
+        applicationService.queryApplications(namespaceId, pageable);
 
     @GetMapping("/application/{id}")
-    fun queryApplication(@PathVariable id: Long) = applicationRepository.findByIdOrNull(id);
+    fun queryApplication(@PathVariable id: Long) = applicationService.findByIdOrNull(id);
 
     @PostMapping("/application")
-    fun saveApplication(@RequestBody application: Application) = applicationRepository.save(application);
+    fun saveApplication(@RequestParam namespaceId: Long, @RequestBody application: Application) =
+        applicationService.saveApplication(namespaceId, application);
 
     @PutMapping("/application")
-    fun updateApplication(@RequestBody application: Application) = applicationRepository.save(application);
+    fun updateApplication(@RequestBody application: Application) = applicationService.updateApplication(application);
 
     @DeleteMapping("/application/{id}")
-    fun deleteApplication(@PathVariable id: Long) = applicationRepository.deleteById(id);
+    fun deleteApplication(@PathVariable id: Long) = applicationService.deleteById(id);
 }
