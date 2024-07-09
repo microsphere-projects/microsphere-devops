@@ -25,9 +25,6 @@ dependencies {
     // Common Utils
     api(libs.commons.lang3)
 
-    // Bean Validation Vender - Hibernate Validator
-    api("org.hibernate.validator:hibernate-validator")
-
     // JPA Vender - Hibernate
     api("org.hibernate.orm:hibernate-core")
 
