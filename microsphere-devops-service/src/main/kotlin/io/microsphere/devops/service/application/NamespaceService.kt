@@ -16,7 +16,7 @@ import java.lang.System.currentTimeMillis
  * @since 1.0.0
  */
 @Service
-open class NamespaceService(
+class NamespaceService(
     private val clusterRepository: ClusterRepository,
     private val namespaceRepository: NamespaceRepository
 ) : NamespaceRepository by namespaceRepository {
