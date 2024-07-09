@@ -5,6 +5,7 @@ import io.microsphere.devops.api.commons.Named
 import io.microsphere.devops.api.enums.ClusterType
 import jakarta.persistence.Column
 import jakarta.persistence.Table
+import org.hibernate.annotations.DynamicUpdate
 
 /**
  * Application Cluster Entity Class
@@ -15,9 +16,12 @@ import jakarta.persistence.Table
  */
 @jakarta.persistence.Entity
 @Table(name = "app_clusters")
+@DynamicUpdate
 open class Cluster(
     @Column(unique = true, nullable = false)
     override var name: String,
-    var type: ClusterType? = ClusterType.KUBERNETES,
-    var url: String? = null,
+    @Column(nullable = false)
+    var type: ClusterType = ClusterType.KUBERNETES,
+    @Column(nullable = false)
+    var url: String,
 ) : Entity(), Named
