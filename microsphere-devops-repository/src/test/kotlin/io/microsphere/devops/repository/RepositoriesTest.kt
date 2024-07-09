@@ -39,8 +39,7 @@ class RepositoriesTest @Autowired constructor(
     @Test
     fun `Test ClusterRepository CRUD Operations`() {
         for (type in ClusterType.values()) {
-            var cluster = Cluster(type.value, type);
-            cluster.url = "http://127.0.0.1";
+            var cluster = Cluster(type.value, type, "http://127.0.0.1");
             cluster.description = type.description;
             clusterRepository.save(cluster);
         }
@@ -61,9 +60,8 @@ class RepositoriesTest @Autowired constructor(
 
     @Test
     fun testRepositories() {
-        var cluster = Cluster("Nacos", ClusterType.NACOS);
+        var cluster = Cluster("Nacos", ClusterType.NACOS, "http://localhost:8848");
         cluster.description = "Cluster Description";
-        cluster.url = "http://localhost:8848";
 
         var namespace = Namespace("test", Status.ACTIVE, cluster);
         namespace.description = "test namespace";
