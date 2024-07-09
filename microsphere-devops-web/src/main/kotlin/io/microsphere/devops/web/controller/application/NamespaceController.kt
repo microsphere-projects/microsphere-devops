@@ -1,9 +1,7 @@
 package io.microsphere.devops.web.controller.application
 
-import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.api.entity.Namespace
-import io.microsphere.devops.repository.ClusterRepository
-import io.microsphere.devops.repository.NamespaceRepository
+import io.microsphere.devops.service.application.NamespaceService
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 /**
@@ -24,20 +23,21 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController
 @RequestMapping("/api/app")
-class NamespaceController(private val namespaceRepository: NamespaceRepository) {
+class NamespaceController(private val namespaceService: NamespaceService) {
 
     @GetMapping("/namespaces")
-    fun queryNamespaces() = namespaceRepository.findAll();
+    fun queryNamespaces() = namespaceService.findAll();
 
     @GetMapping("/namespace/{id}")
-    fun queryNamespace(@PathVariable id: Long) = namespaceRepository.findByIdOrNull(id);
+    fun queryNamespace(@PathVariable id: Long) = namespaceService.findByIdOrNull(id);
 
     @PostMapping("/namespace")
-    fun saveNamespace(@RequestBody namespace: Namespace) = namespaceRepository.save(namespace);
+    fun saveNamespace(@RequestBody namespace: Namespace, @RequestParam clusterId: Long) =
+        namespaceService.saveNamespace(namespace, clusterId);
 
     @PutMapping("/namespace")
-    fun updateNamespace(@RequestBody namespace: Namespace) = namespaceRepository.save(namespace);
+    fun updateNamespace(@RequestBody namespace: Namespace) = namespaceService.updateNamespace(namespace);
 
     @DeleteMapping("/namespace/{id}")
-    fun deleteNamespace(@PathVariable id: Long) = namespaceRepository.deleteById(id);
+    fun deleteNamespace(@PathVariable id: Long) = namespaceService.deleteById(id);
 }
