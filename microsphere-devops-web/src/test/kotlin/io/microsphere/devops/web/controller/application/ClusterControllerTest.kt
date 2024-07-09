@@ -1,5 +1,6 @@
 package io.microsphere.devops.web.controller.application
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.microsphere.devops.api.entity.Cluster
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 
 /**
  * {@link ClusterController} Test
@@ -27,6 +29,9 @@ class ClusterControllerTest(@Autowired val restTemplate: TestRestTemplate) {
     @BeforeEach
     fun setup() {
         println(">> Setup")
+        val restClient = restTemplate.restTemplate;
+        val mapper = jacksonObjectMapper();
+        restClient.messageConverters.addFirst(MappingJackson2HttpMessageConverter(mapper));
     }
 
     @Test
