@@ -15,7 +15,7 @@ import java.lang.System.currentTimeMillis
  * @since 1.0.0
  */
 @Service
-open class ClusterService(
+class ClusterService(
     private val clusterRepository: ClusterRepository
 ) : ClusterRepository by clusterRepository {
 
