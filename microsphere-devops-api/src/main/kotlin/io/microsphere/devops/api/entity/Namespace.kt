@@ -4,7 +4,6 @@ import io.microsphere.devops.api.commons.Entity
 import io.microsphere.devops.api.commons.Named
 import io.microsphere.devops.api.enums.Status
 import jakarta.persistence.Column
-import jakarta.persistence.FetchType
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.DynamicUpdate
@@ -24,6 +23,6 @@ open class Namespace(
     override var name: String,
     @Column(nullable = false)
     var status: Status = Status.ACTIVE,
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    var cluster: Cluster
+    @ManyToOne(optional = false)
+    var cluster: Cluster? = null
 ) : Entity(), Named
