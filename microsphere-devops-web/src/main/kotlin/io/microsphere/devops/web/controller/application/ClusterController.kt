@@ -2,6 +2,7 @@ package io.microsphere.devops.web.controller.application
 
 import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.repository.ClusterRepository
+import io.microsphere.devops.service.application.ClusterService
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController
 @RequestMapping("/api/app")
-class ClusterController(private val clusterRepository: ClusterRepository) {
+class ClusterController(private val clusterRepository: ClusterRepository, private val clusterService: ClusterService) {
 
     @GetMapping("/clusters")
     fun queryClusters() = clusterRepository.findAll();
@@ -33,7 +34,7 @@ class ClusterController(private val clusterRepository: ClusterRepository) {
     fun saveCluster(@RequestBody cluster: Cluster) = clusterRepository.save(cluster);
 
     @PutMapping("/cluster")
-    fun updateCluster(@RequestBody cluster: Cluster) = clusterRepository.save(cluster);
+    fun updateCluster(@RequestBody cluster: Cluster) = clusterService.updateCluster(cluster);
 
     @DeleteMapping("/cluster/{id}")
     fun deleteCluster(@PathVariable id: Long) = clusterRepository.deleteById(id);
