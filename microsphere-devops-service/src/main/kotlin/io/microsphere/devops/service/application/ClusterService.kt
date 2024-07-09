@@ -2,7 +2,6 @@ package io.microsphere.devops.service.application
 
 import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.repository.ClusterRepository
-import jakarta.persistence.EntityManager
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -17,9 +16,8 @@ import java.lang.System.currentTimeMillis
  */
 @Service
 open class ClusterService(
-    private val clusterRepository: ClusterRepository,
-    private val entityManager: EntityManager
-) {
+    private val clusterRepository: ClusterRepository
+) : ClusterRepository by clusterRepository {
 
     @Transactional
     fun updateCluster(cluster: Cluster): Cluster? {
