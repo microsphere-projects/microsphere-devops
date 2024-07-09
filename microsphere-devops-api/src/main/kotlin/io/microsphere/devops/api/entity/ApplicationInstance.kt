@@ -1,14 +1,10 @@
 package io.microsphere.devops.api.entity
 
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import io.microsphere.devops.api.commons.Entity
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
-import org.springframework.cloud.client.DefaultServiceInstance
-import java.lang.System.currentTimeMillis
+import org.hibernate.annotations.DynamicUpdate
+import java.net.URI
 
 /**
  * Application Instance Entity
@@ -16,29 +12,30 @@ import java.lang.System.currentTimeMillis
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Application
  * @see ServiceInstance
- * @see org.springframework.cloud.client.DefaultServiceInstance
  * @since 1.0.0
  */
-@Entity
+@jakarta.persistence.Entity
 @Table(name = "app_instances")
+@DynamicUpdate
 open class ApplicationInstance(
-    /**
-     * ID property
-     */
-    @Id @GeneratedValue(strategy = GenerationType.AUTO) var id: Long? = null,
 
-    /**
-     * Created At property(timestamp)
-     */
-    var createdAt: Long = currentTimeMillis(),
+    var instanceId: String,
 
-    /**
-     * Updated At property(timestamp)
-     */
-    var updatedAt: Long = currentTimeMillis(),
+    var host: String,
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    val application: Application
-) : DefaultServiceInstance() {
+    var port: Int,
+
+    var secure: Boolean? = false,
+
+    var uri: URI? = null,
+
+    var metadata: String? = null,
+
+    @ManyToOne(optional = false)
+    var application: Application? = null
+
+) : Entity() {
+
+    fun getServiceId() = application?.name
 
 }
