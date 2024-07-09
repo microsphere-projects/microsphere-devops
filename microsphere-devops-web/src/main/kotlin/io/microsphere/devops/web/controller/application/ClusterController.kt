@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -29,10 +30,10 @@ class ClusterController(private val clusterRepository: ClusterRepository) {
     fun queryCluster(@PathVariable id: Long) = clusterRepository.findByIdOrNull(id);
 
     @PostMapping("/cluster")
-    fun saveCluster(cluster: Cluster) = clusterRepository.save(cluster);
+    fun saveCluster(@RequestBody cluster: Cluster) = clusterRepository.save(cluster);
 
     @PutMapping("/cluster")
-    fun updateCluster(cluster: Cluster) = saveCluster(cluster);
+    fun updateCluster(@RequestBody cluster: Cluster) = clusterRepository.save(cluster);
 
     @DeleteMapping("/cluster")
     fun deleteCluster(id: Long) = clusterRepository.deleteById(id);
