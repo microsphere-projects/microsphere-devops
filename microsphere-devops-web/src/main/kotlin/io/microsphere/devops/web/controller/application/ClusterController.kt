@@ -35,6 +35,6 @@ class ClusterController(private val clusterRepository: ClusterRepository) {
     @PutMapping("/cluster")
     fun updateCluster(@RequestBody cluster: Cluster) = clusterRepository.save(cluster);
 
-    @DeleteMapping("/cluster")
-    fun deleteCluster(id: Long) = clusterRepository.deleteById(id);
+    @DeleteMapping("/cluster/{id}")
+    fun deleteCluster(@PathVariable id: Long) = clusterRepository.deleteById(id);
 }
