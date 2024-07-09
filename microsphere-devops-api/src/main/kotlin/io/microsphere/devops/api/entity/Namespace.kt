@@ -3,9 +3,11 @@ package io.microsphere.devops.api.entity
 import io.microsphere.devops.api.commons.Entity
 import io.microsphere.devops.api.commons.Named
 import io.microsphere.devops.api.enums.Status
+import jakarta.persistence.Column
 import jakarta.persistence.FetchType
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import org.hibernate.annotations.DynamicUpdate
 
 /**
  * Application Namespace Entity Class
@@ -16,8 +18,11 @@ import jakarta.persistence.Table
  */
 @jakarta.persistence.Entity
 @Table(name = "app_namespaces")
+@DynamicUpdate
 open class Namespace(
+    @Column(nullable = false)
     override var name: String,
+    @Column(nullable = false)
     var status: Status = Status.ACTIVE,
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     var cluster: Cluster
