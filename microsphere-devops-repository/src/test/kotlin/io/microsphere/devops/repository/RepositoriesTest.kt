@@ -73,10 +73,11 @@ class RepositoriesTest @Autowired constructor(
             val app = Application("test-app-${i}", namespace);
             applicationRepository.save(app);
             for (j in 1..10) {
-                var instance = ApplicationInstance(application = app);
-                instance.instanceId = "test-app-${i}-instance+${j}";
-                instance.host = "127.0.0.1";
-                instance.port = 8080;
+                var instanceId = "test-app-${i}-instance+${j}";
+                var host = "127.0.0.1";
+                var port = 8080;
+                var instance = ApplicationInstance(instanceId, host, port, application = app);
+
                 applicationInstanceRepository.save(instance);
             }
         }
