@@ -2,9 +2,9 @@ package io.microsphere.devops.api.entity
 
 import io.microsphere.devops.api.commons.Entity
 import io.microsphere.devops.api.commons.Named
-import jakarta.persistence.FetchType
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import org.hibernate.annotations.DynamicUpdate
 
 /**
  * Application Entity
@@ -15,10 +15,11 @@ import jakarta.persistence.Table
  */
 @jakarta.persistence.Entity
 @Table(name = "applications")
+@DynamicUpdate
 open class Application(
     override var name: String,
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    var namespace: Namespace
+    @ManyToOne(optional = false)
+    var namespace: Namespace? = null
 ) : Entity(), Named {
 
 }
