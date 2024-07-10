@@ -1,10 +1,8 @@
 package io.microsphere.devops.web.config
 
-import io.microsphere.devops.service.application.standalone.ApplicationDataSynchronizer
 import org.springframework.cache.annotation.EnableCaching
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Import
+import org.springframework.context.support.beans
 import org.springframework.scheduling.annotation.AsyncAnnotationBeanPostProcessor.DEFAULT_TASK_EXECUTOR_BEAN_NAME
 import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.scheduling.annotation.EnableScheduling
@@ -25,13 +23,17 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 @EnableTransactionManagement
 class DefaultConfiguration {
 
-    @Bean(name = [DEFAULT_TASK_EXECUTOR_BEAN_NAME])
-    fun taskExecutor(): ThreadPoolTaskScheduler {
-        var executor = ThreadPoolTaskScheduler();
-        val availableProcessors = Runtime.getRuntime().availableProcessors();
-        executor.threadNamePrefix = "microsphere-devops-thread-";
-        executor.isDaemon = true;
-        executor.poolSize = availableProcessors;
-        return executor;
+}
+
+var defaultBeans = beans {
+
+    bean(DEFAULT_TASK_EXECUTOR_BEAN_NAME) {
+        ThreadPoolTaskScheduler().apply {
+            val availableProcessors = Runtime.getRuntime().availableProcessors();
+            threadNamePrefix = "microsphere-devops-thread-";
+            isDaemon = true;
+            poolSize = availableProcessors;
+        }
     }
+
 }
