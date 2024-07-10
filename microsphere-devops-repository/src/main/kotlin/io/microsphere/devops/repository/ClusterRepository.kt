@@ -1,7 +1,6 @@
 package io.microsphere.devops.repository
 
 import io.microsphere.devops.api.entity.Cluster
-import io.microsphere.devops.api.enums.ClusterType
 import org.springframework.data.jpa.repository.JpaRepository
 
 /**
@@ -15,6 +14,6 @@ interface ClusterRepository : JpaRepository<Cluster, Long> {
 
     fun findByName(name: String): Cluster?;
 
-    fun findAllByType(type: ClusterType): List<Cluster>;
+    fun findAllByType(type: Cluster.Type): List<Cluster>;
 }
 
