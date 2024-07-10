@@ -28,7 +28,7 @@ dependencies {
     api("org.springframework.cloud:spring-cloud-commons")
 
     // Nacos Discovery
-    // api("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery")
+    api("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
