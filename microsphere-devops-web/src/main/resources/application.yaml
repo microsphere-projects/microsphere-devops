@@ -1,6 +1,10 @@
 spring:
   application:
     name: microsphere-devops
+  cloud:
+    nacos:
+      discovery:
+        enabled: false
   jpa:
     show-sql: true
     properties:
@@ -17,3 +21,15 @@ management:
     jmx:
       exposure:
         include: '*'
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: nacos
+  cloud:
+    nacos:
+      discovery:
+        enabled: true
+        server-addr: 127.0.0.1:8848
