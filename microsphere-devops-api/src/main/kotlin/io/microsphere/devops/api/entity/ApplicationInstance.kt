@@ -25,11 +25,11 @@ open class ApplicationInstance(
 
     var port: Int,
 
-    var secure: Boolean? = false,
-
     var uri: URI? = null,
 
     var metadata: String? = null,
+
+    var status: Status = Status.UP,
 
     @ManyToOne(optional = false)
     var application: Application? = null
@@ -37,5 +37,23 @@ open class ApplicationInstance(
 ) : Entity() {
 
     fun getServiceId() = application?.name
+
+    fun getScheme() = uri?.scheme;
+
+    fun isSecure() = "https" == getScheme()
+
+    /**
+     * The {@link ApplicationInstance}s' Status
+     */
+    enum class Status {
+
+        UNKNOWN,
+
+        UP,
+
+        DOWN,
+
+        OUT_OF_SERVICE
+    }
 
 }
