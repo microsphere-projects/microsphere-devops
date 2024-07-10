@@ -1,6 +1,6 @@
 [versions]
 springBootVersion = "3.3.0"
-springCloudVersion ="2023.0.1"
+springCloudVersion = "2023.0.1"
 springCloudAlibabaVersion = "2023.0.1.0"
 microsphereSpringCloudVersion = "0.0.1"
 
@@ -41,9 +41,11 @@ log4j2-core = { group = "org.apache.logging.log4j", name = "log4j-core", version
 log4j-api-kotlin = { group = ".apache.logging.log4j", name = "log4j-api-kotlin", version.ref = "log4j2ApiKotlinVersion" }
 
 apollo-java = { group = "com.ctrip.framework.apollo", name = "apollo-client", version.ref = "apolloJavaVersion" }
-apollo-openapi= { group = "com.ctrip.framework.apollo", name = "apollo-openapi", version.ref = "apolloJavaVersion" }
+apollo-openapi = { group = "com.ctrip.framework.apollo", name = "apollo-openapi", version.ref = "apolloJavaVersion" }
 
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinPluginVersion" }
+kotlin-allopen-plugin = { module = "org.jetbrains.kotlin:kotlin-allopen-plugin", version.ref = "kotlinPluginVersion" }
+kotlin-noarg-plugin = { module = "org.jetbrains.kotlin:kotlin-noarg-plugin", version.ref = "kotlinPluginVersion" }
 kotlin-spring-plugin = { module = "org.jetbrains.kotlin:kotlin-spring-plugin", version.ref = "kotlinPluginVersion" }
 kotlin-jpa-plugin = { module = "org.jetbrains.kotlin:kotlin-jpa-plugin", version.ref = "kotlinPluginVersion" }
 
