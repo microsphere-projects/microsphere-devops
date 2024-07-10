@@ -18,7 +18,7 @@ import java.net.URI
  *  The Spring {@link Configuration} for Mock
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see TODO
+ * @see Configuration
  * @since 1.0.0
  */
 @Profile("mock")
@@ -53,10 +53,9 @@ class MockConfiguration(
                         val instanceId = "$applicationName-$k";
                         val host = "127.0.0.$k";
                         val port = 8080 + k;
-                        val isSecure = false;
                         val uri = URI("http://${host}:${port}/");
                         val applicationInstance =
-                            ApplicationInstance(instanceId, host, port, isSecure, uri, application = application);
+                            ApplicationInstance(instanceId, host, port, uri, application = application);
                         applicationInstanceService.saveAndFlush(applicationInstance);
                     }
                 }
