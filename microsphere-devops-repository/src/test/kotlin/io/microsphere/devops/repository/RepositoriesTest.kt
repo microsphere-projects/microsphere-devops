@@ -5,7 +5,6 @@ import io.microsphere.devops.api.entity.ApplicationInstance
 import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.api.entity.Namespace
 import io.microsphere.devops.api.enums.ClusterType
-import io.microsphere.devops.api.enums.Status
 import junit.framework.TestCase.assertEquals
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
