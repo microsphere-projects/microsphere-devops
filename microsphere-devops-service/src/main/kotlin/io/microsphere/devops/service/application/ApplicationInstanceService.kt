@@ -41,7 +41,6 @@ class ApplicationInstanceService(
         existedApplicationInstance.host = applicationInstance.host;
         existedApplicationInstance.port = applicationInstance.port;
         existedApplicationInstance.uri = applicationInstance.uri;
-        existedApplicationInstance.secure = applicationInstance.secure;
         existedApplicationInstance.metadata = applicationInstance.metadata;
 
         return applicationInstanceRepository.save(applicationInstance);
