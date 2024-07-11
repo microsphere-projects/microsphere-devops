@@ -21,6 +21,12 @@ dependencies {
     api(platform(libs.spring.cloud.alibaba.dependencies))
     api(platform(libs.microsphere.spring.cloud.dependencies))
 
+    // Apache HTTP Client
+    api("org.apache.httpcomponents:httpclient")
+
+    // Google Gson
+    api("com.google.code.gson:gson")
+
     // Bean Validation Vender - Hibernate Validator
     api("org.hibernate.validator:hibernate-validator")
 
