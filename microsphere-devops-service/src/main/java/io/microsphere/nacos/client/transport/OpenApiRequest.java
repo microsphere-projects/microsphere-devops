@@ -18,20 +18,32 @@ package io.microsphere.nacos.client.transport;
 
 import io.microsphere.nacos.client.http.HttpMethod;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import static io.microsphere.nacos.client.http.HttpMethod.GET;
-import static java.util.Collections.emptyMap;
+import static java.util.Collections.unmodifiableMap;
 
 /**
- * The Nacos request interface for Open API
+ * The Nacos request for Open API
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see OpenApiClient
  * @see OpenApiResponse
  * @since 1.0.0
  */
-public interface OpenApiRequest {
+public class OpenApiRequest {
+
+    private final String endpoint;
+
+    private final HttpMethod method;
+
+    private final Map<String, String> queryParameters;
+
+    public OpenApiRequest(String endpoint, HttpMethod method, Map<String, String> queryParameters) {
+        this.endpoint = endpoint;
+        this.method = method;
+        this.queryParameters = unmodifiableMap(queryParameters);
+    }
 
     /**
      * Returns the part of this request's URL from the protocol name up to the query string
@@ -39,15 +51,17 @@ public interface OpenApiRequest {
      *
      * @return non-null
      */
-    String getEndpoint();
+    public String getEndpoint() {
+        return endpoint;
+    }
 
     /**
      * Get the HTTP method
      *
      * @return non-null
      */
-    default HttpMethod getMethod() {
-        return GET;
+    public HttpMethod getMethod() {
+        return method;
     }
 
     /**
@@ -55,7 +69,41 @@ public interface OpenApiRequest {
      *
      * @return non-null
      */
-    default Map<String, String> getQueryParameters() {
-        return emptyMap();
+    public Map<String, String> getQueryParameters() {
+        return queryParameters;
+    }
+
+    /**
+     * The Builder for {@link OpenApiRequest}
+     */
+    public static class Builder {
+
+        private String endpoint;
+
+        private HttpMethod method = HttpMethod.GET;
+
+        private Map<String, String> queryParameters = new HashMap<>();
+
+        Builder(String endpoint) {
+            this.endpoint = endpoint;
+        }
+
+        public Builder method(HttpMethod method) {
+            this.method = method;
+            return this;
+        }
+
+        public Builder queryParameter(String name, String value) {
+            this.queryParameters.put(name, value);
+            return this;
+        }
+
+        public OpenApiRequest build() {
+            return new OpenApiRequest(this.endpoint, this.method, this.queryParameters);
+        }
+
+        public static Builder create(String endpoint) {
+            return new Builder(endpoint);
+        }
     }
 }
