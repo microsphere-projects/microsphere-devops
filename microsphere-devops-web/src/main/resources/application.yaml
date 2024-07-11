@@ -5,6 +5,9 @@ spring:
     nacos:
       discovery:
         enabled: false
+    service-registry:
+      auto-registration:
+        enabled: false
   jpa:
     show-sql: true
     properties:
