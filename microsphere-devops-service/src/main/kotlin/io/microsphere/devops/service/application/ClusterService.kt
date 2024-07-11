@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.lang.System.currentTimeMillis
 
 /**
- * The Cluster Service
+ * The {@link Cluster} Service
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Cluster
