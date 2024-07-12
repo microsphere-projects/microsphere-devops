@@ -37,7 +37,7 @@ public class OpenApiNamespaceClientTest extends OpenApiTest {
 
     @Test
     public void testGetAllNamespaces() {
-        OpenApiNamespaceClient namespaceClient = new OpenApiNamespaceClient(this.client);
+        OpenApiNamespaceClient namespaceClient = new OpenApiNamespaceClient(this.openApiClient);
         List<Namespace> namespaces = namespaceClient.getAllNamespaces();
         assertNotNull(namespaces);
         assertTrue(namespaces.size() > 0);
