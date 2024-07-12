@@ -16,6 +16,7 @@
  */
 package io.microsphere.nacos.client;
 
+import io.microsphere.nacos.client.transport.OpenApiClient;
 import io.microsphere.nacos.client.transport.OpenApiHttpClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,9 @@ public abstract class OpenApiTest {
 
     protected static final String SERVER_ADDRESS = System.getenv(SERVER_ADDRESS_PROPERTY_NAME);
 
-    protected OpenApiHttpClient client;
+    protected OpenApiClient openApiClient;
+
+    protected NacosClientConfig nacosClientConfig;
 
     @BeforeEach
     public void init() {
@@ -44,15 +47,18 @@ public abstract class OpenApiTest {
             String errorMessage = format("The environment variable[ name : '%s' ] for Nacos Server must be set!", SERVER_ADDRESS_PROPERTY_NAME);
             throw new IllegalArgumentException(errorMessage);
         }
+
         NacosClientConfig config = new NacosClientConfig();
         config.setServerAddress(SERVER_ADDRESS);
-        client = new OpenApiHttpClient(config);
+
+        this.openApiClient = new OpenApiHttpClient(config);
+        this.nacosClientConfig = config;
     }
 
     @AfterEach
     public void destroy() throws Exception {
-        if (client != null) {
-            client.close();
+        if (openApiClient != null) {
+            openApiClient.close();
         }
     }
 }
