@@ -16,7 +16,7 @@
  */
 package io.microsphere.nacos.client.v1.server.model;
 
-import io.microsphere.nacos.client.v1.common.Model;
+import io.microsphere.nacos.client.common.model.Model;
 
 /**
  * The Class presents the state of Nacos Server

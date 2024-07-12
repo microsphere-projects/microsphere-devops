@@ -39,7 +39,11 @@ public enum HttpRequestParams {
 
     LIGHT_BEAT_ENABLED("lightBeatEnabled"),
 
-    NAMING_REQUEST_TIMEOUT("namingRequestTimeout");
+    NAMING_REQUEST_TIMEOUT("namingRequestTimeout"),
+
+    ACCESS_TOKEN("accessToken"),
+
+    ;
 
     /**
      * The HTTP request parameter name

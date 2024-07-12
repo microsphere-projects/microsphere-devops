@@ -18,7 +18,7 @@ package io.microsphere.nacos.client.v1.namespace;
 
 import io.microsphere.nacos.client.transport.OpenApiClient;
 import io.microsphere.nacos.client.transport.OpenApiRequest;
-import io.microsphere.nacos.client.v1.common.RestResult;
+import io.microsphere.nacos.client.common.model.RestResult;
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
 
 import java.util.List;

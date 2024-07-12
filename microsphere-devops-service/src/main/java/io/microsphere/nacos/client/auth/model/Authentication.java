@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.nacos.client.v1.auth.model;
+package io.microsphere.nacos.client.auth.model;
 
-import io.microsphere.nacos.client.v1.auth.AuthenticationClient;
-import io.microsphere.nacos.client.v1.common.Model;
+import io.microsphere.nacos.client.auth.AuthorizationManager;
+import io.microsphere.nacos.client.common.model.Model;
 
 /**
  * The result class for Authentication
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see AuthenticationClient
+ * @see AuthorizationManager
  * @since 1.0.0
  */
 public class Authentication implements Model {

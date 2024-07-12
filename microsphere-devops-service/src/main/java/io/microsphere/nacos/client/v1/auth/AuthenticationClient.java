@@ -16,7 +16,7 @@
  */
 package io.microsphere.nacos.client.v1.auth;
 
-import io.microsphere.nacos.client.v1.auth.model.Authentication;
+import io.microsphere.nacos.client.auth.model.Authentication;
 
 /**
  * The Client for Nacos Authentication

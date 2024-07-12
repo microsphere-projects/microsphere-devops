@@ -20,7 +20,7 @@ import io.microsphere.nacos.client.NacosClientConfig;
 import io.microsphere.nacos.client.http.HttpMethod;
 import io.microsphere.nacos.client.transport.OpenApiClient;
 import io.microsphere.nacos.client.transport.OpenApiRequest;
-import io.microsphere.nacos.client.v1.auth.model.Authentication;
+import io.microsphere.nacos.client.auth.model.Authentication;
 
 /**
  * The {@link AuthenticationClient} for <a href="https://nacos.io/docs/v1/auth/">Open API</a>
