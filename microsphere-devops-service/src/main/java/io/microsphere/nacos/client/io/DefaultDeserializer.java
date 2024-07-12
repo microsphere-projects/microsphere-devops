@@ -18,10 +18,18 @@ package io.microsphere.nacos.client.io;
 
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ServiceLoader;
 
 /**
  * The default {@link Deserializer} class based on {@link Gson}
@@ -33,12 +41,45 @@ import java.io.Serializable;
  */
 public class DefaultDeserializer implements Deserializer {
 
+    private static final Map<Type, GsonDeserializer> gsonDeserializersCache = loadGsonDeserializers();
+
+    private static final String ENCODING = System.getProperty("file.encoding", "UTF-8");
+
+    private static Map<Type, GsonDeserializer> loadGsonDeserializers() {
+        Map<Type, GsonDeserializer> gsonDeserializersMap = new HashMap<>();
+        for (GsonDeserializer gsonDeserializer : ServiceLoader.load(GsonDeserializer.class)) {
+            Class<?> gsonDeserializerClass = gsonDeserializer.getClass();
+            Type genericSuperclass = gsonDeserializerClass.getGenericSuperclass();
+            if (genericSuperclass instanceof ParameterizedType) {
+                ParameterizedType parameterizedType = (ParameterizedType) genericSuperclass;
+                Type[] typeArguments = parameterizedType.getActualTypeArguments();
+                Type desirializedType = typeArguments[0];
+                gsonDeserializersMap.put(desirializedType, gsonDeserializer);
+            }
+        }
+        return gsonDeserializersMap;
+    }
+
     // TODO build Gson instance with compatible mode
-    private final Gson gson = new Gson();
+    private final Gson gson;
+
+    public DefaultDeserializer() {
+        this.gson = buildGson();
+    }
+
+    private Gson buildGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+
+        for (Map.Entry<Type, GsonDeserializer> entry : gsonDeserializersCache.entrySet()) {
+            gsonBuilder.registerTypeAdapter(entry.getKey(), entry.getValue());
+        }
+
+        return gsonBuilder.create();
+    }
 
     @Override
     public <T extends Serializable> T deserialize(InputStream inputStream, Class<T> deserializedType) throws IOException {
-
-        return null;
+        Reader reader = new InputStreamReader(inputStream, ENCODING);
+        return gson.fromJson(reader, deserializedType);
     }
 }
