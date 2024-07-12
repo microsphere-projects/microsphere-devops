@@ -16,10 +16,8 @@
  */
 package io.microsphere.nacos.client.transport;
 
-import io.microsphere.nacos.client.NacosClientConfig;
+import io.microsphere.nacos.client.OpenApiTest;
 import io.microsphere.nacos.client.v1.server.model.ServerState;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -35,23 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see OpenApiHttpClient
  * @since 1.0.0
  */
-public class OpenApiHttpClientTest {
-
-    private static final String SERVER_ADDRESS = System.getenv("SERVER_ADDRESS");
-
-    private OpenApiHttpClient client;
-
-    @BeforeEach
-    public void init() {
-        NacosClientConfig config = new NacosClientConfig();
-        config.setServerAddress(SERVER_ADDRESS);
-        client = new OpenApiHttpClient(config);
-    }
-
-    @AfterEach
-    public void destroy() throws Exception {
-        client.close();
-    }
+public class OpenApiHttpClientTest extends OpenApiTest {
 
     @Test
     public void testExecute() throws IOException {
