@@ -37,7 +37,7 @@ public class OpenApiServerClient implements ServerClient {
 
     @Override
     public ServerState getServerState() {
-        OpenApiRequest request = OpenApiRequest.Builder.create("/nacos/v1/console/server/state")
+        OpenApiRequest request = OpenApiRequest.Builder.create("/v1/console/server/state")
                 .build();
         return openApiClient.execute(request, ServerState.class);
     }

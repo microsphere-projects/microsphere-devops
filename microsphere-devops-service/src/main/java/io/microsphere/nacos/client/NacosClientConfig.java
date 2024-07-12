@@ -26,7 +26,11 @@ public class NacosClientConfig {
 
     private String serverAddress;
 
-    private String userName;
+    private String scheme = "http";
+
+    private String contextPath = "/nacos";
+
+    private String username;
 
     private String password;
 
@@ -38,12 +42,28 @@ public class NacosClientConfig {
         this.serverAddress = serverAddress;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getScheme() {
+        return scheme;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setScheme(String scheme) {
+        this.scheme = scheme;
+    }
+
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

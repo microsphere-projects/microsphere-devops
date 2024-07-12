@@ -21,7 +21,9 @@ import io.microsphere.nacos.client.http.HttpMethod;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.requireNonNull;
 
 /**
  * The Nacos request for Open API
@@ -39,10 +41,11 @@ public class OpenApiRequest {
 
     private final Map<String, String> queryParameters;
 
-    public OpenApiRequest(String endpoint, HttpMethod method, Map<String, String> queryParameters) {
+    protected OpenApiRequest(String endpoint, HttpMethod method, Map<String, String> queryParameters) {
+        requireNonNull(endpoint, "The 'endpoint' argument must not be null");
         this.endpoint = endpoint;
-        this.method = method;
-        this.queryParameters = unmodifiableMap(queryParameters);
+        this.method = method == null ? HttpMethod.GET : method;
+        this.queryParameters = queryParameters == null ? emptyMap() : unmodifiableMap(queryParameters);
     }
 
     /**
@@ -80,11 +83,12 @@ public class OpenApiRequest {
 
         private String endpoint;
 
-        private HttpMethod method = HttpMethod.GET;
+        private HttpMethod method;
 
-        private Map<String, String> queryParameters = new HashMap<>();
+        private Map<String, String> queryParameters;
 
         Builder(String endpoint) {
+            requireNonNull(endpoint, "The 'endpoint' argument must not be null");
             this.endpoint = endpoint;
         }
 
@@ -94,7 +98,12 @@ public class OpenApiRequest {
         }
 
         public Builder queryParameter(String name, String value) {
-            this.queryParameters.put(name, value);
+            Map<String, String> params = this.queryParameters;
+            if (params == null) {
+                params = new HashMap<>();
+                this.queryParameters = params;
+            }
+            params.put(name, value);
             return this;
         }
 

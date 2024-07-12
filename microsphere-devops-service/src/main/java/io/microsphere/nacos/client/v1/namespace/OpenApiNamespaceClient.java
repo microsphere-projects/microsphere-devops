@@ -40,7 +40,7 @@ public class OpenApiNamespaceClient implements NamespaceClient {
 
     @Override
     public List<Namespace> getAllNamespaces() {
-        OpenApiRequest request = OpenApiRequest.Builder.create("/nacos/v1/console/namespaces")
+        OpenApiRequest request = OpenApiRequest.Builder.create("/v1/console/namespaces")
                 .build();
         NamespacesList namespacesList = openApiClient.execute(request, NamespacesList.class);
         return namespacesList.getData();

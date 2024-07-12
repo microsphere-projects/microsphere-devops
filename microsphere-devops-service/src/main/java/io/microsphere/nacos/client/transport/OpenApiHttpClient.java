@@ -110,7 +110,11 @@ public class OpenApiHttpClient implements OpenApiClient {
         // TODO handle the scheme if duplicated
         StringBuilder urlBuilder = new StringBuilder(256);
 
-        urlBuilder.append(this.nacosClientConfig.getServerAddress()).append(request.getEndpoint());
+        NacosClientConfig config = this.nacosClientConfig;
+
+        String rootPath = buildRootPath(config);
+
+        urlBuilder.append(rootPath).append(request.getEndpoint());
 
         Map<String, String> queryParameters = request.getQueryParameters();
 
@@ -124,6 +128,29 @@ public class OpenApiHttpClient implements OpenApiClient {
         }
 
         return URI.create(urlBuilder.toString());
+    }
+
+    private String buildRootPath(NacosClientConfig config) {
+        String scheme = config.getScheme();
+
+        String prefix = scheme + "://";
+
+        String serverAddress = config.getServerAddress();
+
+        String contextPath = config.getContextPath();
+
+        StringBuilder rootPathBuilder = new StringBuilder(128);
+
+        if (!serverAddress.startsWith(prefix)) {
+            rootPathBuilder.append(prefix);
+
+        }
+
+        rootPathBuilder.append(serverAddress);
+
+        rootPathBuilder.append(contextPath);
+
+        return rootPathBuilder.toString();
     }
 
     private OpenApiResponse buildOpenApiResponse(CloseableHttpResponse httpResponse) throws IOException {
