@@ -17,8 +17,8 @@
 package io.microsphere.nacos.client.v1.auth;
 
 import io.microsphere.nacos.client.NacosClientConfig;
+import io.microsphere.nacos.client.http.HttpMethod;
 import io.microsphere.nacos.client.transport.OpenApiClient;
-import io.microsphere.nacos.client.transport.OpenApiClientException;
 import io.microsphere.nacos.client.transport.OpenApiRequest;
 import io.microsphere.nacos.client.v1.auth.model.Authentication;
 
@@ -43,15 +43,11 @@ public class OpenApiAuthenticationClient implements AuthenticationClient {
     @Override
     public Authentication authenticate() {
         OpenApiRequest request = OpenApiRequest.Builder.create("/v1/auth/login")
+                .method(HttpMethod.POST)
                 .queryParameter("username", nacosClientConfig.getUsername())
                 .queryParameter("password", nacosClientConfig.getPassword())
                 .build();
-        Authentication authentication = null;
-        try {
-            authentication = openApiClient.execute(request, Authentication.class);
-        } catch (OpenApiClientException e) {
 
-        }
-        return authentication;
+        return openApiClient.execute(request, Authentication.class);
     }
 }
