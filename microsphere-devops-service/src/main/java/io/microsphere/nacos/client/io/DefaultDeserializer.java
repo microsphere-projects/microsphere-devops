@@ -19,8 +19,8 @@ package io.microsphere.nacos.client.io;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.microsphere.nacos.client.NacosClientConfig;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -43,8 +43,6 @@ public class DefaultDeserializer implements Deserializer {
 
     private static final Map<Type, GsonDeserializer> gsonDeserializersCache = loadGsonDeserializers();
 
-    private static final String ENCODING = System.getProperty("file.encoding", "UTF-8");
-
     private static Map<Type, GsonDeserializer> loadGsonDeserializers() {
         Map<Type, GsonDeserializer> gsonDeserializersMap = new HashMap<>();
         for (GsonDeserializer gsonDeserializer : ServiceLoader.load(GsonDeserializer.class)) {
@@ -60,11 +58,13 @@ public class DefaultDeserializer implements Deserializer {
         return gsonDeserializersMap;
     }
 
-    // TODO build Gson instance with compatible mode
     private final Gson gson;
 
-    public DefaultDeserializer() {
+    private final String encoding;
+
+    public DefaultDeserializer(NacosClientConfig nacosClientConfig) {
         this.gson = buildGson();
+        this.encoding = nacosClientConfig.getEncoding();
     }
 
     private Gson buildGson() {
@@ -78,8 +78,14 @@ public class DefaultDeserializer implements Deserializer {
     }
 
     @Override
-    public <T extends Serializable> T deserialize(InputStream inputStream, Class<T> deserializedType) throws IOException {
-        Reader reader = new InputStreamReader(inputStream, ENCODING);
-        return gson.fromJson(reader, deserializedType);
+    public <T extends Serializable> T deserialize(InputStream inputStream, Class<T> deserializedType) throws DeserializationException {
+        T object = null;
+        try {
+            Reader reader = new InputStreamReader(inputStream, encoding);
+            object = gson.fromJson(reader, deserializedType);
+        } catch (Throwable e) {
+            throw new DeserializationException(e.getMessage(), e);
+        }
+        return object;
     }
 }

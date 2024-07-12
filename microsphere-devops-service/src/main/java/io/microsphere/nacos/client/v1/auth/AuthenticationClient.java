@@ -14,30 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.nacos.client.io;
+package io.microsphere.nacos.client.v1.auth;
 
-import io.microsphere.nacos.client.transport.OpenApiClient;
-
-import java.io.InputStream;
-import java.io.Serializable;
+import io.microsphere.nacos.client.v1.auth.model.Authentication;
 
 /**
- * The Deserializer interface
+ * The Client for Nacos Authentication
  *
- * @param <T> the type of the object to be deserialized
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see OpenApiClient
+ * @see Authentication
  * @since 1.0.0
  */
-public interface Deserializer {
+public interface AuthenticationClient {
 
     /**
-     * Deserialize an object of type T from the given InputStream.
+     * The client authenticates the Nacos Server
      *
-     * @param inputStream      the input stream
-     * @param deserializedType
-     * @return the deserialized object
-     * @throws DeserializationException
+     * @return the instance of {@link Authentication}
      */
-    <T extends Serializable> T deserialize(InputStream inputStream, Class<T> deserializedType) throws DeserializationException;
+    Authentication authenticate();
 }

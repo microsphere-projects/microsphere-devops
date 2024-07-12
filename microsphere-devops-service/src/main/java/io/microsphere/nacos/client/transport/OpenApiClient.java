@@ -16,12 +16,7 @@
  */
 package io.microsphere.nacos.client.transport;
 
-import io.microsphere.nacos.client.io.Deserializer;
-
-import java.io.IOException;
 import java.io.Serializable;
-
-import static java.lang.String.format;
 
 /**
  * The Nacos Client for Open API
@@ -50,25 +45,6 @@ public interface OpenApiClient extends AutoCloseable {
      * @return the payload instance
      * @throws OpenApiClientException
      */
-    default <T extends Serializable> T execute(OpenApiRequest request, Class<T> payloadType) throws OpenApiClientException {
-        OpenApiResponse response = null;
-        Deserializer deserializer = Deserializer.INSTANCE;
-        T payload = null;
-        try {
-            response = execute(request);
-            int statusCode = response.getStatusCode();
-            if (statusCode == 200) {
-                payload = deserializer.deserialize(response.getContent(), payloadType);
-            } else {
-                throw new OpenApiClientException(format("The Open API response is valid , status[code : %d , message : %s]",
-                        statusCode, response.getStatusMessage()));
-            }
-        } catch (IOException e) {
-            throw new OpenApiClientException(format("The payload[%s] can't be deserialized", payloadType), e);
-        } catch (Throwable e) {
-            throw new OpenApiClientException(e.getMessage(), e);
-        }
-        return payload;
-    }
+    <T extends Serializable> T execute(OpenApiRequest request, Class<T> payloadType) throws OpenApiClientException;
 
 }

@@ -18,6 +18,8 @@ package io.microsphere.nacos.client.transport;
 
 import io.microsphere.nacos.client.NacosClientConfig;
 import io.microsphere.nacos.client.http.HttpMethod;
+import io.microsphere.nacos.client.io.DefaultDeserializer;
+import io.microsphere.nacos.client.io.Deserializer;
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
@@ -36,11 +38,9 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
+import java.util.ServiceLoader;
 
-import static io.microsphere.nacos.client.constants.Constants.CONNECTION_TIMEOUT;
-import static io.microsphere.nacos.client.constants.Constants.MAX_CONNECTIONS;
-import static io.microsphere.nacos.client.constants.Constants.MAX_PER_ROUTE_CONNECTIONS;
-import static io.microsphere.nacos.client.constants.Constants.READ_TIMEOUT;
+import static io.microsphere.nacos.client.ErrorCode.IO_ERROR;
 
 /**
  * {@link OpenApiClient} based on {@link HttpClient}
@@ -49,23 +49,41 @@ import static io.microsphere.nacos.client.constants.Constants.READ_TIMEOUT;
  * @see HttpClient
  * @since 1.0.0
  */
-public class OpenApiHttpClient implements OpenApiClient {
+public class OpenApiHttpClient extends AbstractOpenApiClient {
 
     private final CloseableHttpClient httpClient;
 
     private final NacosClientConfig nacosClientConfig;
 
+    private final Deserializer deserializer;
+
     public OpenApiHttpClient(NacosClientConfig nacosClientConfig) {
+        super(nacosClientConfig);
+        int maxConnections = nacosClientConfig.getMaxConnections();
+        int maxPerRoute = nacosClientConfig.getMaxPerRoute();
+        int connectionTimeout = nacosClientConfig.getConnectionTimeout();
+        int readTimeout = nacosClientConfig.getReadTimeout();
+
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-        connectionManager.setMaxTotal(MAX_CONNECTIONS);
-        connectionManager.setDefaultMaxPerRoute(MAX_PER_ROUTE_CONNECTIONS);
 
-        RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(CONNECTION_TIMEOUT).setConnectionRequestTimeout(CONNECTION_TIMEOUT).setSocketTimeout(READ_TIMEOUT).build();
 
-        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create().setConnectionManager(connectionManager).setDefaultRequestConfig(requestConfig).useSystemProperties();
+        connectionManager.setMaxTotal(maxConnections);
+        connectionManager.setDefaultMaxPerRoute(maxPerRoute);
+
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(connectionTimeout)
+                .setConnectionRequestTimeout(connectionTimeout)
+                .setSocketTimeout(readTimeout)
+                .build();
+
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()
+                .setConnectionManager(connectionManager)
+                .setDefaultRequestConfig(requestConfig)
+                .useSystemProperties();
 
         this.httpClient = httpClientBuilder.build();
         this.nacosClientConfig = nacosClientConfig;
+        this.deserializer = loadDeserializer(nacosClientConfig);
     }
 
     @Override
@@ -77,9 +95,14 @@ public class OpenApiHttpClient implements OpenApiClient {
             httpResponse = httpClient.execute(httpUriRequest);
             response = buildOpenApiResponse(httpResponse);
         } catch (IOException e) {
-            throw new OpenApiClientException(e.getMessage(), e);
+            throw new OpenApiClientException(IO_ERROR, e.getMessage(), e);
         }
         return response;
+    }
+
+    @Override
+    protected Deserializer getDeserializer() {
+        return deserializer;
     }
 
 
@@ -106,9 +129,20 @@ public class OpenApiHttpClient implements OpenApiClient {
         return httpRequest;
     }
 
+    private Deserializer loadDeserializer(NacosClientConfig nacosClientConfig) {
+        ServiceLoader<Deserializer> serviceLoader = ServiceLoader.load(Deserializer.class);
+        // Try to load the first Deserializer by ServiceLoader SPI
+        Deserializer firstDeserializer = null;
+        for (Deserializer deserializer : serviceLoader) {
+            firstDeserializer = deserializer;
+            break;
+        }
+        return firstDeserializer == null ? new DefaultDeserializer(nacosClientConfig) : firstDeserializer;
+    }
+
     private URI buildURI(OpenApiRequest request) {
-        // TODO handle the scheme if duplicated
-        StringBuilder urlBuilder = new StringBuilder(256);
+
+        StringBuilder urlBuilder = new StringBuilder(128);
 
         NacosClientConfig config = this.nacosClientConfig;
 
@@ -139,11 +173,10 @@ public class OpenApiHttpClient implements OpenApiClient {
 
         String contextPath = config.getContextPath();
 
-        StringBuilder rootPathBuilder = new StringBuilder(128);
+        StringBuilder rootPathBuilder = new StringBuilder(36);
 
         if (!serverAddress.startsWith(prefix)) {
             rootPathBuilder.append(prefix);
-
         }
 
         rootPathBuilder.append(serverAddress);

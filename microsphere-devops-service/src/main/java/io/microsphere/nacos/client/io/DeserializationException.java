@@ -16,28 +16,18 @@
  */
 package io.microsphere.nacos.client.io;
 
-import io.microsphere.nacos.client.transport.OpenApiClient;
-
-import java.io.InputStream;
-import java.io.Serializable;
-
 /**
- * The Deserializer interface
+ * The {@link RuntimeException Unchecked Exception} for Deserialization
  *
- * @param <T> the type of the object to be deserialized
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see OpenApiClient
+ * @see RuntimeException
  * @since 1.0.0
  */
-public interface Deserializer {
+public class DeserializationException extends RuntimeException {
 
-    /**
-     * Deserialize an object of type T from the given InputStream.
-     *
-     * @param inputStream      the input stream
-     * @param deserializedType
-     * @return the deserialized object
-     * @throws DeserializationException
-     */
-    <T extends Serializable> T deserialize(InputStream inputStream, Class<T> deserializedType) throws DeserializationException;
+    private static final long serialVersionUID = 1899659121033343256L;
+
+    public DeserializationException(String message, Throwable cause) {
+        super(message, cause, true, false);
+    }
 }
