@@ -41,7 +41,7 @@ public class OpenApiHttpClientTest extends OpenApiTest {
         OpenApiRequest.Builder builder = OpenApiRequest.Builder.create("/nacos/v1/console/server/state");
         OpenApiRequest request = builder.build();
 
-        OpenApiResponse response = client.execute(request);
+        OpenApiResponse response = openApiClient.execute(request);
 
         assertEquals(200, response.getStatusCode());
         assertEquals("", response.getStatusMessage());
@@ -53,7 +53,7 @@ public class OpenApiHttpClientTest extends OpenApiTest {
         OpenApiRequest.Builder builder = OpenApiRequest.Builder.create("/nacos/v1/console/server/state");
         OpenApiRequest request = builder.build();
 
-        ServerState serverState = client.execute(request, ServerState.class);
+        ServerState serverState = openApiClient.execute(request, ServerState.class);
         assertNotNull(serverState);
         assertNotNull(serverState.getMode());
         assertNotNull(serverState.getVersion());
