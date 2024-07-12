@@ -46,7 +46,5 @@ public class OpenApiNamespaceClient implements NamespaceClient {
         return namespacesList.getData();
     }
 
-    private static class NamespacesList extends RestResult<List<Namespace>> {
-
-    }
+    private static class NamespacesList extends RestResult<List<Namespace>> {}
 }
