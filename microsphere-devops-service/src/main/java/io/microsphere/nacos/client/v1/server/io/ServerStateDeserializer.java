@@ -17,7 +17,6 @@
 package io.microsphere.nacos.client.v1.server.io;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import io.microsphere.nacos.client.io.GsonDeserializer;
@@ -54,11 +53,4 @@ public class ServerStateDeserializer extends GsonDeserializer<ServerState> {
         return serverState;
     }
 
-    private String getString(JsonObject jsonObject, String fieldName) {
-        JsonElement fieldElement = jsonObject.get(fieldName);
-        if (fieldElement == null || fieldElement instanceof JsonNull) {
-            return null;
-        }
-        return fieldElement.getAsString();
-    }
 }

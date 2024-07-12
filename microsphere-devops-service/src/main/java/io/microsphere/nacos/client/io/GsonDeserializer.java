@@ -19,6 +19,8 @@ package io.microsphere.nacos.client.io;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
@@ -49,4 +51,19 @@ public abstract class GsonDeserializer<T> implements JsonDeserializer<T> {
      * @throws JsonParseException if json is not in the expected format of {@code typeofT}
      */
     protected abstract T deserialize(JsonElement json, Type typeOfT) throws JsonParseException;
+
+    /**
+     * Get the field value from the {@link JsonObject} by name
+     *
+     * @param jsonObject {@link JsonObject}
+     * @param fieldName  the field name
+     * @return the field value as string if found,or <code>null</code>
+     */
+    protected String getString(JsonObject jsonObject, String fieldName) {
+        JsonElement fieldElement = jsonObject.get(fieldName);
+        if (fieldElement == null || fieldElement instanceof JsonNull) {
+            return null;
+        }
+        return fieldElement.getAsString();
+    }
 }
