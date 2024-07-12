@@ -17,12 +17,16 @@
 package io.microsphere.nacos.client.transport;
 
 import io.microsphere.nacos.client.NacosClientConfig;
+import io.microsphere.nacos.client.v1.server.model.ServerState;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * {@link OpenApiHttpClient} Test
@@ -35,12 +39,22 @@ public class OpenApiHttpClientTest {
 
     private static final String SERVER_ADDRESS = System.getenv("SERVER_ADDRESS");
 
-    @Test
-    public void testExecute() throws IOException {
+    private OpenApiHttpClient client;
+
+    @BeforeEach
+    public void init() {
         NacosClientConfig config = new NacosClientConfig();
         config.setServerAddress(SERVER_ADDRESS);
+        client = new OpenApiHttpClient(config);
+    }
 
-        OpenApiHttpClient client = new OpenApiHttpClient(config);
+    @AfterEach
+    public void destroy() throws Exception {
+        client.close();
+    }
+
+    @Test
+    public void testExecute() throws IOException {
 
         OpenApiRequest.Builder builder = OpenApiRequest.Builder.create("/nacos/v1/console/server/state");
         OpenApiRequest request = builder.build();
@@ -50,5 +64,17 @@ public class OpenApiHttpClientTest {
         assertEquals(200, response.getStatusCode());
         assertEquals("", response.getStatusMessage());
         assertNotNull(response.getContent());
+    }
+
+    @Test
+    public void testExecuteForPayload() throws IOException {
+        OpenApiRequest.Builder builder = OpenApiRequest.Builder.create("/nacos/v1/console/server/state");
+        OpenApiRequest request = builder.build();
+
+        ServerState serverState = client.execute(request, ServerState.class);
+        assertNotNull(serverState);
+        assertNotNull(serverState.getMode());
+        assertNotNull(serverState.getVersion());
+        assertNull(serverState.getFunctionMode());
     }
 }
