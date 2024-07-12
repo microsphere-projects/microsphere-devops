@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.nacos.client.v1.auth;
+package io.microsphere.nacos.client.common.auth;
 
-import io.microsphere.nacos.client.auth.model.Authentication;
+import io.microsphere.nacos.client.common.auth.model.Authentication;
 
 /**
  * The Client for Nacos Authentication

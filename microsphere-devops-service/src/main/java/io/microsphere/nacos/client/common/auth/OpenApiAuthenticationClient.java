@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.nacos.client.v1.auth;
+package io.microsphere.nacos.client.common.auth;
 
 import io.microsphere.nacos.client.NacosClientConfig;
+import io.microsphere.nacos.client.common.auth.model.Authentication;
 import io.microsphere.nacos.client.http.HttpMethod;
 import io.microsphere.nacos.client.transport.OpenApiClient;
 import io.microsphere.nacos.client.transport.OpenApiRequest;
-import io.microsphere.nacos.client.auth.model.Authentication;
 
 /**
  * The {@link AuthenticationClient} for <a href="https://nacos.io/docs/v1/auth/">Open API</a>
@@ -42,6 +42,12 @@ public class OpenApiAuthenticationClient implements AuthenticationClient {
 
     @Override
     public Authentication authenticate() {
+        String username = nacosClientConfig.getUsername();
+        String password = nacosClientConfig.getPassword();
+        if (username == null && password == null) {
+            return null;
+        }
+
         OpenApiRequest request = OpenApiRequest.Builder.create("/v1/auth/login")
                 .method(HttpMethod.POST)
                 .queryParameter("username", nacosClientConfig.getUsername())

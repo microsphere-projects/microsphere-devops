@@ -45,7 +45,7 @@ public class OpenApiRequest {
         requireNonNull(endpoint, "The 'endpoint' argument must not be null");
         this.endpoint = endpoint;
         this.method = method == null ? HttpMethod.GET : method;
-        this.queryParameters = queryParameters == null ? emptyMap() : unmodifiableMap(queryParameters);
+        this.queryParameters = queryParameters;
     }
 
     /**
@@ -73,7 +73,8 @@ public class OpenApiRequest {
      * @return non-null
      */
     public Map<String, String> getQueryParameters() {
-        return queryParameters;
+        Map<String, String> queryParameters = this.queryParameters;
+        return queryParameters == null ? emptyMap() : unmodifiableMap(queryParameters);
     }
 
     /**
@@ -109,6 +110,13 @@ public class OpenApiRequest {
 
         public OpenApiRequest build() {
             return new OpenApiRequest(this.endpoint, this.method, this.queryParameters);
+        }
+
+        public static Builder from(OpenApiRequest request) {
+            Builder builder = create(request.endpoint);
+            builder.method = request.method;
+            builder.queryParameters = request.queryParameters;
+            return builder;
         }
 
         public static Builder create(String endpoint) {

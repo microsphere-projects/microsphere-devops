@@ -17,6 +17,8 @@
 package io.microsphere.nacos.client.transport;
 
 import io.microsphere.nacos.client.NacosClientConfig;
+import io.microsphere.nacos.client.common.auth.AuthorizationManager;
+import io.microsphere.nacos.client.common.auth.OpenApiAuthenticationClient;
 import io.microsphere.nacos.client.http.HttpMethod;
 import io.microsphere.nacos.client.io.DefaultDeserializer;
 import io.microsphere.nacos.client.io.Deserializer;
@@ -57,6 +59,8 @@ public class OpenApiHttpClient extends AbstractOpenApiClient {
 
     private final Deserializer deserializer;
 
+    private final AuthorizationManager authorizationManager;
+
     public OpenApiHttpClient(NacosClientConfig nacosClientConfig) {
         super(nacosClientConfig);
         int maxConnections = nacosClientConfig.getMaxConnections();
@@ -65,7 +69,6 @@ public class OpenApiHttpClient extends AbstractOpenApiClient {
         int readTimeout = nacosClientConfig.getReadTimeout();
 
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-
 
         connectionManager.setMaxTotal(maxConnections);
         connectionManager.setDefaultMaxPerRoute(maxPerRoute);
@@ -84,10 +87,11 @@ public class OpenApiHttpClient extends AbstractOpenApiClient {
         this.httpClient = httpClientBuilder.build();
         this.nacosClientConfig = nacosClientConfig;
         this.deserializer = loadDeserializer(nacosClientConfig);
+        this.authorizationManager = new AuthorizationManager(new OpenApiAuthenticationClient(this, nacosClientConfig));
     }
 
     @Override
-    public OpenApiResponse execute(OpenApiRequest request) throws OpenApiClientException {
+    protected OpenApiResponse doExecute(OpenApiRequest request) throws OpenApiClientException {
         HttpUriRequest httpUriRequest = buildHttpUriRequest(request);
         CloseableHttpResponse httpResponse;
         OpenApiResponse response = null;
@@ -101,10 +105,14 @@ public class OpenApiHttpClient extends AbstractOpenApiClient {
     }
 
     @Override
+    protected String getAccessToken() {
+        return authorizationManager == null ? null : authorizationManager.getAccessToken();
+    }
+
+    @Override
     protected Deserializer getDeserializer() {
         return deserializer;
     }
-
 
     private HttpUriRequest buildHttpUriRequest(OpenApiRequest request) {
         HttpMethod method = request.getMethod();
@@ -194,7 +202,7 @@ public class OpenApiHttpClient extends AbstractOpenApiClient {
 
     @Override
     public void close() throws Exception {
+        this.authorizationManager.close();
         this.httpClient.close();
     }
-
 }
