@@ -34,7 +34,7 @@ public class OpenApiServerClientTest extends OpenApiTest {
 
     @Test
     public void testGetServerState() {
-        OpenApiServerClient serverClient = new OpenApiServerClient(this.client);
+        OpenApiServerClient serverClient = new OpenApiServerClient(this.openApiClient);
         ServerState serverState = serverClient.getServerState();
         assertNotNull(serverState);
         assertNotNull(serverState.getMode());
