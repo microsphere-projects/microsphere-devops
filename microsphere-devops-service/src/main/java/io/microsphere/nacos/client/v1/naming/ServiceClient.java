@@ -57,7 +57,7 @@ public interface ServiceClient {
      * @return non-null {@link Page}
      */
     default Page<String> getServices(String namespaceId, int pageNumber) {
-        return getServices(namespaceId, pageNumber, DEFAULT_PAGE_NUMBER);
+        return getServices(namespaceId, pageNumber, DEFAULT_PAGE_SIZE);
     }
 
     /**
