@@ -50,9 +50,17 @@ public abstract class OpenApiTest {
 
         NacosClientConfig config = new NacosClientConfig();
         config.setServerAddress(SERVER_ADDRESS);
-
+        customize(config);
         this.openApiClient = new OpenApiHttpClient(config);
         this.nacosClientConfig = config;
+    }
+
+    /**
+     * Customize the {@link NacosClientConfig}
+     *
+     * @param nacosClientConfig {@link NacosClientConfig}
+     */
+    protected void customize(NacosClientConfig nacosClientConfig) {
     }
 
     @AfterEach
