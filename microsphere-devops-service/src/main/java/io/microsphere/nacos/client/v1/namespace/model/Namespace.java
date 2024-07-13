@@ -30,12 +30,17 @@ public class Namespace {
     /**
      * The namespace ID
      */
-    private String namespace;
+    private String namespaceId;
 
     /**
      * The namespace to display
      */
-    private String namespaceShowName;
+    private String namespaceName;
+
+    /**
+     * The description of namespace
+     */
+    private String namespaceDesc;
 
     private int quota;
 
@@ -43,20 +48,28 @@ public class Namespace {
 
     private int type;
 
-    public String getNamespace() {
-        return namespace;
+    public String getNamespaceId() {
+        return namespaceId;
     }
 
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
+    public void setNamespaceId(String namespaceId) {
+        this.namespaceId = namespaceId;
     }
 
-    public String getNamespaceShowName() {
-        return namespaceShowName;
+    public String getNamespaceName() {
+        return namespaceName;
     }
 
-    public void setNamespaceShowName(String namespaceShowName) {
-        this.namespaceShowName = namespaceShowName;
+    public void setNamespaceName(String namespaceName) {
+        this.namespaceName = namespaceName;
+    }
+
+    public String getNamespaceDesc() {
+        return namespaceDesc;
+    }
+
+    public void setNamespaceDesc(String namespaceDesc) {
+        this.namespaceDesc = namespaceDesc;
     }
 
     public int getQuota() {
