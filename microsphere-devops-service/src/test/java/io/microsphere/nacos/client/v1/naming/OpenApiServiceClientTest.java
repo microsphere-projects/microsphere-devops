@@ -18,6 +18,7 @@ package io.microsphere.nacos.client.v1.naming;
 
 import io.microsphere.nacos.client.OpenApiTest;
 import io.microsphere.nacos.client.common.model.Page;
+import io.microsphere.nacos.client.v1.naming.model.ServiceDetail;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -36,10 +37,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class OpenApiServiceClientTest extends OpenApiTest {
 
+    private static final String NAMESPACE_ID = "test";
+
     @Test
     public void test() {
+        // Test getServices()
         OpenApiServiceClient client = new OpenApiServiceClient(openApiClient);
-        Page<String> page = client.getServices("test");
+        Page<String> page = client.getServices(NAMESPACE_ID);
         List<String> services = page.getElements();
 
         assertEquals(DEFAULT_PAGE_NUMBER, page.getPageNumber());
@@ -47,5 +51,13 @@ public class OpenApiServiceClientTest extends OpenApiTest {
         assertTrue(page.getTotalElements() > DEFAULT_PAGE_SIZE);
         assertEquals(DEFAULT_PAGE_SIZE, page.getNumberOfElements());
         assertEquals(DEFAULT_PAGE_SIZE, services.size());
+
+
+        // Test getServiceDetail()
+        for (String serviceName : services) {
+            ServiceDetail serviceDetail = client.getServiceDetail(NAMESPACE_ID, serviceName);
+            assertEquals(serviceName, serviceDetail.getName());
+            assertEquals(NAMESPACE_ID, serviceDetail.getNamespaceId());
+        }
     }
 }
