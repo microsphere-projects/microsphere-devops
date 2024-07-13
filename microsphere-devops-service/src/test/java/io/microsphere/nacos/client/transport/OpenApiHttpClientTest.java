@@ -38,7 +38,7 @@ public class OpenApiHttpClientTest extends OpenApiTest {
     @Test
     public void testExecute() throws IOException {
 
-        OpenApiRequest.Builder builder = OpenApiRequest.Builder.create("/nacos/v1/console/server/state");
+        OpenApiRequest.Builder builder = OpenApiRequest.Builder.create("/v1/console/server/state");
         OpenApiRequest request = builder.build();
 
         OpenApiResponse response = openApiClient.execute(request);
@@ -50,7 +50,7 @@ public class OpenApiHttpClientTest extends OpenApiTest {
 
     @Test
     public void testExecuteForPayload() throws IOException {
-        OpenApiRequest.Builder builder = OpenApiRequest.Builder.create("/nacos/v1/console/server/state");
+        OpenApiRequest.Builder builder = OpenApiRequest.Builder.create("/v1/console/server/state");
         OpenApiRequest request = builder.build();
 
         ServerState serverState = openApiClient.execute(request, ServerState.class);
