@@ -37,6 +37,14 @@ public interface NamespaceClient {
     List<Namespace> getAllNamespaces();
 
     /**
+     * Get a single {@link Namespace} by id
+     *
+     * @param namespaceId The id of {@link Namespace} (required)
+     * @return the instance of {@link Namespace} if found, otherwise <code>null</code>
+     */
+    Namespace getNamespace(String namespaceId);
+
+    /**
      * Create a new {@link Namespace}
      *
      * @param namespaceId   The id of {@link Namespace} (required)
@@ -77,4 +85,12 @@ public interface NamespaceClient {
      * @return <code>true</code> if successful, otherwise <code>false</code>
      */
     boolean updateNamespace(String namespaceId, String namespaceName, String namespaceDesc);
+
+    /**
+     * Delete the {@link Namespace} by id
+     *
+     * @param namespaceId The id of {@link Namespace} (required)
+     * @return <code>true</code> if successful, otherwise <code>false</code>
+     */
+    boolean deleteNamespace(String namespaceId);
 }
