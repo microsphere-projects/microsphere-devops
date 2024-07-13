@@ -17,7 +17,6 @@
 package io.microsphere.nacos.client.v1.namespace;
 
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
-import io.microsphere.nacos.client.v1.namespace.model.NewNamespace;
 
 import java.util.List;
 
@@ -40,8 +39,42 @@ public interface NamespaceClient {
     /**
      * Create a new {@link Namespace}
      *
-     * @param newNamespace {@link NewNamespace}
+     * @param namespaceId   The id of {@link Namespace} (required)
+     * @param namespaceName the name of {@link Namespace} (required)
      * @return <code>true</code> if successful, otherwise <code>false</code>
      */
-    boolean createNamespace(NewNamespace newNamespace);
+    default boolean createNamespace(String namespaceId, String namespaceName) {
+        return createNamespace(namespaceId, namespaceName, null);
+    }
+
+    /**
+     * Create a new {@link Namespace}
+     *
+     * @param namespaceId   The id of {@link Namespace} (required)
+     * @param namespaceName the name of {@link Namespace} (required)
+     * @param namespaceDesc the description of {@link Namespace} (optional)
+     * @return <code>true</code> if successful, otherwise <code>false</code>
+     */
+    boolean createNamespace(String namespaceId, String namespaceName, String namespaceDesc);
+
+    /**
+     * Update the {@link Namespace} by id
+     *
+     * @param namespaceId   The id of {@link Namespace} (required)
+     * @param namespaceName the name of {@link Namespace} (required)
+     * @return <code>true</code> if successful, otherwise <code>false</code>
+     */
+    default boolean updateNamespace(String namespaceId, String namespaceName) {
+        return createNamespace(namespaceId, namespaceName, null);
+    }
+
+    /**
+     * Update the {@link Namespace} by id
+     *
+     * @param namespaceId   The id of {@link Namespace} (required)
+     * @param namespaceName the name of {@link Namespace} (required)
+     * @param namespaceDesc the description of {@link Namespace} (optional)
+     * @return <code>true</code> if successful, otherwise <code>false</code>
+     */
+    boolean updateNamespace(String namespaceId, String namespaceName, String namespaceDesc);
 }
