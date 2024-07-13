@@ -42,12 +42,6 @@ public class OpenApiAuthenticationClient implements AuthenticationClient {
 
     @Override
     public Authentication authenticate() {
-        String username = nacosClientConfig.getUsername();
-        String password = nacosClientConfig.getPassword();
-        if (username == null && password == null) {
-            return null;
-        }
-
         OpenApiRequest request = OpenApiRequest.Builder.create("/v1/auth/login")
                 .method(HttpMethod.POST)
                 .queryParameter("username", nacosClientConfig.getUsername())
