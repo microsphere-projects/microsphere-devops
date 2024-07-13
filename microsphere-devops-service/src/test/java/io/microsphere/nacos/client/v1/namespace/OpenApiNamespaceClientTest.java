@@ -16,6 +16,7 @@
  */
 package io.microsphere.nacos.client.v1.namespace;
 
+import io.microsphere.nacos.client.NacosClientConfig;
 import io.microsphere.nacos.client.OpenApiTest;
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class OpenApiNamespaceClientTest extends OpenApiTest {
+
+    @Override
+    protected void customize(NacosClientConfig nacosClientConfig) {
+        nacosClientConfig.setUsername("nacos");
+        nacosClientConfig.setPassword("nacos");
+    }
 
     @Test
     public void testGetAllNamespaces() {
