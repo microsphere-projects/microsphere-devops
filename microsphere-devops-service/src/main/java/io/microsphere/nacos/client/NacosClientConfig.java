@@ -189,4 +189,26 @@ public class NacosClientConfig implements Serializable {
     public void setEncoding(String encoding) {
         this.encoding = encoding;
     }
+
+    public boolean isAuthorizationEnabled() {
+        return this.username != null && this.password != null;
+    }
+
+    @Override
+    public String toString() {
+        return "NacosClientConfig{" +
+                "serverAddress='" + serverAddress + '\'' +
+                ", scheme='" + scheme + '\'' +
+                ", contextPath='" + contextPath + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", accessKey='" + accessKey + '\'' +
+                ", secretKey='" + secretKey + '\'' +
+                ", maxConnections=" + maxConnections +
+                ", maxPerRoute=" + maxPerRoute +
+                ", connectionTimeout=" + connectionTimeout +
+                ", readTimeout=" + readTimeout +
+                ", encoding='" + encoding + '\'' +
+                '}';
+    }
 }
