@@ -17,6 +17,7 @@
 package io.microsphere.nacos.client.transport;
 
 import io.microsphere.nacos.client.ErrorCode;
+import io.microsphere.nacos.client.NacosClientException;
 
 import static java.util.Objects.requireNonNull;
 
@@ -24,10 +25,12 @@ import static java.util.Objects.requireNonNull;
  * The RuntimeException sub-type of Nacos Client Execution
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see RuntimeException
+ * @see NacosClientException
  * @since 1.0.0
  */
-public class OpenApiClientException extends RuntimeException {
+public class OpenApiClientException extends NacosClientException {
+
+    private static final long serialVersionUID = 2169855110220558558L;
 
     private final ErrorCode errorCode;
 
@@ -36,7 +39,7 @@ public class OpenApiClientException extends RuntimeException {
     }
 
     public OpenApiClientException(ErrorCode errorCode, String message, Throwable cause) {
-        super(message, cause, true, false);
+        super(message, cause);
         requireNonNull(errorCode, "The 'errorCode' argument must not be null!");
         this.errorCode = errorCode;
     }

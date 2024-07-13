@@ -16,18 +16,20 @@
  */
 package io.microsphere.nacos.client.io;
 
+import io.microsphere.nacos.client.NacosClientException;
+
 /**
  * The {@link RuntimeException Unchecked Exception} for Deserialization
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see RuntimeException
+ * @see NacosClientException
  * @since 1.0.0
  */
-public class DeserializationException extends RuntimeException {
+public class DeserializationException extends NacosClientException {
 
-    private static final long serialVersionUID = 1899659121033343256L;
+    private static final long serialVersionUID = 4475226264375980743L;
 
     public DeserializationException(String message, Throwable cause) {
-        super(message, cause, true, false);
+        super(message, cause);
     }
 }

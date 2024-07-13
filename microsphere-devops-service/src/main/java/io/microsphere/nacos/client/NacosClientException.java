@@ -14,22 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.nacos.client.common.auth;
-
-import io.microsphere.nacos.client.NacosClientException;
+package io.microsphere.nacos.client;
 
 /**
- * The {@link RuntimeException Unchecked Exception} for Authorization
+ * The {@link RuntimeException Unchecked Exception} for Nacos Client
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see NacosClientException
+ * @see RuntimeException
  * @since 1.0.0
  */
-public class AuthorizationException extends NacosClientException {
+public class NacosClientException extends RuntimeException {
 
-    private static final long serialVersionUID = -7151419719685388987L;
+    private static final long serialVersionUID = 5389428892525639031L;
 
-    public AuthorizationException(String message, Throwable cause) {
-        super(message, cause);
+    public NacosClientException(String message) {
+        this(message, null);
+    }
+
+    public NacosClientException(Throwable cause) {
+        this(null, cause);
+    }
+
+    public NacosClientException(String message, Throwable cause) {
+        super(message, cause, true, false);
     }
 }
