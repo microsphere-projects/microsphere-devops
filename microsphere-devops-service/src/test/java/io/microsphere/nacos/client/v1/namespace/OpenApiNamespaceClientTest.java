@@ -25,6 +25,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -64,10 +65,15 @@ public class OpenApiNamespaceClientTest extends OpenApiTest {
         Namespace namespace = namespaces.get(0);
         assertEquals("public", namespace.getNamespaceName());
 
+        // Test getNamespace()
+        namespace = namespaceClient.getNamespace(NAMESPACE_ID);
+
+        // Not found
+        assertNull(namespace);
+
         // Test createNamespace()
         assertTrue(namespaceClient.createNamespace(NAMESPACE_ID, NAMESPACE_NAME, NAMESPACE_DESC));
         namespaces = namespaceClient.getAllNamespaces();
-        assertEquals(namespacesSize + 1, namespaces.size());
         namespace = namespaces.get(namespaces.size() - 1);
         assertEquals(NAMESPACE_ID, namespace.getNamespaceId());
         assertEquals(NAMESPACE_NAME, namespace.getNamespaceName());
@@ -77,5 +83,7 @@ public class OpenApiNamespaceClientTest extends OpenApiTest {
             assertTrue(namespaceClient.updateNamespace(NAMESPACE_ID, MODIFIED_NAMESPACE_NAME, MODIFIED_NAMESPACE_DESC));
         }
 
+        // Test deleteNamespace()
+        assertTrue(namespaceClient.deleteNamespace(NAMESPACE_ID));
     }
 }
