@@ -21,7 +21,6 @@ import io.microsphere.nacos.client.http.HttpMethod;
 import io.microsphere.nacos.client.transport.OpenApiClient;
 import io.microsphere.nacos.client.transport.OpenApiRequest;
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
-import io.microsphere.nacos.client.v1.namespace.model.NewNamespace;
 
 import java.util.List;
 
@@ -49,12 +48,23 @@ public class OpenApiNamespaceClient implements NamespaceClient {
     }
 
     @Override
-    public boolean createNamespace(NewNamespace newNamespace) {
+    public boolean createNamespace(String namespaceId, String namespaceName, String namespaceDesc) {
         OpenApiRequest request = OpenApiRequest.Builder.create("/v1/console/namespaces")
                 .method(HttpMethod.POST)
-                .queryParameter("customNamespaceId", newNamespace.getNamespaceId())
-                .queryParameter("namespaceName", newNamespace.getNamespaceName())
-                .queryParameter("namespaceDesc", newNamespace.getNamespaceDesc())
+                .queryParameter("customNamespaceId", namespaceId)
+                .queryParameter("namespaceName", namespaceName)
+                .queryParameter("namespaceDesc", namespaceDesc)
+                .build();
+        return openApiClient.execute(request, boolean.class);
+    }
+
+    @Override
+    public boolean updateNamespace(String namespaceId, String namespaceName, String namespaceDesc) {
+        OpenApiRequest request = OpenApiRequest.Builder.create("/v1/console/namespaces")
+                .method(HttpMethod.PUT)
+                .queryParameter("namespace", namespaceId)
+                .queryParameter("namespaceShowName", namespaceName)
+                .queryParameter("namespaceDesc", namespaceDesc)
                 .build();
         return openApiClient.execute(request, boolean.class);
     }
