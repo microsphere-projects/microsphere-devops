@@ -17,6 +17,7 @@
 package io.microsphere.nacos.client.v1.namespace;
 
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
+import io.microsphere.nacos.client.v1.namespace.model.NewNamespace;
 
 import java.util.List;
 
@@ -35,4 +36,12 @@ public interface NamespaceClient {
      * @return non-null
      */
     List<Namespace> getAllNamespaces();
+
+    /**
+     * Create a new {@link Namespace}
+     *
+     * @param newNamespace {@link NewNamespace}
+     * @return <code>true</code> if successful, otherwise <code>false</code>
+     */
+    boolean createNamespace(NewNamespace newNamespace);
 }
