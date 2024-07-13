@@ -16,12 +16,13 @@
  */
 package io.microsphere.nacos.client.common.auth;
 
+import io.microsphere.nacos.client.NacosClientConfig;
 import io.microsphere.nacos.client.common.auth.model.Authentication;
+import io.microsphere.nacos.client.transport.OpenApiClient;
 
 import java.util.concurrent.ScheduledExecutorService;
 
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
@@ -35,6 +36,8 @@ public class AuthorizationManager implements AutoCloseable {
 
     private final AuthenticationClient authenticationClient;
 
+    private final NacosClientConfig nacosClientConfig;
+
     private final ScheduledExecutorService authenticationRefresher;
 
     /**
@@ -42,33 +45,52 @@ public class AuthorizationManager implements AutoCloseable {
      */
     private volatile Authentication authentication;
 
-    public AuthorizationManager(AuthenticationClient authenticationClient) {
-        this.authenticationClient = authenticationClient;
-        this.authenticationRefresher = newSingleThreadScheduledExecutor(task -> {
-            Thread thread = new Thread(task, "Nacos Client - Authorization Refresher");
-            thread.setDaemon(true);
-            return thread;
-        });
-
+    public AuthorizationManager(OpenApiClient openApiClient, NacosClientConfig nacosClientConfig) {
+        this.authenticationClient = new OpenApiAuthenticationClient(openApiClient, nacosClientConfig);
+        this.nacosClientConfig = nacosClientConfig;
+        this.authenticationRefresher = initAuthenticationRefresher();
         refreshAuthentication();
     }
 
-    private void refreshAuthentication() {
-        try {
-            this.authentication = this.authenticationClient.authenticate();
-        } finally {
-            this.authenticationRefresher.schedule(this::refreshAuthentication, getRefreshInterval(getAuthentication()), MILLISECONDS);
+    private boolean isAuthorizationEnabled() {
+        return this.nacosClientConfig.isAuthorizationEnabled();
+    }
+
+    private ScheduledExecutorService initAuthenticationRefresher() {
+        if (isAuthorizationEnabled()) {
+            return newSingleThreadScheduledExecutor(task -> {
+                Thread thread = new Thread(task, "Nacos Client - Authorization Refresher");
+                thread.setDaemon(true);
+                return thread;
+            });
+        }
+        return null;
+    }
+
+    private void refreshAuthentication() throws AuthorizationException {
+        if (isAuthorizationEnabled()) {
+            try {
+                this.authentication = this.authenticationClient.authenticate();
+            } catch (Throwable e) {
+                String errorMessage = "Failed to refresh Nacos Client Authentication";
+                throw new AuthorizationException(errorMessage, e);
+            } finally {
+                scheduleRefresh();
+            }
         }
     }
 
-    protected Authentication getAuthentication() {
-        Authentication authentication = this.authentication;
-        return authentication;
+    private void scheduleRefresh() {
+        this.authenticationRefresher.schedule(this::refreshAuthentication, getRefreshIntervalInSeconds(getAuthentication()), SECONDS);
     }
 
-    private long getRefreshInterval(Authentication authentication) {
-        long tokenTtl = authentication == null ? SECONDS.toMillis(60) : authentication.getTokenTtl();
-        return tokenTtl / 2;
+    protected Authentication getAuthentication() {
+        return this.isAuthorizationEnabled() ? this.authentication : null;
+    }
+
+    private long getRefreshIntervalInSeconds(Authentication authentication) {
+        long tokenTtlInSeconds = authentication == null ? 60 : authentication.getTokenTtl();
+        return tokenTtlInSeconds / 2;
     }
 
     public String getAccessToken() {
@@ -78,6 +100,9 @@ public class AuthorizationManager implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-        this.authenticationRefresher.shutdown();
+        ScheduledExecutorService authenticationRefresher = this.authenticationRefresher;
+        if (authenticationRefresher != null) {
+            this.authenticationRefresher.shutdown();
+        }
     }
 }

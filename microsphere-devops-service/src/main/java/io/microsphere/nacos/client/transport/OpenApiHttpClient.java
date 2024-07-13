@@ -18,7 +18,6 @@ package io.microsphere.nacos.client.transport;
 
 import io.microsphere.nacos.client.NacosClientConfig;
 import io.microsphere.nacos.client.common.auth.AuthorizationManager;
-import io.microsphere.nacos.client.common.auth.OpenApiAuthenticationClient;
 import io.microsphere.nacos.client.http.HttpMethod;
 import io.microsphere.nacos.client.io.DefaultDeserializer;
 import io.microsphere.nacos.client.io.Deserializer;
@@ -87,7 +86,7 @@ public class OpenApiHttpClient extends AbstractOpenApiClient {
         this.httpClient = httpClientBuilder.build();
         this.nacosClientConfig = nacosClientConfig;
         this.deserializer = loadDeserializer(nacosClientConfig);
-        this.authorizationManager = new AuthorizationManager(new OpenApiAuthenticationClient(this, nacosClientConfig));
+        this.authorizationManager = new AuthorizationManager(this, nacosClientConfig);
     }
 
     @Override
