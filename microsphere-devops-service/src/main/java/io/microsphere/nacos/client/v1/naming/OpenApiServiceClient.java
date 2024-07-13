@@ -59,4 +59,22 @@ public class OpenApiServiceClient implements ServiceClient {
                 .build();
         return openApiClient.execute(request, Service.class);
     }
+
+    @Override
+    public boolean createService(Service service) {
+        OpenApiRequest request = OpenApiRequest.Builder.create("/v1/ns/service")
+                .queryParameter("namespaceId", service.getNamespaceId())
+                .queryParameter("groupName", service.getGroupName())
+                .queryParameter("serviceName", service.getName())
+                .queryParameter("protectThreshold", service.getProtectThreshold())
+                .queryParameter("metadata", service.getMetadata())
+                .queryParameter("selector", service.getSelector())
+                .build();
+        return false;
+    }
+
+    @Override
+    public boolean updateService(Service service) {
+        return false;
+    }
 }
