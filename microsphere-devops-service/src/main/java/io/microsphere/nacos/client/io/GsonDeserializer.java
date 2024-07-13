@@ -53,7 +53,7 @@ public abstract class GsonDeserializer<T> implements JsonDeserializer<T> {
     protected abstract T deserialize(JsonElement json, Type typeOfT) throws JsonParseException;
 
     /**
-     * Get the field value from the {@link JsonObject} by name
+     * Get the string value from the {@link JsonObject} by field name
      *
      * @param jsonObject {@link JsonObject}
      * @param fieldName  the field name
@@ -65,5 +65,17 @@ public abstract class GsonDeserializer<T> implements JsonDeserializer<T> {
             return null;
         }
         return fieldElement.getAsString();
+    }
+
+    /**
+     * Get the int value from the {@link JsonObject} by field name
+     *
+     * @param jsonObject {@link JsonObject}
+     * @param fieldName  the field name
+     * @return the field value as int
+     */
+    protected int getInt(JsonObject jsonObject, String fieldName) {
+        JsonElement fieldElement = jsonObject.get(fieldName);
+        return fieldElement.getAsInt();
     }
 }
