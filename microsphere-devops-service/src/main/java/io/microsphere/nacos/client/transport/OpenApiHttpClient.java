@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.ServiceLoader;
 
 import static io.microsphere.nacos.client.ErrorCode.IO_ERROR;
+import static java.net.URLEncoder.encode;
 
 /**
  * {@link OpenApiClient} based on {@link HttpClient}
@@ -91,10 +92,10 @@ public class OpenApiHttpClient extends AbstractOpenApiClient {
 
     @Override
     protected OpenApiResponse doExecute(OpenApiRequest request) throws OpenApiClientException {
-        HttpUriRequest httpUriRequest = buildHttpUriRequest(request);
         CloseableHttpResponse httpResponse;
         OpenApiResponse response = null;
         try {
+            HttpUriRequest httpUriRequest = buildHttpUriRequest(request);
             httpResponse = httpClient.execute(httpUriRequest);
             response = buildOpenApiResponse(httpResponse);
         } catch (IOException e) {
@@ -113,7 +114,7 @@ public class OpenApiHttpClient extends AbstractOpenApiClient {
         return deserializer;
     }
 
-    private HttpUriRequest buildHttpUriRequest(OpenApiRequest request) {
+    private HttpUriRequest buildHttpUriRequest(OpenApiRequest request) throws IOException {
         HttpMethod method = request.getMethod();
         HttpRequestBase httpRequest = null;
         switch (method) {
@@ -147,7 +148,7 @@ public class OpenApiHttpClient extends AbstractOpenApiClient {
         return firstDeserializer == null ? new DefaultDeserializer(nacosClientConfig) : firstDeserializer;
     }
 
-    private URI buildURI(OpenApiRequest request) {
+    private URI buildURI(OpenApiRequest request) throws IOException {
 
         StringBuilder urlBuilder = new StringBuilder(128);
 
@@ -164,7 +165,12 @@ public class OpenApiHttpClient extends AbstractOpenApiClient {
             for (Map.Entry<String, String> entry : queryParameters.entrySet()) {
                 String name = entry.getKey();
                 String value = entry.getValue();
-                urlBuilder.append(name).append("=").append(value).append("&");
+                urlBuilder.append(name).append("=");
+                if (value != null) {
+                    String encodedValue = encode(value, config.getEncoding());
+                    urlBuilder.append(encodedValue);
+                }
+                urlBuilder.append("&");
             }
         }
 
