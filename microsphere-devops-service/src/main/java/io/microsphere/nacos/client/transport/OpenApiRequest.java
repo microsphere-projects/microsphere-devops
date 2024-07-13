@@ -77,6 +77,13 @@ public class OpenApiRequest {
         return queryParameters == null ? emptyMap() : unmodifiableMap(queryParameters);
     }
 
+    @Override
+    public String toString() {
+        return this.method + " " + this.endpoint +
+                System.lineSeparator() +
+                "Query Params : " + this.queryParameters;
+    }
+
     /**
      * The Builder for {@link OpenApiRequest}
      */
