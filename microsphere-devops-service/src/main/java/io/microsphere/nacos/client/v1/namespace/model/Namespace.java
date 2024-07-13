@@ -16,6 +16,7 @@
  */
 package io.microsphere.nacos.client.v1.namespace.model;
 
+import io.microsphere.nacos.client.common.model.Model;
 import io.microsphere.nacos.client.v1.namespace.NamespaceClient;
 
 /**
@@ -25,7 +26,9 @@ import io.microsphere.nacos.client.v1.namespace.NamespaceClient;
  * @see NamespaceClient
  * @since 1.0.0
  */
-public class Namespace {
+public class Namespace implements Model {
+
+    private static final long serialVersionUID = -7531818882902548890L;
 
     /**
      * The namespace ID
