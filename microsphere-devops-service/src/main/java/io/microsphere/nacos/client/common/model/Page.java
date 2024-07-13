@@ -64,4 +64,14 @@ public class Page<E> implements Model {
     public int getNumberOfElements() {
         return elements.size();
     }
+
+    @Override
+    public String toString() {
+        return "Page{" +
+                "pageNumber=" + pageNumber +
+                ", pageSize=" + pageSize +
+                ", totalElements=" + totalElements +
+                ", elements=" + elements +
+                '}';
+    }
 }
