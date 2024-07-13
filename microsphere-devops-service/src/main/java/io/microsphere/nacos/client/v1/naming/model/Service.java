@@ -22,13 +22,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Service Detail Model
+ * Service Model
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Model
  * @since 1.0.0
  */
-public class ServiceDetail implements Model {
+public class Service implements Model {
 
     private Map<String, String> metadata;
 

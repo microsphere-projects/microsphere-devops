@@ -19,7 +19,7 @@ package io.microsphere.nacos.client.v1.naming;
 import io.microsphere.nacos.client.common.model.Page;
 import io.microsphere.nacos.client.transport.OpenApiClient;
 import io.microsphere.nacos.client.transport.OpenApiRequest;
-import io.microsphere.nacos.client.v1.naming.model.ServiceDetail;
+import io.microsphere.nacos.client.v1.naming.model.Service;
 import io.microsphere.nacos.client.v1.naming.model.ServiceList;
 
 /**
@@ -39,7 +39,7 @@ public class OpenApiServiceClient implements ServiceClient {
     }
 
     @Override
-    public Page<String> getServices(String namespaceId, String groupName, int pageNumber, int pageSize) {
+    public Page<String> getServiceNames(String namespaceId, String groupName, int pageNumber, int pageSize) {
         OpenApiRequest request = OpenApiRequest.Builder.create("/v1/ns/service/list")
                 .queryParameter("namespaceId", namespaceId)
                 .queryParameter("groupName", groupName)
@@ -51,12 +51,12 @@ public class OpenApiServiceClient implements ServiceClient {
     }
 
     @Override
-    public ServiceDetail getServiceDetail(String namespaceId, String groupName, String serviceName) {
+    public Service getService(String namespaceId, String groupName, String serviceName) {
         OpenApiRequest request = OpenApiRequest.Builder.create("/v1/ns/service")
                 .queryParameter("namespaceId", namespaceId)
                 .queryParameter("groupName", groupName)
                 .queryParameter("serviceName", serviceName)
                 .build();
-        return openApiClient.execute(request, ServiceDetail.class);
+        return openApiClient.execute(request, Service.class);
     }
 }

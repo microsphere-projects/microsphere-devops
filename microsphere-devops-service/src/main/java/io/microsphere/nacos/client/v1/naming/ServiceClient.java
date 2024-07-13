@@ -18,7 +18,7 @@ package io.microsphere.nacos.client.v1.naming;
 
 import io.microsphere.nacos.client.common.model.Page;
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
-import io.microsphere.nacos.client.v1.naming.model.ServiceDetail;
+import io.microsphere.nacos.client.v1.naming.model.Service;
 
 /**
  * The Nacos Client for Service
@@ -46,8 +46,8 @@ public interface ServiceClient {
      * @param namespaceId the id of {@link Namespace}
      * @return non-null {@link Page}
      */
-    default Page<String> getServices(String namespaceId) {
-        return getServices(namespaceId, DEFAULT_PAGE_NUMBER);
+    default Page<String> getServiceNames(String namespaceId) {
+        return getServiceNames(namespaceId, DEFAULT_PAGE_NUMBER);
     }
 
     /**
@@ -57,8 +57,8 @@ public interface ServiceClient {
      * @param pageNumber  the number of page, starts with 1
      * @return non-null {@link Page}
      */
-    default Page<String> getServices(String namespaceId, int pageNumber) {
-        return getServices(namespaceId, pageNumber, DEFAULT_PAGE_SIZE);
+    default Page<String> getServiceNames(String namespaceId, int pageNumber) {
+        return getServiceNames(namespaceId, pageNumber, DEFAULT_PAGE_SIZE);
     }
 
     /**
@@ -69,8 +69,8 @@ public interface ServiceClient {
      * @param pageSize    the expected size of one page
      * @return non-null {@link Page}
      */
-    default Page<String> getServices(String namespaceId, int pageNumber, int pageSize) {
-        return getServices(namespaceId, null, pageNumber, pageSize);
+    default Page<String> getServiceNames(String namespaceId, int pageNumber, int pageSize) {
+        return getServiceNames(namespaceId, null, pageNumber, pageSize);
     }
 
     /**
@@ -82,26 +82,26 @@ public interface ServiceClient {
      * @param pageSize    the expected size of one page
      * @return non-null {@link Page}
      */
-    Page<String> getServices(String namespaceId, String groupName, int pageNumber, int pageSize);
+    Page<String> getServiceNames(String namespaceId, String groupName, int pageNumber, int pageSize);
 
     /**
-     * Get an instance of {@link ServiceDetail} by the specified namespaceId and serviceName
+     * Get an instance of {@link Service} by the specified namespaceId and serviceName
      *
      * @param namespaceId the id of {@link Namespace}
      * @param serviceName the name of service
-     * @return an instance of {@link ServiceDetail} if found, otherwise <code>null</code>
+     * @return an instance of {@link Service} if found, otherwise <code>null</code>
      */
-    default ServiceDetail getServiceDetail(String namespaceId, String serviceName) {
-        return getServiceDetail(namespaceId, null, serviceName);
+    default Service getService(String namespaceId, String serviceName) {
+        return getService(namespaceId, null, serviceName);
     }
 
     /**
-     * Get an instance of {@link ServiceDetail} by the specified namespaceId, groupName and serviceName
+     * Get an instance of {@link Service} by the specified namespaceId, groupName and serviceName
      *
      * @param namespaceId the id of {@link Namespace}
      * @param groupName   the name of group (optional)
      * @param serviceName the name of service
-     * @return an instance of {@link ServiceDetail} if found, otherwise <code>null</code>
+     * @return an instance of {@link Service} if found, otherwise <code>null</code>
      */
-    ServiceDetail getServiceDetail(String namespaceId, String groupName, String serviceName);
+    Service getService(String namespaceId, String groupName, String serviceName);
 }

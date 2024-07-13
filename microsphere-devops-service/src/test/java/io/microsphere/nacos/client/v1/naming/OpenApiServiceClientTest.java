@@ -18,7 +18,7 @@ package io.microsphere.nacos.client.v1.naming;
 
 import io.microsphere.nacos.client.OpenApiTest;
 import io.microsphere.nacos.client.common.model.Page;
-import io.microsphere.nacos.client.v1.naming.model.ServiceDetail;
+import io.microsphere.nacos.client.v1.naming.model.Service;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -41,23 +41,23 @@ public class OpenApiServiceClientTest extends OpenApiTest {
 
     @Test
     public void test() {
-        // Test getServices()
+        // Test getServiceNames()
         OpenApiServiceClient client = new OpenApiServiceClient(openApiClient);
-        Page<String> page = client.getServices(NAMESPACE_ID);
-        List<String> services = page.getElements();
+        Page<String> page = client.getServiceNames(NAMESPACE_ID);
+        List<String> serviceNames = page.getElements();
 
         assertEquals(DEFAULT_PAGE_NUMBER, page.getPageNumber());
         assertEquals(DEFAULT_PAGE_SIZE, page.getPageSize());
         assertTrue(page.getTotalElements() > DEFAULT_PAGE_SIZE);
         assertEquals(DEFAULT_PAGE_SIZE, page.getNumberOfElements());
-        assertEquals(DEFAULT_PAGE_SIZE, services.size());
+        assertEquals(DEFAULT_PAGE_SIZE, serviceNames.size());
 
 
-        // Test getServiceDetail()
-        for (String serviceName : services) {
-            ServiceDetail serviceDetail = client.getServiceDetail(NAMESPACE_ID, serviceName);
-            assertEquals(serviceName, serviceDetail.getName());
-            assertEquals(NAMESPACE_ID, serviceDetail.getNamespaceId());
+        // Test getService()
+        for (String serviceName : serviceNames) {
+            Service service = client.getService(NAMESPACE_ID, serviceName);
+            assertEquals(serviceName, service.getName());
+            assertEquals(NAMESPACE_ID, service.getNamespaceId());
         }
     }
 }
