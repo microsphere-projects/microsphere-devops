@@ -104,4 +104,20 @@ public interface ServiceClient {
      * @return an instance of {@link Service} if found, otherwise <code>null</code>
      */
     Service getService(String namespaceId, String groupName, String serviceName);
+
+    /**
+     * Create a new {@link Service}
+     *
+     * @param service {@link Service}
+     * @return <code>true</code> if successful, otherwise <code>false</code>
+     */
+    boolean createService(Service service);
+
+    /**
+     * Update the specified {@link Service}
+     *
+     * @param service {@link Service}
+     * @return <code>true</code> if successful, otherwise <code>false</code>
+     */
+    boolean updateService(Service service);
 }
