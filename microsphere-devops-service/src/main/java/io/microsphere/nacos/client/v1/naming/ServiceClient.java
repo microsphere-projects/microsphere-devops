@@ -18,6 +18,7 @@ package io.microsphere.nacos.client.v1.naming;
 
 import io.microsphere.nacos.client.common.model.Page;
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
+import io.microsphere.nacos.client.v1.naming.model.ServiceDetail;
 
 /**
  * The Nacos Client for Service
@@ -76,11 +77,31 @@ public interface ServiceClient {
      * Get the pagination of service names by the specified namespaceId and groupName
      *
      * @param namespaceId the id of {@link Namespace}
-     * @param groupName   the name of group
+     * @param groupName   the name of group (optional)
      * @param pageNumber  the number of page, starts with 1
      * @param pageSize    the expected size of one page
      * @return non-null {@link Page}
      */
     Page<String> getServices(String namespaceId, String groupName, int pageNumber, int pageSize);
 
+    /**
+     * Get an instance of {@link ServiceDetail} by the specified namespaceId and serviceName
+     *
+     * @param namespaceId the id of {@link Namespace}
+     * @param serviceName the name of service
+     * @return an instance of {@link ServiceDetail} if found, otherwise <code>null</code>
+     */
+    default ServiceDetail getServiceDetail(String namespaceId, String serviceName) {
+        return getServiceDetail(namespaceId, null, serviceName);
+    }
+
+    /**
+     * Get an instance of {@link ServiceDetail} by the specified namespaceId, groupName and serviceName
+     *
+     * @param namespaceId the id of {@link Namespace}
+     * @param groupName   the name of group (optional)
+     * @param serviceName the name of service
+     * @return an instance of {@link ServiceDetail} if found, otherwise <code>null</code>
+     */
+    ServiceDetail getServiceDetail(String namespaceId, String groupName, String serviceName);
 }
