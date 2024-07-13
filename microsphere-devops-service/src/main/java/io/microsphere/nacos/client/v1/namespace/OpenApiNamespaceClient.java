@@ -16,10 +16,12 @@
  */
 package io.microsphere.nacos.client.v1.namespace;
 
+import io.microsphere.nacos.client.common.model.RestResult;
+import io.microsphere.nacos.client.http.HttpMethod;
 import io.microsphere.nacos.client.transport.OpenApiClient;
 import io.microsphere.nacos.client.transport.OpenApiRequest;
-import io.microsphere.nacos.client.common.model.RestResult;
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
+import io.microsphere.nacos.client.v1.namespace.model.NewNamespace;
 
 import java.util.List;
 
@@ -46,5 +48,17 @@ public class OpenApiNamespaceClient implements NamespaceClient {
         return namespacesList.getData();
     }
 
-    private static class NamespacesList extends RestResult<List<Namespace>> {}
+    @Override
+    public boolean createNamespace(NewNamespace newNamespace) {
+        OpenApiRequest request = OpenApiRequest.Builder.create("/v1/console/namespaces")
+                .method(HttpMethod.POST)
+                .queryParameter("customNamespaceId", newNamespace.getNamespaceId())
+                .queryParameter("namespaceName", newNamespace.getNamespaceName())
+                .queryParameter("namespaceDesc", newNamespace.getNamespaceDesc())
+                .build();
+        return openApiClient.execute(request, boolean.class);
+    }
+
+    private static class NamespacesList extends RestResult<List<Namespace>> {
+    }
 }
