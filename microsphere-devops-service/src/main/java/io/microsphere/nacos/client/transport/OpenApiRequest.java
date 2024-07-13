@@ -106,6 +106,9 @@ public class OpenApiRequest {
         }
 
         public Builder queryParameter(String name, String value) {
+            if (name == null || value == null || value.isEmpty()) {
+                return this;
+            }
             Map<String, String> params = this.queryParameters;
             if (params == null) {
                 params = new HashMap<>();
