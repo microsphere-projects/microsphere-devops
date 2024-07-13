@@ -19,7 +19,6 @@ package io.microsphere.nacos.client.v1.namespace;
 import io.microsphere.nacos.client.NacosClientConfig;
 import io.microsphere.nacos.client.OpenApiTest;
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
-import io.microsphere.nacos.client.v1.namespace.model.NewNamespace;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -43,6 +42,10 @@ public class OpenApiNamespaceClientTest extends OpenApiTest {
 
     private static final String NAMESPACE_DESC = "test-001-desc";
 
+    private static final String MODIFIED_NAMESPACE_NAME = "test-001(modified)";
+
+    private static final String MODIFIED_NAMESPACE_DESC = "test-001 DESC ...";
+
     @Override
     protected void customize(NacosClientConfig nacosClientConfig) {
         nacosClientConfig.setUsername("nacos");
@@ -50,25 +53,29 @@ public class OpenApiNamespaceClientTest extends OpenApiTest {
     }
 
     @Test
-    public void testGetAllNamespaces() {
+    public void test() {
         OpenApiNamespaceClient namespaceClient = new OpenApiNamespaceClient(this.openApiClient);
-        List<Namespace> namespaces = namespaceClient.getAllNamespaces();
-        assertNotNull(namespaces);
-        assertTrue(namespaces.size() > 0);
-        Namespace namespace = namespaces.get(0);
-        assertEquals("public", namespace.getNamespaceShowName());
-    }
 
-    @Test
-    public void testCreateNamespace() {
-        OpenApiNamespaceClient namespaceClient = new OpenApiNamespaceClient(this.openApiClient);
+        // Test getAllNamespace()
         List<Namespace> namespaces = namespaceClient.getAllNamespaces();
-        NewNamespace newNamespace = new NewNamespace(NAMESPACE_ID, NAMESPACE_NAME, NAMESPACE_DESC);
-        assertTrue(namespaceClient.createNamespace(newNamespace));
-        List<Namespace> newNamespaces = namespaceClient.getAllNamespaces();
-        assertEquals(namespaces.size() + 1, newNamespaces.size());
-        Namespace namespace = newNamespaces.get(newNamespaces.size() - 1);
-        assertEquals(namespace.getNamespace(), newNamespace.getNamespaceId());
-        assertEquals(namespace.getNamespaceShowName(), newNamespace.getNamespaceName());
+        int namespacesSize = namespaces.size();
+        assertNotNull(namespaces);
+        assertTrue(namespacesSize > 0);
+        Namespace namespace = namespaces.get(0);
+        assertEquals("public", namespace.getNamespaceName());
+
+        // Test createNamespace()
+        assertTrue(namespaceClient.createNamespace(NAMESPACE_ID, NAMESPACE_NAME, NAMESPACE_DESC));
+        namespaces = namespaceClient.getAllNamespaces();
+        assertEquals(namespacesSize + 1, namespaces.size());
+        namespace = namespaces.get(namespaces.size() - 1);
+        assertEquals(NAMESPACE_ID, namespace.getNamespaceId());
+        assertEquals(NAMESPACE_NAME, namespace.getNamespaceName());
+
+        // Test updateNamespace()
+        for (int i = 0; i < 5; i++) {
+            assertTrue(namespaceClient.updateNamespace(NAMESPACE_ID, MODIFIED_NAMESPACE_NAME, MODIFIED_NAMESPACE_DESC));
+        }
+
     }
 }
