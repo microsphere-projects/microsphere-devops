@@ -106,7 +106,7 @@ public class OpenApiRequest {
         }
 
         public Builder queryParameter(String name, String value) {
-            if (name == null || value == null || value.isEmpty()) {
+            if (name == null && value == null) {
                 return this;
             }
             Map<String, String> params = this.queryParameters;
