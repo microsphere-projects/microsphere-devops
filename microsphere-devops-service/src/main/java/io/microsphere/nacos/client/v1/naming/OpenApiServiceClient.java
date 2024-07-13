@@ -19,6 +19,7 @@ package io.microsphere.nacos.client.v1.naming;
 import io.microsphere.nacos.client.common.model.Page;
 import io.microsphere.nacos.client.transport.OpenApiClient;
 import io.microsphere.nacos.client.transport.OpenApiRequest;
+import io.microsphere.nacos.client.v1.naming.model.ServiceDetail;
 import io.microsphere.nacos.client.v1.naming.model.ServiceList;
 
 /**
@@ -47,5 +48,15 @@ public class OpenApiServiceClient implements ServiceClient {
                 .build();
         ServiceList serviceList = openApiClient.execute(request, ServiceList.class);
         return new Page<>(pageNumber, pageSize, serviceList.getCount(), serviceList.getDoms());
+    }
+
+    @Override
+    public ServiceDetail getServiceDetail(String namespaceId, String groupName, String serviceName) {
+        OpenApiRequest request = OpenApiRequest.Builder.create("/v1/ns/service")
+                .queryParameter("namespaceId", namespaceId)
+                .queryParameter("groupName", groupName)
+                .queryParameter("serviceName", serviceName)
+                .build();
+        return openApiClient.execute(request, ServiceDetail.class);
     }
 }
