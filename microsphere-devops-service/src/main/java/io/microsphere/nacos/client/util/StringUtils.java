@@ -16,6 +16,11 @@
  */
 package io.microsphere.nacos.client.util;
 
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collection;
+import java.util.Iterator;
+
 /**
  * The utility class for {@link String}
  *
@@ -55,5 +60,64 @@ public abstract class StringUtils {
             }
         }
         return true;
+    }
+
+
+    /**
+     * Convert a {@code Collection} into a delimited {@code String} (e.g., CSV).
+     * <p>Useful for {@code toString()} implementations.
+     *
+     * @param coll the {@code Collection} to convert (potentially {@code null} or empty)
+     * @return the delimited {@code String}
+     * @since Spring Framework 1.0.0
+     */
+    public static String collectionToCommaDelimitedString(Collection<?> coll) {
+        return collectionToDelimitedString(coll, ",");
+    }
+
+    /**
+     * Convert a {@link Collection} to a delimited {@code String} (e.g. CSV).
+     * <p>Useful for {@code toString()} implementations.
+     *
+     * @param coll   the {@code Collection} to convert (potentially {@code null} or empty)
+     * @param delim  the delimiter to use (typically a ",")
+     * @param prefix the {@code String} to start each element with
+     * @param suffix the {@code String} to end each element with
+     * @return the delimited {@code String}
+     * @since Spring Framework 1.0.0
+     */
+    public static String collectionToDelimitedString(Collection<?> coll, String delim, String prefix, String suffix) {
+
+        if (CollectionUtils.isEmpty(coll)) {
+            return "";
+        }
+
+        int totalLength = coll.size() * (prefix.length() + suffix.length()) + (coll.size() - 1) * delim.length();
+        for (Object element : coll) {
+            totalLength += String.valueOf(element).length();
+        }
+
+        StringBuilder sb = new StringBuilder(totalLength);
+        Iterator<?> it = coll.iterator();
+        while (it.hasNext()) {
+            sb.append(prefix).append(it.next()).append(suffix);
+            if (it.hasNext()) {
+                sb.append(delim);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Convert a {@code Collection} into a delimited {@code String} (e.g. CSV).
+     * <p>Useful for {@code toString()} implementations.
+     *
+     * @param coll  the {@code Collection} to convert (potentially {@code null} or empty)
+     * @param delim the delimiter to use (typically a ",")
+     * @return the delimited {@code String}
+     * @since Spring Framework 1.0.0
+     */
+    public static String collectionToDelimitedString(Collection<?> coll, String delim) {
+        return collectionToDelimitedString(coll, delim, "", "");
     }
 }
