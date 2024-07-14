@@ -40,7 +40,7 @@ public class Service implements Model {
 
     private Selector selector;
 
-    private int protectThreshold;
+    private float protectThreshold;
 
     private List<Cluster> clusters;
 
@@ -84,11 +84,11 @@ public class Service implements Model {
         this.selector = selector;
     }
 
-    public int getProtectThreshold() {
+    public float getProtectThreshold() {
         return protectThreshold;
     }
 
-    public void setProtectThreshold(int protectThreshold) {
+    public void setProtectThreshold(float protectThreshold) {
         this.protectThreshold = protectThreshold;
     }
 
