@@ -18,14 +18,18 @@ package io.microsphere.nacos.client.v1.naming;
 
 import io.microsphere.nacos.client.OpenApiTest;
 import io.microsphere.nacos.client.common.model.Page;
+import io.microsphere.nacos.client.v1.naming.model.Selector;
 import io.microsphere.nacos.client.v1.naming.model.Service;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static io.microsphere.nacos.client.v1.naming.ServiceClient.DEFAULT_PAGE_NUMBER;
 import static io.microsphere.nacos.client.v1.naming.ServiceClient.DEFAULT_PAGE_SIZE;
+import static java.util.Collections.singletonMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -37,13 +41,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class OpenApiServiceClientTest extends OpenApiTest {
 
-    private static final String NAMESPACE_ID = "test";
+    private static final String TEST_NAMESPACE_ID = "test";
+
+    private static final String TEST_GROUP_NAME = "test-group";
+
+    private static final String TEST_SERVICE_NAME = "test-service";
 
     @Test
     public void test() {
         // Test getServiceNames()
         OpenApiServiceClient client = new OpenApiServiceClient(openApiClient);
-        Page<String> page = client.getServiceNames(NAMESPACE_ID);
+        Page<String> page = client.getServiceNames(TEST_NAMESPACE_ID);
         List<String> serviceNames = page.getElements();
 
         assertEquals(DEFAULT_PAGE_NUMBER, page.getPageNumber());
@@ -55,9 +63,50 @@ public class OpenApiServiceClientTest extends OpenApiTest {
 
         // Test getService()
         for (String serviceName : serviceNames) {
-            Service service = client.getService(NAMESPACE_ID, serviceName);
+            Service service = client.getService(TEST_NAMESPACE_ID, serviceName);
             assertEquals(serviceName, service.getName());
-            assertEquals(NAMESPACE_ID, service.getNamespaceId());
+            assertEquals(TEST_NAMESPACE_ID, service.getNamespaceId());
         }
+
+
+        // Test createService()
+        Service service = createService();
+        assertTrue(client.createService(service));
+
+
+        // Test getService()
+        Service testService = client.getService(TEST_NAMESPACE_ID, TEST_SERVICE_NAME);
+        assertEquals(TEST_NAMESPACE_ID, testService.getNamespaceId());
+        assertEquals(TEST_GROUP_NAME, testService.getGroupName());
+        assertEquals(TEST_SERVICE_NAME, testService.getName());
+        assertEquals(0.0f, testService.getProtectThreshold());
+        assertEquals("none", testService.getSelector().getType());
+
+
+        // Test UpdateService();
+        service.setProtectThreshold(0.5f);
+        assertTrue(client.updateService(service));
+
+
+        // Test DeleteService()
+        assertTrue(client.deleteService(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_SERVICE_NAME));
+
+        // Test getService() : not found
+        testService = client.getService(TEST_NAMESPACE_ID, TEST_SERVICE_NAME);
+        assertNull(testService);
+    }
+
+    private Service createService() {
+        Service service = new Service();
+        service.setNamespaceId(TEST_NAMESPACE_ID);
+        service.setGroupName(TEST_GROUP_NAME);
+        service.setName(TEST_SERVICE_NAME);
+        service.setProtectThreshold(0.0f);
+//        Selector selector = new Selector();
+//        selector.setType("none");
+//        service.setSelector(selector);
+//        Map<String, String> metadata = singletonMap("servce.name", TEST_SERVICE_NAME);
+//        service.setMetadata(metadata);
+        return service;
     }
 }
