@@ -19,6 +19,7 @@ package io.microsphere.nacos.client.v1.naming.model;
 import io.microsphere.nacos.client.common.model.Model;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The model of Instance
@@ -30,7 +31,7 @@ import java.util.Map;
 public class Instance implements Model {
 
 
-    private static final long serialVersionUID = 5197406079273911147L;
+    private static final long serialVersionUID = -605793020763891332L;
 
     private String namespaceId;
 
@@ -39,6 +40,8 @@ public class Instance implements Model {
     private String instanceId;
 
     private String serviceName;
+
+    private String service;
 
     private int port;
 
@@ -85,11 +88,25 @@ public class Instance implements Model {
     }
 
     public String getServiceName() {
-        return serviceName;
+        return serviceName == null ? getService() : serviceName;
     }
 
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
+    }
+
+    public String getService() {
+        String service = this.service;
+        // FIXME : There is different between Open-API Doc and actual response
+        if (service != null) {
+            int index = service.indexOf("@@");
+            service = index > -1 ? service.substring(index + 2) : service;
+        }
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
     }
 
     public int getPort() {
@@ -170,5 +187,45 @@ public class Instance implements Model {
 
     public void setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Instance instance)) return false;
+        return port == instance.port && healthy == instance.healthy && Float.compare(weight, instance.weight) == 0
+                && enabled == instance.enabled && valid == instance.valid && marked == instance.marked
+                && ephemeral == instance.ephemeral && Objects.equals(namespaceId, instance.namespaceId)
+                && Objects.equals(groupName, instance.groupName) && Objects.equals(instanceId, instance.instanceId)
+                && Objects.equals(serviceName, instance.serviceName) && Objects.equals(service, instance.service)
+                && Objects.equals(ip, instance.ip) && Objects.equals(clusterName, instance.clusterName)
+                && Objects.equals(metadata, instance.metadata);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(namespaceId, groupName, instanceId, serviceName, service, port, healthy, ip, clusterName,
+                weight, enabled, valid, marked, ephemeral, metadata);
+    }
+
+    @Override
+    public String toString() {
+        return "Instance{" +
+                "namespaceId='" + namespaceId + '\'' +
+                ", groupName='" + groupName + '\'' +
+                ", instanceId='" + instanceId + '\'' +
+                ", serviceName='" + serviceName + '\'' +
+                ", service='" + service + '\'' +
+                ", port=" + port +
+                ", healthy=" + healthy +
+                ", ip='" + ip + '\'' +
+                ", clusterName='" + clusterName + '\'' +
+                ", weight=" + weight +
+                ", enabled=" + enabled +
+                ", valid=" + valid +
+                ", marked=" + marked +
+                ", ephemeral=" + ephemeral +
+                ", metadata=" + metadata +
+                '}';
     }
 }
