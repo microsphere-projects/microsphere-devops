@@ -32,7 +32,7 @@ import static io.microsphere.nacos.client.http.HttpMethod.PUT;
 import static java.util.Collections.singletonMap;
 
 /**
- * The Service for <a href="https://nacos.io/en/docs/v1/open-api/">Open API</a>
+ * The {@link Service} for <a href="https://nacos.io/en/docs/v1/open-api/">Open API</a>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see ServiceClient
