@@ -16,6 +16,7 @@
  */
 package io.microsphere.nacos.client.v1.naming;
 
+import io.microsphere.nacos.client.http.HttpMethod;
 import io.microsphere.nacos.client.transport.OpenApiClient;
 import io.microsphere.nacos.client.transport.OpenApiRequest;
 import io.microsphere.nacos.client.v1.naming.model.Instance;
@@ -24,7 +25,11 @@ import io.microsphere.nacos.client.v1.naming.model.Service;
 
 import java.util.Set;
 
+import static io.microsphere.nacos.client.http.HttpMethod.DELETE;
 import static io.microsphere.nacos.client.http.HttpMethod.GET;
+import static io.microsphere.nacos.client.http.HttpMethod.POST;
+import static io.microsphere.nacos.client.http.HttpMethod.PUT;
+import static io.microsphere.nacos.client.util.JsonUtils.toJSON;
 import static io.microsphere.nacos.client.util.StringUtils.collectionToCommaDelimitedString;
 
 /**
@@ -44,6 +49,24 @@ public class OpenApiInstanceClient implements InstanceClient {
     }
 
     @Override
+    public boolean register(Instance instance) {
+        OpenApiRequest request = buildInstanceRequest(instance, POST);
+        return responseMessage(request);
+    }
+
+    @Override
+    public boolean deregister(Instance instance) {
+        OpenApiRequest request = buildInstanceRequest(instance, DELETE);
+        return responseMessage(request);
+    }
+
+    @Override
+    public boolean refresh(Instance instance) {
+        OpenApiRequest request = buildInstanceRequest(instance, PUT);
+        return responseMessage(request);
+    }
+
+    @Override
     public InstancesList getInstancesList(String namespaceId, String groupName, String serviceName, Set<String> clusters, boolean healthyOnly) {
         OpenApiRequest request = OpenApiRequest.Builder.create("/v1/ns/instance/list")
                 .method(GET)
@@ -54,5 +77,27 @@ public class OpenApiInstanceClient implements InstanceClient {
                 .queryParameter("healthyOnly", healthyOnly)
                 .build();
         return openApiClient.execute(request, InstancesList.class);
+    }
+
+    private OpenApiRequest buildInstanceRequest(Instance instance, HttpMethod method) {
+        return OpenApiRequest.Builder.create("/v1/ns/instance")
+                .method(method)
+                .queryParameter("namespaceId", instance.getNamespaceId())
+                .queryParameter("groupName", instance.getGroupName())
+                .queryParameter("serviceName", instance.getServiceName())
+                .queryParameter("clusterName", instance.getClusterName())
+                .queryParameter("instanceId", instance.getInstanceId())
+                .queryParameter("ip", instance.getIp())
+                .queryParameter("port", instance.getPort())
+                .queryParameter("weight", instance.getWeight())
+                .queryParameter("enabled", instance.isEnabled())
+                .queryParameter("healthy", instance.isHealthy())
+                .queryParameter("ephemeral", instance.isEphemeral())
+                .queryParameter("metadata", toJSON(instance.getMetadata()))
+                .build();
+    }
+
+    private boolean responseMessage(OpenApiRequest request) {
+        return OpenApiServiceClient.responseMessage(this.openApiClient, request);
     }
 }
