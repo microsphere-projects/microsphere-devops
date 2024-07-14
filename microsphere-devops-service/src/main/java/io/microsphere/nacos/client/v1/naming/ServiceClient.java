@@ -120,4 +120,25 @@ public interface ServiceClient {
      * @return <code>true</code> if successful, otherwise <code>false</code>
      */
     boolean updateService(Service service);
+
+    /**
+     * Delete the {@link Service} by the specified namespaceId and serviceName
+     *
+     * @param namespaceId the id of {@link Namespace}
+     * @param serviceName the name of service
+     * @return <code>true</code> if successful, otherwise <code>false</code>
+     */
+    default boolean deleteService(String namespaceId, String serviceName) {
+        return deleteService(namespaceId, null, serviceName);
+    }
+
+    /**
+     * Delete the {@link Service} by the specified namespaceId, groupName and serviceName
+     *
+     * @param namespaceId the id of {@link Namespace}
+     * @param groupName   the name of group (optional)
+     * @param serviceName the name of service
+     * @return <code>true</code> if successful, otherwise <code>false</code>
+     */
+    boolean deleteService(String namespaceId, String groupName, String serviceName);
 }
