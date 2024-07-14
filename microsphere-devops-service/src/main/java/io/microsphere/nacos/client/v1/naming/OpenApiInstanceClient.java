@@ -79,6 +79,12 @@ public class OpenApiInstanceClient implements InstanceClient {
         return openApiClient.execute(request, InstancesList.class);
     }
 
+    @Override
+    public Instance getInstance(Instance instance) {
+        OpenApiRequest request = buildInstanceRequest(instance, GET);
+        return this.openApiClient.execute(request, Instance.class);
+    }
+
     private OpenApiRequest buildInstanceRequest(Instance instance, HttpMethod method) {
         return OpenApiRequest.Builder.create("/v1/ns/instance")
                 .method(method)
