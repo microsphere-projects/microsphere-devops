@@ -108,6 +108,10 @@ public class OpenApiServiceClient implements ServiceClient {
     }
 
     private boolean responseMessage(OpenApiRequest request) {
+        return responseMessage(this.openApiClient, request);
+    }
+
+    static boolean responseMessage(OpenApiClient openApiClient, OpenApiRequest request) {
         String message = openApiClient.execute(request, String.class);
         return RESPONSE_OK_MESSAGE.equals(message);
     }
