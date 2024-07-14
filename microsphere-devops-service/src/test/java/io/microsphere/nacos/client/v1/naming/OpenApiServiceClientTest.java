@@ -70,6 +70,7 @@ public class OpenApiServiceClientTest extends OpenApiTest {
 
 
         // Test createService()
+        // Bug? failed response from Nacos Server
         Service service = createService();
         assertTrue(client.createService(service));
 
@@ -102,11 +103,11 @@ public class OpenApiServiceClientTest extends OpenApiTest {
         service.setGroupName(TEST_GROUP_NAME);
         service.setName(TEST_SERVICE_NAME);
         service.setProtectThreshold(0.0f);
-//        Selector selector = new Selector();
-//        selector.setType("none");
-//        service.setSelector(selector);
-//        Map<String, String> metadata = singletonMap("servce.name", TEST_SERVICE_NAME);
-//        service.setMetadata(metadata);
+        Selector selector = new Selector();
+        selector.setType("none");
+        service.setSelector(selector);
+        Map<String, String> metadata = singletonMap("servce.name", TEST_SERVICE_NAME);
+        service.setMetadata(metadata);
         return service;
     }
 }
