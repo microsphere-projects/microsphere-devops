@@ -41,6 +41,66 @@ public interface ServiceClient {
     int DEFAULT_PAGE_SIZE = 10;
 
     /**
+     * Create a new {@link Service}
+     *
+     * @param service {@link Service}
+     * @return <code>true</code> if successful, otherwise <code>false</code>
+     */
+    boolean createService(Service service);
+
+    /**
+     * Delete the {@link Service} by the specified namespaceId and serviceName
+     *
+     * @param namespaceId the id of {@link Namespace}
+     * @param serviceName the name of service
+     * @return <code>true</code> if successful, otherwise <code>false</code>
+     */
+    default boolean deleteService(String namespaceId, String serviceName) {
+        return deleteService(namespaceId, null, serviceName);
+    }
+
+    /**
+     * Delete the {@link Service} by the specified namespaceId, groupName and serviceName
+     *
+     * @param namespaceId the id of {@link Namespace}
+     * @param groupName   the name of group (optional)
+     * @param serviceName the name of service
+     * @return <code>true</code> if successful, otherwise <code>false</code>
+     */
+    boolean deleteService(String namespaceId, String groupName, String serviceName);
+
+    /**
+     * Update the specified {@link Service}
+     *
+     * @param service {@link Service}
+     * @return <code>true</code> if successful, otherwise <code>false</code>
+     */
+    boolean updateService(Service service);
+
+
+    /**
+     * Get an instance of {@link Service} by the specified namespaceId and serviceName
+     *
+     * @param namespaceId the id of {@link Namespace}
+     * @param serviceName the name of service
+     * @return an instance of {@link Service} if found, otherwise <code>null</code>
+     */
+    default Service getService(String namespaceId, String serviceName) {
+        return getService(namespaceId, null, serviceName);
+    }
+
+    /**
+     * Get an instance of {@link Service} by the specified namespaceId, groupName and serviceName
+     *
+     * @param namespaceId the id of {@link Namespace}
+     * @param groupName   the name of group (optional)
+     * @param serviceName the name of service
+     * @return an instance of {@link Service} if found, otherwise <code>null</code>
+     */
+    Service getService(String namespaceId, String groupName, String serviceName);
+
+
+    /**
      * Get the pagination of service names by the specified namespaceId
      *
      * @param namespaceId the id of {@link Namespace}
@@ -84,61 +144,4 @@ public interface ServiceClient {
      */
     Page<String> getServiceNames(String namespaceId, String groupName, int pageNumber, int pageSize);
 
-    /**
-     * Get an instance of {@link Service} by the specified namespaceId and serviceName
-     *
-     * @param namespaceId the id of {@link Namespace}
-     * @param serviceName the name of service
-     * @return an instance of {@link Service} if found, otherwise <code>null</code>
-     */
-    default Service getService(String namespaceId, String serviceName) {
-        return getService(namespaceId, null, serviceName);
-    }
-
-    /**
-     * Get an instance of {@link Service} by the specified namespaceId, groupName and serviceName
-     *
-     * @param namespaceId the id of {@link Namespace}
-     * @param groupName   the name of group (optional)
-     * @param serviceName the name of service
-     * @return an instance of {@link Service} if found, otherwise <code>null</code>
-     */
-    Service getService(String namespaceId, String groupName, String serviceName);
-
-    /**
-     * Create a new {@link Service}
-     *
-     * @param service {@link Service}
-     * @return <code>true</code> if successful, otherwise <code>false</code>
-     */
-    boolean createService(Service service);
-
-    /**
-     * Update the specified {@link Service}
-     *
-     * @param service {@link Service}
-     * @return <code>true</code> if successful, otherwise <code>false</code>
-     */
-    boolean updateService(Service service);
-
-    /**
-     * Delete the {@link Service} by the specified namespaceId and serviceName
-     *
-     * @param namespaceId the id of {@link Namespace}
-     * @param serviceName the name of service
-     * @return <code>true</code> if successful, otherwise <code>false</code>
-     */
-    default boolean deleteService(String namespaceId, String serviceName) {
-        return deleteService(namespaceId, null, serviceName);
-    }
-
-    /**
-     * Delete the {@link Service} by the specified namespaceId, groupName and serviceName
-     *
-     * @param namespaceId the id of {@link Namespace}
-     * @param groupName   the name of group (optional)
-     * @param serviceName the name of service
-     * @return <code>true</code> if successful, otherwise <code>false</code>
-     */
-    boolean deleteService(String namespaceId, String groupName, String serviceName);
 }

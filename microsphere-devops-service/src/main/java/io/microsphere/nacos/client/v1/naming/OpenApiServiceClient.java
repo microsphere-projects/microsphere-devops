@@ -50,26 +50,14 @@ public class OpenApiServiceClient implements ServiceClient {
     }
 
     @Override
-    public Page<String> getServiceNames(String namespaceId, String groupName, int pageNumber, int pageSize) {
-        OpenApiRequest request = OpenApiRequest.Builder.create("/v1/ns/service/list")
-                .queryParameter("namespaceId", namespaceId)
-                .queryParameter("groupName", groupName)
-                .queryParameter("pageNo", pageNumber)
-                .queryParameter("pageSize", pageSize)
-                .build();
-        ServiceList serviceList = openApiClient.execute(request, ServiceList.class);
-        return new Page<>(pageNumber, pageSize, serviceList.getCount(), serviceList.getDoms());
-    }
-
-    @Override
-    public Service getService(String namespaceId, String groupName, String serviceName) {
-        OpenApiRequest request = buildServiceRequest(namespaceId, groupName, serviceName, GET);
-        return openApiClient.execute(request, Service.class);
-    }
-
-    @Override
     public boolean createService(Service service) {
         OpenApiRequest request = buildServiceRequest(service, POST);
+        return responseMessage(request);
+    }
+
+    @Override
+    public boolean deleteService(String namespaceId, String groupName, String serviceName) {
+        OpenApiRequest request = buildServiceRequest(namespaceId, groupName, serviceName, DELETE);
         return responseMessage(request);
     }
 
@@ -80,11 +68,23 @@ public class OpenApiServiceClient implements ServiceClient {
     }
 
     @Override
-    public boolean deleteService(String namespaceId, String groupName, String serviceName) {
-        OpenApiRequest request = buildServiceRequest(namespaceId, groupName, serviceName, DELETE);
-        return responseMessage(request);
+    public Service getService(String namespaceId, String groupName, String serviceName) {
+        OpenApiRequest request = buildServiceRequest(namespaceId, groupName, serviceName, GET);
+        return openApiClient.execute(request, Service.class);
     }
 
+    @Override
+    public Page<String> getServiceNames(String namespaceId, String groupName, int pageNumber, int pageSize) {
+        OpenApiRequest request = OpenApiRequest.Builder.create("/v1/ns/service/list")
+                .queryParameter("namespaceId", namespaceId)
+                .queryParameter("groupName", groupName)
+                .queryParameter("pageNo", pageNumber)
+                .queryParameter("pageSize", pageSize)
+                .build();
+        ServiceList serviceList = openApiClient.execute(request, ServiceList.class);
+        return new Page<>(pageNumber, pageSize, serviceList.getCount(), serviceList.getDoms());
+    }
+    
     private boolean responseMessage(OpenApiRequest request) {
         String message = openApiClient.execute(request, String.class);
         return RESPONSE_OK_MESSAGE.equals(message);
