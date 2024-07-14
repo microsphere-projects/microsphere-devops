@@ -76,7 +76,7 @@ public interface ServiceClient {
      * @return <code>true</code> if successful, otherwise <code>false</code>
      */
     boolean updateService(Service service);
-    
+
     /**
      * Get an instance of {@link Service} by the specified namespaceId and serviceName
      *
