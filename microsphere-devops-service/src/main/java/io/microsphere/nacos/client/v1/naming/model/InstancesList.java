@@ -34,15 +34,15 @@ public class InstancesList implements Model {
 
     private String dom;
 
-    private long cacheMillis;
+    private Long cacheMillis;
 
-    private boolean useSpecifiedURL;
+    private Boolean useSpecifiedURL;
 
     private String name;
 
     private String checksum;
 
-    private long lastRefTime;
+    private Long lastRefTime;
 
     private String env;
 
@@ -60,19 +60,19 @@ public class InstancesList implements Model {
         this.dom = dom;
     }
 
-    public long getCacheMillis() {
+    public Long getCacheMillis() {
         return cacheMillis;
     }
 
-    public void setCacheMillis(long cacheMillis) {
+    public void setCacheMillis(Long cacheMillis) {
         this.cacheMillis = cacheMillis;
     }
 
-    public boolean isUseSpecifiedURL() {
+    public Boolean getUseSpecifiedURL() {
         return useSpecifiedURL;
     }
 
-    public void setUseSpecifiedURL(boolean useSpecifiedURL) {
+    public void setUseSpecifiedURL(Boolean useSpecifiedURL) {
         this.useSpecifiedURL = useSpecifiedURL;
     }
 
@@ -92,11 +92,11 @@ public class InstancesList implements Model {
         this.checksum = checksum;
     }
 
-    public long getLastRefTime() {
+    public Long getLastRefTime() {
         return lastRefTime;
     }
 
-    public void setLastRefTime(long lastRefTime) {
+    public void setLastRefTime(Long lastRefTime) {
         this.lastRefTime = lastRefTime;
     }
 
