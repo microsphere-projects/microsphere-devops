@@ -29,7 +29,12 @@ import java.util.Map;
  */
 public class Instance implements Model {
 
-    private static final long serialVersionUID = 7023571389085807435L;
+
+    private static final long serialVersionUID = 5197406079273911147L;
+
+    private String namespaceId;
+
+    private String groupName;
 
     private String instanceId;
 
@@ -54,6 +59,22 @@ public class Instance implements Model {
     private boolean ephemeral;
 
     private Map<String, String> metadata;
+
+    public String getNamespaceId() {
+        return namespaceId;
+    }
+
+    public void setNamespaceId(String namespaceId) {
+        this.namespaceId = namespaceId;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
 
     public String getInstanceId() {
         return instanceId;
