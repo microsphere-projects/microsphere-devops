@@ -84,7 +84,7 @@ public class OpenApiServiceClient implements ServiceClient {
         ServiceList serviceList = openApiClient.execute(request, ServiceList.class);
         return new Page<>(pageNumber, pageSize, serviceList.getCount(), serviceList.getDoms());
     }
-    
+
     private boolean responseMessage(OpenApiRequest request) {
         String message = openApiClient.execute(request, String.class);
         return RESPONSE_OK_MESSAGE.equals(message);
