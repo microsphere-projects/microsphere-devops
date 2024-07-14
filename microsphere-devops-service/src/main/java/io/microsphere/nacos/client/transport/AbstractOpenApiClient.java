@@ -27,6 +27,8 @@ import static io.microsphere.nacos.client.ErrorCode.CLIENT_ERROR;
 import static io.microsphere.nacos.client.ErrorCode.DESERIALIZATION_ERROR;
 import static io.microsphere.nacos.client.http.HttpRequestParams.ACCESS_TOKEN;
 import static io.microsphere.nacos.client.transport.OpenApiRequest.Builder.from;
+import static io.microsphere.nacos.client.util.IOUtils.readAsString;
+import static io.microsphere.nacos.client.util.StringUtils.isBlank;
 import static java.lang.String.format;
 
 /**
@@ -63,10 +65,15 @@ public abstract class AbstractOpenApiClient implements OpenApiClient {
                 payload = deserializer.deserialize(response.getContent(), payloadType);
             } else {
                 ErrorCode errorCode = ErrorCode.valueOf(statusCode);
-                String errorMessage = format("The Open API response is valid , status[code : %d , message : %s]",
-                        statusCode, response.getStatusMessage());
+                String responseMessage = isBlank(response.getStatusMessage()) ?
+                        readAsString(response.getContent(), nacosClientConfig.getEncoding()) :
+                        response.getStatusMessage();
+                String errorMessage = format("The Open API request[%s] is invalid , response status[code : %d , message : %s]",
+                        request, statusCode, responseMessage);
                 throw new OpenApiClientException(errorCode, errorMessage);
             }
+        } catch (OpenApiClientException e) {
+            throw e;
         } catch (DeserializationException e) {
             String errorMessage = format("The payload[%s] can't be deserialized", payloadType);
             throw new OpenApiClientException(DESERIALIZATION_ERROR, errorMessage, e);
