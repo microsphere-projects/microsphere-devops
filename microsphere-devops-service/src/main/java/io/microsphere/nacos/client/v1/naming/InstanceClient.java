@@ -36,7 +36,7 @@ import java.util.Set;
 public interface InstanceClient {
 
     /**
-     * Register a new {@link Instance}, parameters :
+     * Register a new {@link Instance} with parameters :
      * <table>
      * <thead>
      * <tr>
@@ -122,7 +122,7 @@ public interface InstanceClient {
     boolean register(Instance instance);
 
     /**
-     * Deregister a new {@link Instance}, parameters :
+     * Deregister a new {@link Instance} with parameters :
      * <table>
      * <thead>
      * <tr>
@@ -184,7 +184,7 @@ public interface InstanceClient {
     boolean deregister(Instance instance);
 
     /**
-     * Refresh the registered {@link Instance}, parameters:
+     * Refresh the registered {@link Instance} with parameters:
      * <table>
      * <thead>
      * <tr>
@@ -310,4 +310,67 @@ public interface InstanceClient {
      * @return non-null
      */
     InstancesList getInstancesList(String namespaceId, String groupName, String serviceName, Set<String> clusters, boolean healthyOnly);
+
+
+    /**
+     * Get the {@link Instance} of the specified {@link Instance} with parameters :
+     * <table>
+     * <thead>
+     * <tr>
+     * <th>Name</th>
+     * <th>Type</th>
+     * <th>Required</th>
+     * <th>Description</th>
+     * </tr>
+     * </thead>
+     * <tbody>
+     * <tr>
+     * <td>namespaceId</td>
+     * <td>String</td>
+     * <td>no</td>
+     * <td>ID of namespace</td>
+     * </tr>
+     * <tr>
+     * <td>serviceName</td>
+     * <td>String</td>
+     * <td>yes</td>
+     * <td>Service name</td>
+     * </tr>
+     * <tr>
+     * <td>groupName</td>
+     * <td>String</td>
+     * <td>no</td>
+     * <td>group name</td>
+     * </tr>
+     * <tr>
+     * <td>ephemeral</td>
+     * <td>boolean</td>
+     * <td>no</td>
+     * <td>if instance is ephemeral</td>
+     * </tr>
+     * <tr>
+     * <td>ip</td>
+     * <td>String</td>
+     * <td>yes</td>
+     * <td>IP of instance</td>
+     * </tr>
+     * <tr>
+     * <td>port</td>
+     * <td>String</td>
+     * <td>yes</td>
+     * <td>Port of instance</td>
+     * </tr>
+     * <tr>
+     * <td>cluster</td>
+     * <td>String</td>
+     * <td>no</td>
+     * <td>Cluster name</td>
+     * </tr>
+     * </tbody>
+     * </table>
+     *
+     * @param instance
+     * @return
+     */
+    Instance getInstance(Instance instance);
 }
