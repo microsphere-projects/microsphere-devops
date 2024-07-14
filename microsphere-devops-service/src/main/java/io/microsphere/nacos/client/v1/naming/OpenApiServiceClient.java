@@ -85,11 +85,6 @@ public class OpenApiServiceClient implements ServiceClient {
         return new Page<>(pageNumber, pageSize, serviceList.getCount(), serviceList.getDoms());
     }
 
-    private boolean responseMessage(OpenApiRequest request) {
-        String message = openApiClient.execute(request, String.class);
-        return RESPONSE_OK_MESSAGE.equals(message);
-    }
-
     private OpenApiRequest buildServiceRequest(String namespaceId, String groupName, String serviceName, HttpMethod method) {
         OpenApiRequest request = OpenApiRequest.Builder.create("/v1/ns/service")
                 .method(method)
@@ -110,6 +105,11 @@ public class OpenApiServiceClient implements ServiceClient {
                 .queryParameter("metadata", JsonUtils.toJSON(service.getMetadata()))
                 .queryParameter("selector", toJSON(service.getSelector()))
                 .build();
+    }
+
+    private boolean responseMessage(OpenApiRequest request) {
+        String message = openApiClient.execute(request, String.class);
+        return RESPONSE_OK_MESSAGE.equals(message);
     }
 
     private String toJSON(Selector selector) {
