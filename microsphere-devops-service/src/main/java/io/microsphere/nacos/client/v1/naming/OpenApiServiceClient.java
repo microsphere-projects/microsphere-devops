@@ -17,10 +17,19 @@
 package io.microsphere.nacos.client.v1.naming;
 
 import io.microsphere.nacos.client.common.model.Page;
+import io.microsphere.nacos.client.http.HttpMethod;
 import io.microsphere.nacos.client.transport.OpenApiClient;
 import io.microsphere.nacos.client.transport.OpenApiRequest;
+import io.microsphere.nacos.client.util.JsonUtils;
+import io.microsphere.nacos.client.v1.naming.model.Selector;
 import io.microsphere.nacos.client.v1.naming.model.Service;
 import io.microsphere.nacos.client.v1.naming.model.ServiceList;
+
+import static io.microsphere.nacos.client.http.HttpMethod.DELETE;
+import static io.microsphere.nacos.client.http.HttpMethod.GET;
+import static io.microsphere.nacos.client.http.HttpMethod.POST;
+import static io.microsphere.nacos.client.http.HttpMethod.PUT;
+import static java.util.Collections.singletonMap;
 
 /**
  * The Service for <a href="https://nacos.io/en/docs/v1/open-api/">Open API</a>
@@ -31,6 +40,8 @@ import io.microsphere.nacos.client.v1.naming.model.ServiceList;
  * @since 1.0.0
  */
 public class OpenApiServiceClient implements ServiceClient {
+
+    private static final String RESPONSE_OK_MESSAGE = "ok";
 
     private final OpenApiClient openApiClient;
 
@@ -52,29 +63,56 @@ public class OpenApiServiceClient implements ServiceClient {
 
     @Override
     public Service getService(String namespaceId, String groupName, String serviceName) {
-        OpenApiRequest request = OpenApiRequest.Builder.create("/v1/ns/service")
-                .queryParameter("namespaceId", namespaceId)
-                .queryParameter("groupName", groupName)
-                .queryParameter("serviceName", serviceName)
-                .build();
+        OpenApiRequest request = buildServiceRequest(namespaceId, groupName, serviceName, GET);
         return openApiClient.execute(request, Service.class);
     }
 
     @Override
     public boolean createService(Service service) {
-        OpenApiRequest request = OpenApiRequest.Builder.create("/v1/ns/service")
-                .queryParameter("namespaceId", service.getNamespaceId())
-                .queryParameter("groupName", service.getGroupName())
-                .queryParameter("serviceName", service.getName())
-                .queryParameter("protectThreshold", service.getProtectThreshold())
-                .queryParameter("metadata", service.getMetadata())
-                .queryParameter("selector", service.getSelector())
-                .build();
-        return false;
+        OpenApiRequest request = buildServiceRequest(service, POST);
+        return responseMessage(request);
     }
 
     @Override
     public boolean updateService(Service service) {
-        return false;
+        OpenApiRequest request = buildServiceRequest(service, PUT);
+        return responseMessage(request);
+    }
+
+    @Override
+    public boolean deleteService(String namespaceId, String groupName, String serviceName) {
+        OpenApiRequest request = buildServiceRequest(namespaceId, groupName, serviceName, DELETE);
+        return responseMessage(request);
+    }
+
+    private boolean responseMessage(OpenApiRequest request) {
+        String message = openApiClient.execute(request, String.class);
+        return RESPONSE_OK_MESSAGE.equals(message);
+    }
+
+    private OpenApiRequest buildServiceRequest(String namespaceId, String groupName, String serviceName, HttpMethod method) {
+        OpenApiRequest request = OpenApiRequest.Builder.create("/v1/ns/service")
+                .method(method)
+                .queryParameter("namespaceId", namespaceId)
+                .queryParameter("groupName", groupName)
+                .queryParameter("serviceName", serviceName)
+                .build();
+        return request;
+    }
+
+    private OpenApiRequest buildServiceRequest(Service service, HttpMethod method) {
+        return OpenApiRequest.Builder.create("/v1/ns/service")
+                .method(method)
+                .queryParameter("namespaceId", service.getNamespaceId())
+                .queryParameter("groupName", service.getGroupName())
+                .queryParameter("serviceName", service.getName())
+                .queryParameter("protectThreshold", service.getProtectThreshold())
+                .queryParameter("metadata", JsonUtils.toJSON(service.getMetadata()))
+                .queryParameter("selector", toJSON(service.getSelector()))
+                .build();
+    }
+
+    private String toJSON(Selector selector) {
+        return selector == null ? null : JsonUtils.toJSON(singletonMap("type", selector.getType()));
     }
 }
