@@ -76,8 +76,7 @@ public interface ServiceClient {
      * @return <code>true</code> if successful, otherwise <code>false</code>
      */
     boolean updateService(Service service);
-
-
+    
     /**
      * Get an instance of {@link Service} by the specified namespaceId and serviceName
      *
@@ -98,7 +97,6 @@ public interface ServiceClient {
      * @return an instance of {@link Service} if found, otherwise <code>null</code>
      */
     Service getService(String namespaceId, String groupName, String serviceName);
-
 
     /**
      * Get the pagination of service names by the specified namespaceId
