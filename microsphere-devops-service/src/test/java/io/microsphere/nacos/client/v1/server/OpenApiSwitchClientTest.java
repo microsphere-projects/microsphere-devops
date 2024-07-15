@@ -87,5 +87,9 @@ public class OpenApiSwitchClientTest extends OpenApiTest {
         sw = client.getSwitch();
         assertEquals(20000, sw.getDefaultPushCacheMillis());
 
+        assertTrue(client.updateSwitch("pushCacheMillis", "10000"));
+        sw = client.getSwitch();
+        assertEquals(10000, sw.getDefaultPushCacheMillis());
+
     }
 }
