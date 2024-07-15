@@ -30,6 +30,7 @@ import static io.microsphere.nacos.client.http.HttpMethod.GET;
 import static io.microsphere.nacos.client.http.HttpMethod.POST;
 import static io.microsphere.nacos.client.http.HttpMethod.PUT;
 import static io.microsphere.nacos.client.util.JsonUtils.toJSON;
+import static io.microsphere.nacos.client.util.OpenApiUtils.isOkResponse;
 import static io.microsphere.nacos.client.util.StringUtils.collectionToCommaDelimitedString;
 
 /**
@@ -104,6 +105,6 @@ public class OpenApiInstanceClient implements InstanceClient {
     }
 
     private boolean responseMessage(OpenApiRequest request) {
-        return OpenApiServiceClient.responseMessage(this.openApiClient, request);
+        return isOkResponse(this.openApiClient, request);
     }
 }
