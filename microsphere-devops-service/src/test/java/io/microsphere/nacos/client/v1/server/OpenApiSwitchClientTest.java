@@ -81,6 +81,8 @@ public class OpenApiSwitchClientTest extends OpenApiTest {
         assertTrue(sw.getLightBeatEnabled());
 
         // Test updateSwitch()
+        // see com.alibaba.nacos.naming.misc.SwitchEntry
+        // you will crazy :D
         assertTrue(client.updateSwitch("pushCacheMillis", "20000"));
         sw = client.getSwitch();
         assertEquals(20000, sw.getDefaultPushCacheMillis());
