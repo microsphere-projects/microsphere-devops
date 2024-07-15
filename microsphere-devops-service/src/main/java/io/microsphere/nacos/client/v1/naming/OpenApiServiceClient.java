@@ -29,6 +29,7 @@ import static io.microsphere.nacos.client.http.HttpMethod.DELETE;
 import static io.microsphere.nacos.client.http.HttpMethod.GET;
 import static io.microsphere.nacos.client.http.HttpMethod.POST;
 import static io.microsphere.nacos.client.http.HttpMethod.PUT;
+import static io.microsphere.nacos.client.util.OpenApiUtils.isOkResponse;
 import static java.util.Collections.singletonMap;
 
 /**
@@ -108,12 +109,7 @@ public class OpenApiServiceClient implements ServiceClient {
     }
 
     private boolean responseMessage(OpenApiRequest request) {
-        return responseMessage(this.openApiClient, request);
-    }
-
-    static boolean responseMessage(OpenApiClient openApiClient, OpenApiRequest request) {
-        String message = openApiClient.execute(request, String.class);
-        return RESPONSE_OK_MESSAGE.equals(message);
+        return isOkResponse(this.openApiClient, request);
     }
 
     private String toJSON(Selector selector) {
