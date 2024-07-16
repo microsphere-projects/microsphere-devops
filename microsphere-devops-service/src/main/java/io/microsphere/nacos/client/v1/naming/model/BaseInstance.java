@@ -17,6 +17,7 @@
 package io.microsphere.nacos.client.v1.naming.model;
 
 import io.microsphere.nacos.client.common.model.Model;
+import io.microsphere.nacos.client.constants.Constants;
 
 /**
  * The abstract {@link Model model} {@link Class} of Service Instance
@@ -32,17 +33,24 @@ public abstract class BaseInstance implements Model {
     /**
      * The ID of namespace (optional)
      * If not specified, the default value is "public"
+     *
+     * @see Constants#DEFAULT_NAMESPACE_ID
      */
     private String namespaceId;
 
     /**
      * The Cluster name (optional)
+     * If not specified, the default value is "DEFAULT"
+     *
+     * @see Constants#DEFAULT_CLUSTER_NAME
      */
     private String clusterName;
 
     /**
      * The Group name (optional)
      * If not specified, the default value is "DEFAULT_GROUP"
+     *
+     * @see Constants#DEFAULT_GROUP_NAME
      */
     private String groupName;
 
@@ -124,15 +132,7 @@ public abstract class BaseInstance implements Model {
 
     @Override
     public String toString() {
-        return "{" +
-                "namespaceId='" + namespaceId + '\'' +
-                ", clusterName='" + clusterName + '\'' +
-                ", groupName='" + groupName + '\'' +
-                ", serviceName='" + serviceName + '\'' +
-                ", ip='" + ip + '\'' +
-                ", port=" + port +
-                ", ephemeral=" + ephemeral +
-                '}';
+        return "{" + "namespaceId='" + namespaceId + '\'' + ", clusterName='" + clusterName + '\'' + ", groupName='" + groupName + '\'' + ", serviceName='" + serviceName + '\'' + ", ip='" + ip + '\'' + ", port=" + port + ", ephemeral=" + ephemeral + '}';
     }
 
     /**
