@@ -18,6 +18,8 @@ package io.microsphere.nacos.client.v1.naming.model;
 
 import io.microsphere.nacos.client.common.model.Model;
 
+import static io.microsphere.nacos.client.constants.Constants.GROUP_SERVICE_NAME_SEPARATOR;
+
 /**
  * The {@link Model model} {@link Class} of Service Instance
  *
@@ -57,7 +59,7 @@ public class Instance extends NewInstance {
         String service = this.service;
         // FIXME : There is different between Open-API Doc and actual response
         if (service != null) {
-            int index = service.indexOf("@@");
+            int index = service.indexOf(GROUP_SERVICE_NAME_SEPARATOR);
             service = index > -1 ? service.substring(index + 2) : service;
         }
         return service;
