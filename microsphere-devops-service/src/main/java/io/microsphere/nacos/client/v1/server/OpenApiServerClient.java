@@ -51,14 +51,14 @@ public class OpenApiServerClient implements ServerClient {
     public ServerState getServerState() {
         OpenApiRequest request = OpenApiRequest.Builder.create("/v1/console/server/state")
                 .build();
-        return openApiClient.execute(request, ServerState.class);
+        return this.openApiClient.execute(request, ServerState.class);
     }
 
     @Override
     public ServerSwitch getServerSwitch() {
         OpenApiRequest request = OpenApiRequest.Builder.create(SERVER_SWITCH_ENDPOINT)
                 .build();
-        return openApiClient.execute(request, ServerSwitch.class);
+        return this.openApiClient.execute(request, ServerSwitch.class);
     }
 
     @Override
@@ -69,20 +69,20 @@ public class OpenApiServerClient implements ServerClient {
                 .queryParameter("value", switchValue)
                 .queryParameter("debug", debug)
                 .build();
-        return isOkResponse(openApiClient, request);
+        return isOkResponse(this.openApiClient, request);
     }
 
     @Override
     public ServerMetrics getServerMetrics() {
         OpenApiRequest request = OpenApiRequest.Builder.create(SERVER_METRICS_ENDPOINT)
                 .build();
-        return openApiClient.execute(request, ServerMetrics.class);
+        return this.openApiClient.execute(request, ServerMetrics.class);
     }
 
     @Override
     public ServersList getServersList() {
         OpenApiRequest request = OpenApiRequest.Builder.create(SERVERS_LIST_ENDPOINT)
                 .build();
-        return openApiClient.execute(request, ServersList.class);
+        return this.openApiClient.execute(request, ServersList.class);
     }
 }
