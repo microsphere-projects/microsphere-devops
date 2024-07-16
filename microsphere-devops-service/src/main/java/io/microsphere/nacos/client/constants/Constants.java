@@ -119,4 +119,19 @@ public interface Constants {
      */
     String ENCODING = getProperty(ENCODING_PROPERTY_NAME, DEFAULT_ENCODING);
 
+    /**
+     * The default namespace ID : "public"
+     */
+    String DEFAULT_NAMESPACE_ID = "public";
+
+    /**
+     * The default group name : "DEFAULT_GROUP"
+     */
+    String DEFAULT_GROUP_NAME = "DEFAULT_GROUP";
+
+    /**
+     * The default cluster name : "DEFAULT"
+     */
+    String DEFAULT_CLUSTER_NAME = "DEFAULT";
+
 }
