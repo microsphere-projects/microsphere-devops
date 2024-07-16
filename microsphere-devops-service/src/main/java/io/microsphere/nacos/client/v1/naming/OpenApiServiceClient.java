@@ -71,7 +71,7 @@ public class OpenApiServiceClient implements ServiceClient {
     @Override
     public Service getService(String namespaceId, String groupName, String serviceName) {
         OpenApiRequest request = buildServiceRequest(namespaceId, groupName, serviceName, GET);
-        return openApiClient.execute(request, Service.class);
+        return this.openApiClient.execute(request, Service.class);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class OpenApiServiceClient implements ServiceClient {
                 .queryParameter("pageNo", pageNumber)
                 .queryParameter("pageSize", pageSize)
                 .build();
-        ServiceList serviceList = openApiClient.execute(request, ServiceList.class);
+        ServiceList serviceList = this.openApiClient.execute(request, ServiceList.class);
         return new Page<>(pageNumber, pageSize, serviceList.getCount(), serviceList.getDoms());
     }
 
