@@ -70,7 +70,55 @@ public interface ServiceClient {
     boolean deleteService(String namespaceId, String groupName, String serviceName);
 
     /**
-     * Update the specified {@link Service}
+     * Update the specified {@link Service} with parameters :
+     <table>
+     <thead>
+     <tr>
+     <th>Name</th>
+     <th>Type</th>
+     <th>Required</th>
+     <th>Description</th>
+     </tr>
+     </thead>
+     <tbody>
+     <tr>
+     <td>serviceName</td>
+     <td>String</td>
+     <td>yes</td>
+     <td>service name</td>
+     </tr>
+     <tr>
+     <td>groupName</td>
+     <td>String</td>
+     <td>no</td>
+     <td>group name</td>
+     </tr>
+     <tr>
+     <td>namespaceId</td>
+     <td>String</td>
+     <td>no</td>
+     <td>namespace id</td>
+     </tr>
+     <tr>
+     <td>protectThreshold</td>
+     <td>float</td>
+     <td>no</td>
+     <td>set value from 0 to 1, default 0</td>
+     </tr>
+     <tr>
+     <td>metadata</td>
+     <td>String</td>
+     <td>no</td>
+     <td>metadata of service</td>
+     </tr>
+     <tr>
+     <td>selector</td>
+     <td>JSON</td>
+     <td>no</td>
+     <td>visit strategy</td>
+     </tr>
+     </tbody>
+     </table>
      *
      * @param service {@link Service}
      * @return <code>true</code> if successful, otherwise <code>false</code>
