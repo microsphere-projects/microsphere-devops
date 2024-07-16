@@ -20,7 +20,7 @@ import io.microsphere.nacos.client.common.model.Model;
 import io.microsphere.nacos.client.v1.namespace.NamespaceClient;
 
 /**
- * The model class of namespace in Open API V1
+ * The {@link Model model} {@link Class} of namespace in Open API V1
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see NamespaceClient
