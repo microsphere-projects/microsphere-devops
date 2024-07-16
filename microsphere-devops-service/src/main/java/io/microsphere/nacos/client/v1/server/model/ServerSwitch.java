@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * The model of Nacos Server Switch
+ * The {@link Model model} {@link Class} of Nacos Server Switch
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Model
