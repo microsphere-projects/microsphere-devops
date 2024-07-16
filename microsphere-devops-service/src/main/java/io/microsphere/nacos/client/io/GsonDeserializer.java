@@ -37,6 +37,8 @@ import java.util.function.Function;
  */
 public abstract class GsonDeserializer<T> implements JsonDeserializer<T> {
 
+    private Deserializer deserializer;
+
     @Override
     public final T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         T result = deserialize(json, typeOfT);
@@ -52,6 +54,24 @@ public abstract class GsonDeserializer<T> implements JsonDeserializer<T> {
      * @throws JsonParseException if json is not in the expected format of {@code typeofT}
      */
     protected abstract T deserialize(JsonElement json, Type typeOfT) throws JsonParseException;
+
+    /**
+     * Get the {@link Deserializer}
+     *
+     * @return non-null
+     */
+    protected Deserializer getDeserializer() {
+        return deserializer;
+    }
+
+    /**
+     * Set the {@link Deserializer}
+     *
+     * @param deserializer {@link Deserializer}
+     */
+    void setDeserializer(Deserializer deserializer) {
+        this.deserializer = deserializer;
+    }
 
     /**
      * Get the {@link Boolean} value from the {@link JsonObject} by field name
