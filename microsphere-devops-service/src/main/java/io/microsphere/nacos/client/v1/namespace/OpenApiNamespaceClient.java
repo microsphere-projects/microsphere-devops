@@ -46,7 +46,7 @@ public class OpenApiNamespaceClient implements NamespaceClient {
     public List<Namespace> getAllNamespaces() {
         OpenApiRequest request = OpenApiRequest.Builder.create(NAMESPACES_ENDPOINT)
                 .build();
-        NamespacesList namespacesList = openApiClient.execute(request, NamespacesList.class);
+        NamespacesList namespacesList = this.openApiClient.execute(request, NamespacesList.class);
         return namespacesList.getData();
     }
 
@@ -58,7 +58,7 @@ public class OpenApiNamespaceClient implements NamespaceClient {
                 .build();
         Namespace namespace = null;
         try {
-            namespace = openApiClient.execute(request, Namespace.class);
+            namespace = this.openApiClient.execute(request, Namespace.class);
         } catch (OpenApiClientException e) {
             // TODO log
         }
@@ -73,7 +73,7 @@ public class OpenApiNamespaceClient implements NamespaceClient {
                 .queryParameter("namespaceName", namespaceName)
                 .queryParameter("namespaceDesc", namespaceDesc)
                 .build();
-        return openApiClient.execute(request, boolean.class);
+        return this.openApiClient.execute(request, boolean.class);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class OpenApiNamespaceClient implements NamespaceClient {
                 .queryParameter("namespaceShowName", namespaceName)
                 .queryParameter("namespaceDesc", namespaceDesc)
                 .build();
-        return openApiClient.execute(request, boolean.class);
+        return this.openApiClient.execute(request, boolean.class);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class OpenApiNamespaceClient implements NamespaceClient {
                 .method(HttpMethod.DELETE)
                 .queryParameter("namespaceId", namespaceId)
                 .build();
-        return openApiClient.execute(request, boolean.class);
+        return this.openApiClient.execute(request, boolean.class);
     }
 
     private static class NamespacesList extends RestResult<List<Namespace>> {
