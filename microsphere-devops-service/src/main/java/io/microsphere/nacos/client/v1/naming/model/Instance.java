@@ -19,7 +19,7 @@ package io.microsphere.nacos.client.v1.naming.model;
 import io.microsphere.nacos.client.common.model.Model;
 
 /**
- * The {@link Model model} {@link Class} of Instance
+ * The {@link Model model} {@link Class} of Service Instance
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Model
