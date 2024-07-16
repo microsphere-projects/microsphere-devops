@@ -22,7 +22,7 @@ import io.microsphere.nacos.client.v1.naming.ServiceClient;
 import java.util.List;
 
 /**
- * The model of <a href="https://nacos.io/en/docs/v1/open-api/#2.15">Service List</a>
+ * The {@link Model model} {@link Class} of <a href="https://nacos.io/en/docs/v1/open-api/#2.15">Service List</a>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see ServiceClient
