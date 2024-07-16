@@ -19,7 +19,7 @@ package io.microsphere.nacos.client.v1.raft.model;
 import io.microsphere.nacos.client.common.model.Model;
 
 /**
- * The model of RAFT Peer
+ * The {@link Model model} {@link Class} of RAFT Peer
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Model
