@@ -16,10 +16,15 @@
  */
 package io.microsphere.nacos.client.io;
 
+import io.microsphere.nacos.client.constants.Constants;
 import io.microsphere.nacos.client.transport.OpenApiClient;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+
+import static io.microsphere.nacos.client.constants.Constants.ENCODING;
+import static io.microsphere.nacos.client.util.IOUtils.readAsString;
 
 /**
  * The Deserializer interface
@@ -39,5 +44,34 @@ public interface Deserializer {
      * @return the deserialized object
      * @throws DeserializationException
      */
-    <T extends Serializable> T deserialize(InputStream inputStream, Class<T> deserializedType) throws DeserializationException;
+    default <T extends Serializable> T deserialize(InputStream inputStream, Class<T> deserializedType) throws DeserializationException {
+        String content = null;
+        try {
+            content = readAsString(inputStream, getEncoding());
+        } catch (IOException e) {
+            throw new DeserializationException(e.getMessage(), e);
+        }
+        return deserialize(content, deserializedType);
+    }
+
+    /**
+     * Deserialize an object of type T from the given InputStream.
+     *
+     * @param content          the content
+     * @param deserializedType the type to be deserialized
+     * @return the deserialized object
+     * @throws DeserializationException
+     */
+    <T extends Serializable> T deserialize(String content, Class<T> deserializedType) throws DeserializationException;
+
+
+    /**
+     * The encoding is used for {@link InputStream} when deserializing
+     *
+     * @return non-null
+     * @see Constants#ENCODING
+     */
+    default String getEncoding() {
+        return ENCODING;
+    }
 }
