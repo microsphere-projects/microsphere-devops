@@ -20,7 +20,9 @@ import io.microsphere.nacos.client.NacosClientConfig;
 import io.microsphere.nacos.client.common.auth.AuthorizationManager;
 import io.microsphere.nacos.client.http.HttpMethod;
 import io.microsphere.nacos.client.io.DefaultDeserializer;
+import io.microsphere.nacos.client.io.DefaultSerializer;
 import io.microsphere.nacos.client.io.Deserializer;
+import io.microsphere.nacos.client.io.Serializer;
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
@@ -43,6 +45,7 @@ import java.util.ServiceLoader;
 
 import static io.microsphere.nacos.client.ErrorCode.IO_ERROR;
 import static java.net.URLEncoder.encode;
+import static java.util.ServiceLoader.load;
 
 /**
  * {@link OpenApiClient} based on {@link HttpClient}
@@ -56,6 +59,8 @@ public class OpenApiHttpClient extends AbstractOpenApiClient {
     private final CloseableHttpClient httpClient;
 
     private final NacosClientConfig nacosClientConfig;
+
+    private final Serializer serializer;
 
     private final Deserializer deserializer;
 
@@ -86,9 +91,11 @@ public class OpenApiHttpClient extends AbstractOpenApiClient {
 
         this.httpClient = httpClientBuilder.build();
         this.nacosClientConfig = nacosClientConfig;
+        this.serializer = loadSerializer(nacosClientConfig);
         this.deserializer = loadDeserializer(nacosClientConfig);
         this.authorizationManager = new AuthorizationManager(this, nacosClientConfig);
     }
+
 
     @Override
     protected OpenApiResponse doExecute(OpenApiRequest request) throws OpenApiClientException {
@@ -96,7 +103,7 @@ public class OpenApiHttpClient extends AbstractOpenApiClient {
         OpenApiResponse response = null;
         try {
             HttpUriRequest httpUriRequest = buildHttpUriRequest(request);
-            httpResponse = httpClient.execute(httpUriRequest);
+            httpResponse = this.httpClient.execute(httpUriRequest);
             response = buildOpenApiResponse(httpResponse);
         } catch (IOException e) {
             throw new OpenApiClientException(IO_ERROR, e.getMessage(), e);
@@ -106,12 +113,18 @@ public class OpenApiHttpClient extends AbstractOpenApiClient {
 
     @Override
     protected String getAccessToken() {
+        AuthorizationManager authorizationManager = this.authorizationManager;
         return authorizationManager == null ? null : authorizationManager.getAccessToken();
     }
 
     @Override
-    protected Deserializer getDeserializer() {
-        return deserializer;
+    public Serializer getSerializer() {
+        return this.serializer;
+    }
+
+    @Override
+    public Deserializer getDeserializer() {
+        return this.deserializer;
     }
 
     private HttpUriRequest buildHttpUriRequest(OpenApiRequest request) throws IOException {
@@ -137,15 +150,25 @@ public class OpenApiHttpClient extends AbstractOpenApiClient {
         return httpRequest;
     }
 
+    private Serializer loadSerializer(NacosClientConfig nacosClientConfig) {
+        Serializer spiSerializer = loadService(Serializer.class);
+        return spiSerializer == null ? new DefaultSerializer(nacosClientConfig) : spiSerializer;
+    }
+
     private Deserializer loadDeserializer(NacosClientConfig nacosClientConfig) {
-        ServiceLoader<Deserializer> serviceLoader = ServiceLoader.load(Deserializer.class);
-        // Try to load the first Deserializer by ServiceLoader SPI
-        Deserializer firstDeserializer = null;
-        for (Deserializer deserializer : serviceLoader) {
-            firstDeserializer = deserializer;
+        Deserializer spiDeserializer = loadService(Deserializer.class);
+        return spiDeserializer == null ? new DefaultDeserializer(nacosClientConfig) : spiDeserializer;
+    }
+
+    private <S> S loadService(Class<S> serviceClass) {
+        ServiceLoader<S> serviceLoader = load(serviceClass);
+        // Try to load the first SPI by ServiceLoader SPI
+        S firstService = null;
+        for (S spi : serviceLoader) {
+            firstService = spi;
             break;
         }
-        return firstDeserializer == null ? new DefaultDeserializer(nacosClientConfig) : firstDeserializer;
+        return firstService;
     }
 
     private URI buildURI(OpenApiRequest request) throws IOException {

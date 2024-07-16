@@ -16,6 +16,9 @@
  */
 package io.microsphere.nacos.client.transport;
 
+import io.microsphere.nacos.client.io.Deserializer;
+import io.microsphere.nacos.client.io.Serializer;
+
 import java.io.Serializable;
 
 /**
@@ -47,4 +50,24 @@ public interface OpenApiClient extends AutoCloseable {
      */
     <T extends Serializable> T execute(OpenApiRequest request, Class<T> payloadType) throws OpenApiClientException;
 
+    /**
+     * Get the instance of {@link Serializer}
+     *
+     * @return non-null
+     */
+    Serializer getSerializer();
+
+    /**
+     * Get the instance of {@link Deserializer}
+     *
+     * @return non-null
+     */
+    Deserializer getDeserializer();
+
+    /**
+     * Get the encoding
+     *
+     * @return non-null
+     */
+    String getEncoding();
 }

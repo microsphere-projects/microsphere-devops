@@ -17,6 +17,7 @@
 package io.microsphere.nacos.client.v1.naming;
 
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
+import io.microsphere.nacos.client.v1.naming.model.BatchUpdateMetadataResult;
 import io.microsphere.nacos.client.v1.naming.model.DeleteInstance;
 import io.microsphere.nacos.client.v1.naming.model.Instance;
 import io.microsphere.nacos.client.v1.naming.model.InstancesList;
@@ -26,7 +27,10 @@ import io.microsphere.nacos.client.v1.naming.model.Service;
 import io.microsphere.nacos.client.v1.naming.model.UpdateHealthInstance;
 import io.microsphere.nacos.client.v1.naming.model.UpdateInstance;
 
+import java.util.Map;
 import java.util.Set;
+
+import static io.microsphere.nacos.client.v1.naming.ConsistencyType.EPHEMERAL;
 
 /**
  * The Nacos Client for {@link Service} {@link Instance}
@@ -386,4 +390,24 @@ public interface InstanceClient {
      */
     boolean updateHealth(UpdateHealthInstance updateHealthInstance);
 
+    /**
+     * Batch Update Service Instances' Metadata
+     *
+     * @param instances one or more {@link Instance instances}
+     * @param metadata  Service Instances' Metadata
+     * @return {@link BatchUpdateMetadataResult}
+     */
+    default BatchUpdateMetadataResult batchUpdateMetadata(Iterable<Instance> instances, Map<String, String> metadata) {
+        return batchUpdateMetadata(instances, metadata, EPHEMERAL);
+    }
+
+    /**
+     * Batch Update Service Instances' Metadata
+     *
+     * @param instances       one or more {@link Instance instances}
+     * @param metadata        Service Instances' Metadata
+     * @param consistencyType {@link ConsistencyType}
+     * @return {@link BatchUpdateMetadataResult}
+     */
+    BatchUpdateMetadataResult batchUpdateMetadata(Iterable<Instance> instances, Map<String, String> metadata, ConsistencyType consistencyType);
 }

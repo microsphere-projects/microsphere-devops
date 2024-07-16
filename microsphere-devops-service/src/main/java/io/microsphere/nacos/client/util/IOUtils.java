@@ -43,7 +43,7 @@ public abstract class IOUtils {
     /**
      * The default buffer size
      */
-    static final int DEFAULT_BUFFER_SIZE = Integer.getInteger(DEFAULT_BUFFER_SIZE_PROPERTY_NAME, 4 * 1024);
+    public static final int DEFAULT_BUFFER_SIZE = Integer.getInteger(DEFAULT_BUFFER_SIZE_PROPERTY_NAME, 4 * 1024);
 
     static final int MAX_BUFFER_SIZE = Integer.MAX_VALUE - 8;
 

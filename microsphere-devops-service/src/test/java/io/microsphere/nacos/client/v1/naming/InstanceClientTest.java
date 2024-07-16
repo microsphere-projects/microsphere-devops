@@ -19,6 +19,7 @@ package io.microsphere.nacos.client.v1.naming;
 import io.microsphere.nacos.client.ErrorCode;
 import io.microsphere.nacos.client.OpenApiTest;
 import io.microsphere.nacos.client.transport.OpenApiClientException;
+import io.microsphere.nacos.client.v1.naming.model.BatchUpdateMetadataResult;
 import io.microsphere.nacos.client.v1.naming.model.DeleteInstance;
 import io.microsphere.nacos.client.v1.naming.model.Instance;
 import io.microsphere.nacos.client.v1.naming.model.InstancesList;
@@ -28,6 +29,7 @@ import io.microsphere.nacos.client.v1.naming.model.UpdateHealthInstance;
 import io.microsphere.nacos.client.v1.naming.model.UpdateInstance;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import static java.util.Collections.singleton;
@@ -116,6 +118,11 @@ public class InstanceClientTest extends OpenApiTest {
         assertFalse(instancesList.getHosts().isEmpty());
         assertTrue(instancesList.getMetadata().isEmpty());
 
+        // Test batchUpdateMetadata()
+        instance1.setNamespaceId(TEST_NAMESPACE_ID);
+        BatchUpdateMetadataResult result = client.batchUpdateMetadata(Arrays.asList(instance1), singletonMap("test-key", "test-value"));
+        assertFalse(result.getUpdated().isEmpty());
+        
         // Test deregister()
         DeleteInstance deleteInstance = new DeleteInstance().from(instance);
         assertTrue(client.deregister(deleteInstance));

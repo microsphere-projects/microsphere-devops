@@ -99,14 +99,12 @@ public abstract class AbstractOpenApiClient implements OpenApiClient {
      */
     protected abstract String getAccessToken();
 
-    /**
-     * Get the instance of {@link Deserializer}
-     *
-     * @return Deserializer
-     */
-    protected abstract Deserializer getDeserializer();
-
     public final NacosClientConfig getNacosClientConfig() {
-        return nacosClientConfig;
+        return this.nacosClientConfig;
+    }
+
+    @Override
+    public String getEncoding() {
+        return this.nacosClientConfig.getEncoding();
     }
 }

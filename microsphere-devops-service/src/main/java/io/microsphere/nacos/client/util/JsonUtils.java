@@ -16,7 +16,9 @@
  */
 package io.microsphere.nacos.client.util;
 
+import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 /**
  * The utility class for JSON
@@ -26,6 +28,21 @@ import java.util.Map;
  */
 public abstract class JsonUtils {
 
+    public static String toJSON(List<Map<String, String>> maps) {
+        int size = maps == null ? 0 : maps.size();
+        if (size < 1) {
+            return "[]";
+        }
+
+        StringJoiner jsonBuilder = new StringJoiner(",", "[", "]");
+        for (int i = 0; i < size; i++) {
+            Map<String, String> map = maps.get(i);
+            jsonBuilder.add(toJSON(map));
+        }
+
+        return jsonBuilder.toString();
+    }
+
     /**
      * Create a new JSON String from the specified {@link Map}
      *
@@ -34,7 +51,7 @@ public abstract class JsonUtils {
      */
     public static String toJSON(Map<String, String> map) {
         int size = map == null ? 0 : map.size();
-        if (size == 0) {
+        if (size < 1) {
             return "{}";
         }
 
