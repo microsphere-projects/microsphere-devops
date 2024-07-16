@@ -19,7 +19,7 @@ package io.microsphere.nacos.client.v1.server.model;
 import io.microsphere.nacos.client.common.model.Model;
 
 /**
- * The model of Nacos Server
+ * The {@link Model model} {@link Class} of Nacos Server
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Model
