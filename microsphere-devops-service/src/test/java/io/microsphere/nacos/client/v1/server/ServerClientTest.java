@@ -16,35 +16,29 @@
  */
 package io.microsphere.nacos.client.v1.server;
 
-import io.microsphere.nacos.client.transport.OpenApiClient;
-import io.microsphere.nacos.client.transport.OpenApiRequest;
-import io.microsphere.nacos.client.v1.server.model.ServerMetrics;
+import io.microsphere.nacos.client.OpenApiTest;
+import io.microsphere.nacos.client.v1.server.model.ServerState;
+import org.junit.jupiter.api.Test;
 
-import static io.microsphere.nacos.client.http.HttpMethod.GET;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * The {@link ServerMetricsClient} for Open API
+ * {@link ServerClient} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see ServerMetricsClient
- * @see ServerMetrics
+ * @see OpenApiServerClient
  * @since 1.0.0
  */
-public class OpenApiServerMetricsClient implements ServerMetricsClient {
+public class ServerClientTest extends OpenApiTest {
 
-    private static final String ENDPOINT = "/v1/ns/operator/metrics";
-
-    private final OpenApiClient openApiClient;
-
-    public OpenApiServerMetricsClient(OpenApiClient openApiClient) {
-        this.openApiClient = openApiClient;
-    }
-
-    @Override
-    public ServerMetrics getServerMetrics() {
-        OpenApiRequest request = OpenApiRequest.Builder.create(ENDPOINT)
-                .method(GET)
-                .build();
-        return openApiClient.execute(request, ServerMetrics.class);
+    @Test
+    public void testGetServerState() {
+        ServerClient serverClient = new OpenApiServerClient(this.openApiClient);
+        ServerState serverState = serverClient.getServerState();
+        assertNotNull(serverState);
+        assertNotNull(serverState.getMode());
+        assertNotNull(serverState.getVersion());
+        assertNull(serverState.getFunctionMode());
     }
 }

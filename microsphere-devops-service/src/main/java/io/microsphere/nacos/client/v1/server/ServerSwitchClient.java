@@ -16,42 +16,42 @@
  */
 package io.microsphere.nacos.client.v1.server;
 
-import io.microsphere.nacos.client.v1.server.model.Switch;
+import io.microsphere.nacos.client.v1.server.model.ServerSwitch;
 
 /**
- * The Client for Nacos Server {@link Switch}
+ * The Client for Nacos {@link ServerSwitch Server Swtich}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see Switch
+ * @see ServerSwitch
  * @since 1.0.0
  */
-public interface SwitchClient {
+public interface ServerSwitchClient {
 
     /**
-     * Get the Nacos Server {@link Switch}
+     * Get the Nacos {@link ServerSwitch Server Swtich}
      *
      * @return non-null
      */
-    Switch getSwitch();
+    ServerSwitch getServerSwitch();
 
     /**
-     * Update the Nacos Server {@link Switch}
+     * Update the Nacos {@link ServerSwitch Server Swtich}
      *
-     * @param switchName  the name of {@link Switch}
-     * @param switchValue the value of {@link Switch}
-     * @return <code>true</code> if the {@link Switch} is updated successfully, otherwise <code>false</code>
+     * @param switchName  the name of {@link ServerSwitch}
+     * @param switchValue the value of {@link ServerSwitch}
+     * @return <code>true</code> if the {@link ServerSwitch} is updated successfully, otherwise <code>false</code>
      */
-    default boolean updateSwitch(String switchName, String switchValue) {
-        return updateSwitch(switchName, switchValue, true);
+    default boolean updateServerSwitch(String switchName, String switchValue) {
+        return updateServerSwitch(switchName, switchValue, true);
     }
 
     /**
-     * Update the Nacos Server {@link Switch}
+     * Update the Nacos Server {@link ServerSwitch}
      *
-     * @param switchName  the name of {@link Switch}
-     * @param switchValue the value of {@link Switch}
+     * @param switchName  the name of {@link ServerSwitch}
+     * @param switchValue the value of {@link ServerSwitch}
      * @param debug       if affect the local server, true means yes, false means no, default true
-     * @return <code>true</code> if the {@link Switch} is updated successfully, otherwise <code>false</code>
+     * @return <code>true</code> if the {@link ServerSwitch} is updated successfully, otherwise <code>false</code>
      */
-    boolean updateSwitch(String switchName, String switchValue, boolean debug);
+    boolean updateServerSwitch(String switchName, String switchValue, boolean debug);
 }

@@ -18,7 +18,13 @@ package io.microsphere.nacos.client.v1.server;
 
 import io.microsphere.nacos.client.transport.OpenApiClient;
 import io.microsphere.nacos.client.transport.OpenApiRequest;
+import io.microsphere.nacos.client.v1.server.model.ServerMetrics;
 import io.microsphere.nacos.client.v1.server.model.ServerState;
+import io.microsphere.nacos.client.v1.server.model.ServerSwitch;
+import io.microsphere.nacos.client.v1.server.model.ServersList;
+
+import static io.microsphere.nacos.client.http.HttpMethod.PUT;
+import static io.microsphere.nacos.client.util.OpenApiUtils.isOkResponse;
 
 /**
  * The {@link ServerClient} for Open API
@@ -28,6 +34,12 @@ import io.microsphere.nacos.client.v1.server.model.ServerState;
  * @since 1.0.0
  */
 public class OpenApiServerClient implements ServerClient {
+
+    public static final String SERVER_SWITCH_ENDPOINT = "/v1/ns/operator/switches";
+
+    public static final String SERVER_METRICS_ENDPOINT = "/v1/ns/operator/metrics";
+
+    public static final String SERVERS_LIST_ENDPOINT = "/v1/ns/operator/servers";
 
     private final OpenApiClient openApiClient;
 
@@ -40,5 +52,37 @@ public class OpenApiServerClient implements ServerClient {
         OpenApiRequest request = OpenApiRequest.Builder.create("/v1/console/server/state")
                 .build();
         return openApiClient.execute(request, ServerState.class);
+    }
+
+    @Override
+    public ServerSwitch getServerSwitch() {
+        OpenApiRequest request = OpenApiRequest.Builder.create(SERVER_SWITCH_ENDPOINT)
+                .build();
+        return openApiClient.execute(request, ServerSwitch.class);
+    }
+
+    @Override
+    public boolean updateServerSwitch(String switchName, String switchValue, boolean debug) {
+        OpenApiRequest request = OpenApiRequest.Builder.create(SERVER_SWITCH_ENDPOINT)
+                .method(PUT)
+                .queryParameter("entry", switchName)
+                .queryParameter("value", switchValue)
+                .queryParameter("debug", debug)
+                .build();
+        return isOkResponse(openApiClient, request);
+    }
+
+    @Override
+    public ServerMetrics getServerMetrics() {
+        OpenApiRequest request = OpenApiRequest.Builder.create(SERVER_METRICS_ENDPOINT)
+                .build();
+        return openApiClient.execute(request, ServerMetrics.class);
+    }
+
+    @Override
+    public ServersList getServersList() {
+        OpenApiRequest request = OpenApiRequest.Builder.create(SERVERS_LIST_ENDPOINT)
+                .build();
+        return openApiClient.execute(request, ServersList.class);
     }
 }

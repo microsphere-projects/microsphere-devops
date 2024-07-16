@@ -1,3 +1,4 @@
 io.microsphere.nacos.client.v1.server.io.ServerStateDeserializer
 io.microsphere.nacos.client.v1.namespace.io.NamespaceDeserializer
 io.microsphere.nacos.client.v1.server.io.ServerMetricsDeserializer
+io.microsphere.nacos.client.v1.server.io.ServerDeserializer

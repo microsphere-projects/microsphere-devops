@@ -70,7 +70,6 @@ public class OpenApiInstanceClient implements InstanceClient {
     @Override
     public InstancesList getInstancesList(String namespaceId, String groupName, String serviceName, Set<String> clusters, boolean healthyOnly) {
         OpenApiRequest request = OpenApiRequest.Builder.create("/v1/ns/instance/list")
-                .method(GET)
                 .queryParameter("namespaceId", namespaceId)
                 .queryParameter("groupName", groupName)
                 .queryParameter("serviceName", serviceName)

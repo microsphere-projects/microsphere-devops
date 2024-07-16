@@ -14,31 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.nacos.client.v1.server;
+package io.microsphere.nacos.client.v1.server.model;
 
-import io.microsphere.nacos.client.OpenApiTest;
-import io.microsphere.nacos.client.v1.server.model.ServerState;
-import org.junit.jupiter.api.Test;
+import io.microsphere.nacos.client.common.model.Model;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import java.util.List;
 
 /**
- * {@link OpenApiServerClient} Test
+ * The List model of {@link Server Servers}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see OpenApiServerClient
+ * @see Server
  * @since 1.0.0
  */
-public class OpenApiServerClientTest extends OpenApiTest {
+public class ServersList implements Model {
 
-    @Test
-    public void testGetServerState() {
-        OpenApiServerClient serverClient = new OpenApiServerClient(this.openApiClient);
-        ServerState serverState = serverClient.getServerState();
-        assertNotNull(serverState);
-        assertNotNull(serverState.getMode());
-        assertNotNull(serverState.getVersion());
-        assertNull(serverState.getFunctionMode());
+    private List<Server> servers;
+
+    public List<Server> getServers() {
+        return servers;
+    }
+
+    public void setServers(List<Server> servers) {
+        this.servers = servers;
     }
 }

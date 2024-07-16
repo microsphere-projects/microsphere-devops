@@ -65,11 +65,11 @@ public class ServerMetricsDeserializer extends GsonDeserializer<ServerMetrics> {
     protected ServerMetrics deserialize(JsonElement json, Type typeOfT) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
         String status = getString(jsonObject, STATUS_FIELD_NAME);
-        int serviceCount = getInt(jsonObject, SERVICE_COUNT_FIELD_NAME);
-        int instanceCount = getInt(jsonObject, INSTANCE_COUNT_FIELD_NAME);
-        int raftNotifyTaskCount = getInt(jsonObject, RAFT_NOTIFY_TASK_COUNT_FIELD_NAME);
-        int responsibleServiceCount = getInt(jsonObject, RESPONSIBLE_SERVICE_COUNT_FIELD_NAME);
-        int responsibleInstanceCount = getInt(jsonObject, RESPONSIBLE_INSTANCE_COUNT_FIELD_NAME);
+        int serviceCount = getInteger(jsonObject, SERVICE_COUNT_FIELD_NAME);
+        int instanceCount = getInteger(jsonObject, INSTANCE_COUNT_FIELD_NAME);
+        int raftNotifyTaskCount = getInteger(jsonObject, RAFT_NOTIFY_TASK_COUNT_FIELD_NAME);
+        int responsibleServiceCount = getInteger(jsonObject, RESPONSIBLE_SERVICE_COUNT_FIELD_NAME);
+        int responsibleInstanceCount = getInteger(jsonObject, RESPONSIBLE_INSTANCE_COUNT_FIELD_NAME);
         float systemCpuLoad = getFloat(jsonObject, SYSTEM_CPU_LOAD_FIELD_NAME);
         float systemLoadAverage = getFloat(jsonObject, SYSTEM_LOAD_AVERAGE_FIELD_NAME);
         float memoryUsage = getFloat(jsonObject, MEMORY_USAGE_FIELD_NAME);

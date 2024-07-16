@@ -16,25 +16,21 @@
  */
 package io.microsphere.nacos.client.v1.server;
 
-import io.microsphere.nacos.client.v1.server.model.ServerState;
+import io.microsphere.nacos.client.v1.server.model.ServersList;
 
 /**
- * The Client for Nacos Server
+ * The Client for {@link ServersList}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see ServerState
- * @see ServerSwitchClient
- * @see ServerMetricsClient
- * @see ServersListClient
+ * @see ServersList
  * @since 1.0.0
  */
-public interface ServerClient extends ServerSwitchClient, ServerMetricsClient, ServersListClient {
+public interface ServersListClient {
 
     /**
-     * Get the {@link ServerState}
+     * Get the {@link ServersList}
      *
      * @return non-null
      */
-    ServerState getServerState();
-
+    ServersList getServersList();
 }

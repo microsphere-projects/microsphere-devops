@@ -24,17 +24,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * {@link OpenApiServerMetricsClient} Test
+ * {@link ServerMetricsClient} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see OpenApiServerMetricsClient
+ * @see ServerMetricsClient
  * @since 1.0.0
  */
-public class OpenApiServerMetricsClientTest extends OpenApiTest {
+public class ServerMetricsClientTest extends OpenApiTest {
 
     @Test
     public void test() {
-        OpenApiServerMetricsClient client = new OpenApiServerMetricsClient(this.openApiClient);
+        ServerMetricsClient client = new OpenApiServerClient(this.openApiClient);
 
         ServerMetrics serverMetrics = client.getServerMetrics();
 

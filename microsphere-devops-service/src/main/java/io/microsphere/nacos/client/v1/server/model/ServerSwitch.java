@@ -29,7 +29,7 @@ import java.util.Set;
  * @see Model
  * @since 1.0.0
  */
-public class Switch implements Model {
+public class ServerSwitch implements Model {
 
     private static final long serialVersionUID = -2905800184770325864L;
 

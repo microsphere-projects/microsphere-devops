@@ -54,37 +54,58 @@ public abstract class GsonDeserializer<T> implements JsonDeserializer<T> {
     protected abstract T deserialize(JsonElement json, Type typeOfT) throws JsonParseException;
 
     /**
-     * Get the string value from the {@link JsonObject} by field name
+     * Get the {@link Boolean} value from the {@link JsonObject} by field name
      *
      * @param jsonObject {@link JsonObject}
      * @param fieldName  the field name
-     * @return the field value as string if found,or <code>null</code>
+     * @return the field value as {@link Boolean} if found,or <code>null</code>
      */
-    protected String getString(JsonObject jsonObject, String fieldName) {
-        return getFieldValue(jsonObject, fieldName, JsonElement::getAsString);
+    protected Boolean getBoolean(JsonObject jsonObject, String fieldName) {
+        return getFieldValue(jsonObject, fieldName, JsonElement::getAsBoolean);
     }
 
     /**
-     * Get the float value from the {@link JsonObject} by field name
+     * Get the {@link Integer} value from the {@link JsonObject} by field name
      *
      * @param jsonObject {@link JsonObject}
      * @param fieldName  the field name
-     * @return the field value as float
+     * @return the field value as {@link Integer} if found,or <code>null</code>
      */
-    protected float getFloat(JsonObject jsonObject, String fieldName) {
+    protected Integer getInteger(JsonObject jsonObject, String fieldName) {
+        return getFieldValue(jsonObject, fieldName, JsonElement::getAsInt);
+    }
+
+    /**
+     * Get the {@link Long} value from the {@link JsonObject} by field name
+     *
+     * @param jsonObject {@link JsonObject}
+     * @param fieldName  the field name
+     * @return the field value as {@link Long} if found,or <code>null</code>
+     */
+    protected Long getLong(JsonObject jsonObject, String fieldName) {
+        return getFieldValue(jsonObject, fieldName, JsonElement::getAsLong);
+    }
+
+    /**
+     * Get the {@link Float} value from the {@link JsonObject} by field name
+     *
+     * @param jsonObject {@link JsonObject}
+     * @param fieldName  the field name
+     * @return the field value as {@link Float} if found,or <code>null</code>
+     */
+    protected Float getFloat(JsonObject jsonObject, String fieldName) {
         return getFieldValue(jsonObject, fieldName, JsonElement::getAsFloat);
     }
 
     /**
-     * Get the int value from the {@link JsonObject} by field name
+     * Get the string value from the {@link JsonObject} by field name
      *
      * @param jsonObject {@link JsonObject}
      * @param fieldName  the field name
-     * @return the field value as int
+     * @return the field value as {@link String} if found,or <code>null</code>
      */
-    protected int getInt(JsonObject jsonObject, String fieldName) {
-        JsonElement fieldElement = jsonObject.get(fieldName);
-        return fieldElement.getAsInt();
+    protected String getString(JsonObject jsonObject, String fieldName) {
+        return getFieldValue(jsonObject, fieldName, JsonElement::getAsString);
     }
 
     protected <T> T getFieldValue(JsonObject jsonObject, String fieldName, Function<JsonElement, T> asTypeFunction) {

@@ -17,7 +17,7 @@
 package io.microsphere.nacos.client.v1.server;
 
 import io.microsphere.nacos.client.OpenApiTest;
-import io.microsphere.nacos.client.v1.server.model.Switch;
+import io.microsphere.nacos.client.v1.server.model.ServerSwitch;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -28,20 +28,20 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * {@link OpenApiSwitchClient} Test
+ * {@link ServerSwitchClient} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see OpenApiSwitchClient
+ * @see ServerSwitchClient
  * @since 1.0.0
  */
-public class OpenApiSwitchClientTest extends OpenApiTest {
+public class ServerSwitchClientTest extends OpenApiTest {
 
     @Test
     public void test() {
-        OpenApiSwitchClient client = new OpenApiSwitchClient(this.openApiClient);
+        ServerSwitchClient client = new OpenApiServerClient(this.openApiClient);
 
         // Test getSwitch()
-        Switch sw = client.getSwitch();
+        ServerSwitch sw = client.getServerSwitch();
 
         assertNull(sw.getMasters());
         assertEquals(10000, sw.getDefaultPushCacheMillis());
@@ -55,17 +55,17 @@ public class OpenApiSwitchClientTest extends OpenApiTest {
         assertTrue(sw.getPushEnabled());
         assertEquals(3, sw.getCheckTimes());
 
-        Switch.HealthParams httpHealthParams = sw.getHttpHealthParams();
+        ServerSwitch.HealthParams httpHealthParams = sw.getHttpHealthParams();
         assertEquals(5000, httpHealthParams.getMax());
         assertEquals(500, httpHealthParams.getMin());
         assertEquals(0.85f, httpHealthParams.getFactor());
 
-        Switch.HealthParams tcpHealthParams = sw.getTcpHealthParams();
+        ServerSwitch.HealthParams tcpHealthParams = sw.getTcpHealthParams();
         assertEquals(5000, tcpHealthParams.getMax());
         assertEquals(1000, tcpHealthParams.getMin());
         assertEquals(0.75f, tcpHealthParams.getFactor());
 
-        Switch.HealthParams mysqlHealthParams = sw.getMysqlHealthParams();
+        ServerSwitch.HealthParams mysqlHealthParams = sw.getMysqlHealthParams();
         assertEquals(3000, mysqlHealthParams.getMax());
         assertEquals(2000, mysqlHealthParams.getMin());
         assertEquals(0.65f, mysqlHealthParams.getFactor());
@@ -83,12 +83,12 @@ public class OpenApiSwitchClientTest extends OpenApiTest {
         // Test updateSwitch()
         // see com.alibaba.nacos.naming.misc.SwitchEntry
         // you will crazy :D
-        assertTrue(client.updateSwitch("pushCacheMillis", "20000"));
-        sw = client.getSwitch();
+        assertTrue(client.updateServerSwitch("pushCacheMillis", "20000"));
+        sw = client.getServerSwitch();
         assertEquals(20000, sw.getDefaultPushCacheMillis());
 
-        assertTrue(client.updateSwitch("pushCacheMillis", "10000"));
-        sw = client.getSwitch();
+        assertTrue(client.updateServerSwitch("pushCacheMillis", "10000"));
+        sw = client.getServerSwitch();
         assertEquals(10000, sw.getDefaultPushCacheMillis());
 
     }

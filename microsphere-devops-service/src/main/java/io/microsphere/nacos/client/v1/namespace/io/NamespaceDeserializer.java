@@ -52,9 +52,9 @@ public class NamespaceDeserializer extends GsonDeserializer<Namespace> {
         String namespaceId = getString(jsonObject, NAMESPACE_ID_FIELD_NAME);
         String namespaceName = getString(jsonObject, NAMESPACE_NAME_FIELD_NAME);
         String namespaceDesc = getString(jsonObject, NAMESPACE_DESC_FIELD_NAME);
-        Integer quota = getInt(jsonObject, QUOTA_FIELD_NAME);
-        Integer configCount = getInt(jsonObject, CONFIG_COUNT_FIELD_NAME);
-        Integer type = getInt(jsonObject, TYPE_FIELD_NAME);
+        Integer quota = getInteger(jsonObject, QUOTA_FIELD_NAME);
+        Integer configCount = getInteger(jsonObject, CONFIG_COUNT_FIELD_NAME);
+        Integer type = getInteger(jsonObject, TYPE_FIELD_NAME);
         Namespace namespace = new Namespace();
         namespace.setNamespaceId(namespaceId);
         namespace.setNamespaceName(namespaceName);
