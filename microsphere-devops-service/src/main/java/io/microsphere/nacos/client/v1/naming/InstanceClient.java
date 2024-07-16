@@ -23,6 +23,7 @@ import io.microsphere.nacos.client.v1.naming.model.InstancesList;
 import io.microsphere.nacos.client.v1.naming.model.NewInstance;
 import io.microsphere.nacos.client.v1.naming.model.QueryInstance;
 import io.microsphere.nacos.client.v1.naming.model.Service;
+import io.microsphere.nacos.client.v1.naming.model.UpdateHealthInstance;
 import io.microsphere.nacos.client.v1.naming.model.UpdateInstance;
 
 import java.util.Set;
@@ -372,10 +373,17 @@ public interface InstanceClient {
      * </tbody>
      * </table>
      *
-     * @param queryInstance
+     * @param queryInstance {@link QueryInstance}
      * @return
      */
     Instance getInstance(QueryInstance queryInstance);
 
+    /**
+     * {@link UpdateHealthInstance Update Instances' Health}
+     *
+     * @param updateHealthInstance {@link UpdateHealthInstance}
+     * @return <code>true</code> if update successfully, otherwise <code>false</code>
+     */
+    boolean updateHealth(UpdateHealthInstance updateHealthInstance);
 
 }
