@@ -396,6 +396,7 @@ public interface InstanceClient {
      * @param instances one or more {@link Instance instances}
      * @param metadata  Service Instances' Metadata
      * @return {@link BatchUpdateMetadataResult}
+     * @since Nacos 1.4.x (Beta)
      */
     default BatchUpdateMetadataResult batchUpdateMetadata(Iterable<Instance> instances, Map<String, String> metadata) {
         return batchUpdateMetadata(instances, metadata, EPHEMERAL);
@@ -408,6 +409,7 @@ public interface InstanceClient {
      * @param metadata        Service Instances' Metadata
      * @param consistencyType {@link ConsistencyType}
      * @return {@link BatchUpdateMetadataResult}
+     * @since Nacos 1.4.x (Beta)
      */
     BatchUpdateMetadataResult batchUpdateMetadata(Iterable<Instance> instances, Map<String, String> metadata, ConsistencyType consistencyType);
 }
