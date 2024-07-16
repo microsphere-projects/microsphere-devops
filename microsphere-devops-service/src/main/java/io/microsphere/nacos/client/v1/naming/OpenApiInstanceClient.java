@@ -76,7 +76,7 @@ public class OpenApiInstanceClient implements InstanceClient {
                 .queryParameter("clusters", collectionToCommaDelimitedString(clusters))
                 .queryParameter("healthyOnly", healthyOnly)
                 .build();
-        return openApiClient.execute(request, InstancesList.class);
+        return this.openApiClient.execute(request, InstancesList.class);
     }
 
     @Override
