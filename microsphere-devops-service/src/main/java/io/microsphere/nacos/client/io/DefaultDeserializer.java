@@ -21,9 +21,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.microsphere.nacos.client.NacosClientConfig;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -41,9 +38,46 @@ import java.util.ServiceLoader;
  */
 public class DefaultDeserializer implements Deserializer {
 
-    private static final Map<Type, GsonDeserializer> gsonDeserializersCache = loadGsonDeserializers();
+    private final Gson gson;
 
-    private static Map<Type, GsonDeserializer> loadGsonDeserializers() {
+    private final String encoding;
+
+    public DefaultDeserializer(NacosClientConfig nacosClientConfig) {
+        this.gson = buildGson();
+        this.encoding = nacosClientConfig.getEncoding();
+    }
+
+    @Override
+    public <T extends Serializable> T deserialize(String content, Class<T> deserializedType) throws DeserializationException {
+        T object = null;
+        try {
+            object = this.gson.fromJson(content, deserializedType);
+        } catch (Throwable e) {
+            throw new DeserializationException(e.getMessage(), e);
+        }
+        return object;
+    }
+
+    @Override
+    public String getEncoding() {
+        return this.encoding;
+    }
+
+    private Gson buildGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+
+        Map<Type, GsonDeserializer> gsonDeserializes = loadGsonDeserializers();
+        for (Map.Entry<Type, GsonDeserializer> entry : gsonDeserializes.entrySet()) {
+            Type deserializedType = entry.getKey();
+            GsonDeserializer gsonDeserializer = entry.getValue();
+            gsonDeserializer.setDeserializer(this);
+            gsonBuilder.registerTypeAdapter(deserializedType, gsonDeserializer);
+        }
+
+        return gsonBuilder.create();
+    }
+
+    private Map<Type, GsonDeserializer> loadGsonDeserializers() {
         Map<Type, GsonDeserializer> gsonDeserializersMap = new HashMap<>();
         for (GsonDeserializer gsonDeserializer : ServiceLoader.load(GsonDeserializer.class)) {
             Class<?> gsonDeserializerClass = gsonDeserializer.getClass();
@@ -56,36 +90,5 @@ public class DefaultDeserializer implements Deserializer {
             }
         }
         return gsonDeserializersMap;
-    }
-
-    private final Gson gson;
-
-    private final String encoding;
-
-    public DefaultDeserializer(NacosClientConfig nacosClientConfig) {
-        this.gson = buildGson();
-        this.encoding = nacosClientConfig.getEncoding();
-    }
-
-    private Gson buildGson() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-
-        for (Map.Entry<Type, GsonDeserializer> entry : gsonDeserializersCache.entrySet()) {
-            gsonBuilder.registerTypeAdapter(entry.getKey(), entry.getValue());
-        }
-
-        return gsonBuilder.create();
-    }
-
-    @Override
-    public <T extends Serializable> T deserialize(InputStream inputStream, Class<T> deserializedType) throws DeserializationException {
-        T object = null;
-        try {
-            Reader reader = new InputStreamReader(inputStream, encoding);
-            object = gson.fromJson(reader, deserializedType);
-        } catch (Throwable e) {
-            throw new DeserializationException(e.getMessage(), e);
-        }
-        return object;
     }
 }
