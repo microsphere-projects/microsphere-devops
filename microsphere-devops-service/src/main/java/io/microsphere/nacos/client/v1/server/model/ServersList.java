@@ -21,7 +21,7 @@ import io.microsphere.nacos.client.common.model.Model;
 import java.util.List;
 
 /**
- * The List model of {@link Server Servers}
+ * The List {@link Model model} {@link Class} of {@link Server Servers}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Server
