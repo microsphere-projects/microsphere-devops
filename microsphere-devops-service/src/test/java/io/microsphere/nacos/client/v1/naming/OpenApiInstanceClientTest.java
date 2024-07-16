@@ -17,8 +17,12 @@
 package io.microsphere.nacos.client.v1.naming;
 
 import io.microsphere.nacos.client.OpenApiTest;
+import io.microsphere.nacos.client.v1.naming.model.DeleteInstance;
 import io.microsphere.nacos.client.v1.naming.model.Instance;
 import io.microsphere.nacos.client.v1.naming.model.InstancesList;
+import io.microsphere.nacos.client.v1.naming.model.NewInstance;
+import io.microsphere.nacos.client.v1.naming.model.QueryInstance;
+import io.microsphere.nacos.client.v1.naming.model.UpdateInstance;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
@@ -55,30 +59,33 @@ public class OpenApiInstanceClientTest extends OpenApiTest {
 
         // Test register()
         Instance instance = createInstance();
-        assertTrue(client.register(instance));
+        NewInstance newInstance = new NewInstance().from(instance);
+        assertTrue(client.register(newInstance));
         assertEquals(TEST_NAMESPACE_ID, instance.getNamespaceId());
         assertEquals(TEST_GROUP_NAME, instance.getGroupName());
         assertEquals(TEST_SERVICE_NAME, instance.getServiceName());
         assertEquals(TEST_CLUSTER, instance.getClusterName());
 
         // Test getInstance()
-        Instance instance1 = client.getInstance(instance);
+        QueryInstance queryInstance = new QueryInstance().from(instance);
+        Instance instance1 = client.getInstance(queryInstance);
         assertEquals(instance.getIp(), instance1.getIp());
         assertEquals(instance.getPort(), instance1.getPort());
         assertEquals(instance.getServiceName(), instance1.getServiceName());
         assertEquals(instance.getClusterName(), instance1.getClusterName());
-        assertEquals(instance.isHealthy(), instance1.isHealthy());
+        assertEquals(instance.getHealthy(), instance1.getHealthy());
         assertEquals(instance.getWeight(), instance1.getWeight());
 
         // Test refresh()
-        instance.setWeight(50.0f);
-        client.refresh(instance);
-        instance1 = client.getInstance(instance);
+        instance.setWeight(50.0);
+        UpdateInstance updateInstance = new UpdateInstance().from(instance);
+        client.refresh(updateInstance);
+        instance1 = client.getInstance(queryInstance);
         assertEquals(instance.getIp(), instance1.getIp());
         assertEquals(instance.getPort(), instance1.getPort());
         assertEquals(instance.getServiceName(), instance1.getServiceName());
         assertEquals(instance.getClusterName(), instance1.getClusterName());
-        assertEquals(instance.isHealthy(), instance1.isHealthy());
+        assertEquals(instance.getHealthy(), instance1.getHealthy());
         assertEquals(instance.getWeight(), instance1.getWeight());
 
         // Test getInstancesList()
@@ -95,7 +102,8 @@ public class OpenApiInstanceClientTest extends OpenApiTest {
         assertTrue(instancesList.getMetadata().isEmpty());
 
         // Test deregister()
-        assertTrue(client.deregister(instance));
+        DeleteInstance deleteInstance = new DeleteInstance().from(instance);
+        assertTrue(client.deregister(deleteInstance));
 
     }
 
@@ -107,7 +115,7 @@ public class OpenApiInstanceClientTest extends OpenApiTest {
         instance.setClusterName(TEST_CLUSTER);
         instance.setIp("127.0.0.1");
         instance.setPort(8080);
-        instance.setWeight(100.0f);
+        instance.setWeight(100.0);
         instance.setEnabled(true);
         instance.setHealthy(true);
         instance.setEphemeral(true);

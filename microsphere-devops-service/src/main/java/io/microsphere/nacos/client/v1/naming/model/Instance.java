@@ -18,9 +18,6 @@ package io.microsphere.nacos.client.v1.naming.model;
 
 import io.microsphere.nacos.client.common.model.Model;
 
-import java.util.Map;
-import java.util.Objects;
-
 /**
  * The {@link Model model} {@link Class} of Instance
  *
@@ -28,55 +25,25 @@ import java.util.Objects;
  * @see Model
  * @since 1.0.0
  */
-public class Instance implements Model {
+public class Instance extends NewInstance {
 
-    private static final long serialVersionUID = -605793020763891332L;
-
-    private String namespaceId;
-
-    private String groupName;
-
-    private String serviceName;
+    private static final long serialVersionUID = -6481881580931739934L;
 
     private String instanceId;
 
     private String service;
 
-    private int port;
+    private Boolean valid;
 
-    private boolean healthy;
+    private Boolean marked;
 
-    private String ip;
+    private String instanceIdGenerator;
 
-    private String clusterName;
+    private Long instanceHeartBeatInterval;
 
-    private float weight;
+    private Long instanceHeartBeatTimeOut;
 
-    private boolean enabled;
-
-    private boolean valid;
-
-    private boolean marked;
-
-    private boolean ephemeral;
-
-    private Map<String, String> metadata;
-
-    public String getNamespaceId() {
-        return namespaceId;
-    }
-
-    public void setNamespaceId(String namespaceId) {
-        this.namespaceId = namespaceId;
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
+    private Long ipDeleteTimeout;
 
     public String getInstanceId() {
         return instanceId;
@@ -84,14 +51,6 @@ public class Instance implements Model {
 
     public void setInstanceId(String instanceId) {
         this.instanceId = instanceId;
-    }
-
-    public String getServiceName() {
-        return serviceName == null ? getService() : serviceName;
-    }
-
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
     }
 
     public String getService() {
@@ -104,127 +63,74 @@ public class Instance implements Model {
         return service;
     }
 
+    @Override
+    public String getServiceName() {
+        String serviceName = super.getServiceName();
+        return serviceName == null ? getService() : serviceName;
+    }
+
     public void setService(String service) {
         this.service = service;
     }
 
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public boolean isHealthy() {
-        return healthy;
-    }
-
-    public void setHealthy(boolean healthy) {
-        this.healthy = healthy;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public String getClusterName() {
-        return clusterName;
-    }
-
-    public void setClusterName(String clusterName) {
-        this.clusterName = clusterName;
-    }
-
-    public float getWeight() {
-        return weight;
-    }
-
-    public void setWeight(float weight) {
-        this.weight = weight;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public boolean isValid() {
+    public Boolean getValid() {
         return valid;
     }
 
-    public void setValid(boolean valid) {
+    public void setValid(Boolean valid) {
         this.valid = valid;
     }
 
-    public boolean isMarked() {
+    public Boolean getMarked() {
         return marked;
     }
 
-    public void setMarked(boolean marked) {
+    public void setMarked(Boolean marked) {
         this.marked = marked;
     }
 
-    public boolean isEphemeral() {
-        return ephemeral;
+    public String getInstanceIdGenerator() {
+        return instanceIdGenerator;
     }
 
-    public void setEphemeral(boolean ephemeral) {
-        this.ephemeral = ephemeral;
+    public void setInstanceIdGenerator(String instanceIdGenerator) {
+        this.instanceIdGenerator = instanceIdGenerator;
     }
 
-    public Map<String, String> getMetadata() {
-        return metadata;
+    public Long getInstanceHeartBeatInterval() {
+        return instanceHeartBeatInterval;
     }
 
-    public void setMetadata(Map<String, String> metadata) {
-        this.metadata = metadata;
+    public void setInstanceHeartBeatInterval(Long instanceHeartBeatInterval) {
+        this.instanceHeartBeatInterval = instanceHeartBeatInterval;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Instance instance)) return false;
-        return port == instance.port && healthy == instance.healthy && Float.compare(weight, instance.weight) == 0
-                && enabled == instance.enabled && valid == instance.valid && marked == instance.marked
-                && ephemeral == instance.ephemeral && Objects.equals(namespaceId, instance.namespaceId)
-                && Objects.equals(groupName, instance.groupName) && Objects.equals(instanceId, instance.instanceId)
-                && Objects.equals(serviceName, instance.serviceName) && Objects.equals(service, instance.service)
-                && Objects.equals(ip, instance.ip) && Objects.equals(clusterName, instance.clusterName)
-                && Objects.equals(metadata, instance.metadata);
+    public Long getInstanceHeartBeatTimeOut() {
+        return instanceHeartBeatTimeOut;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(namespaceId, groupName, instanceId, serviceName, service, port, healthy, ip, clusterName,
-                weight, enabled, valid, marked, ephemeral, metadata);
+    public void setInstanceHeartBeatTimeOut(Long instanceHeartBeatTimeOut) {
+        this.instanceHeartBeatTimeOut = instanceHeartBeatTimeOut;
     }
 
-    @Override
-    public String toString() {
-        return "Instance{" +
-                "namespaceId='" + namespaceId + '\'' +
-                ", groupName='" + groupName + '\'' +
-                ", instanceId='" + instanceId + '\'' +
-                ", serviceName='" + serviceName + '\'' +
-                ", service='" + service + '\'' +
-                ", port=" + port +
-                ", healthy=" + healthy +
-                ", ip='" + ip + '\'' +
-                ", clusterName='" + clusterName + '\'' +
-                ", weight=" + weight +
-                ", enabled=" + enabled +
-                ", valid=" + valid +
-                ", marked=" + marked +
-                ", ephemeral=" + ephemeral +
-                ", metadata=" + metadata +
-                '}';
+    public Long getIpDeleteTimeout() {
+        return ipDeleteTimeout;
+    }
+
+    public void setIpDeleteTimeout(Long ipDeleteTimeout) {
+        this.ipDeleteTimeout = ipDeleteTimeout;
+    }
+
+    public Instance from(Instance that) {
+        super.from(that);
+        this.instanceId = that.instanceId;
+        this.service = that.service;
+        this.valid = that.valid;
+        this.marked = that.marked;
+        this.instanceIdGenerator = that.instanceIdGenerator;
+        this.instanceHeartBeatInterval = that.instanceHeartBeatInterval;
+        this.instanceHeartBeatTimeOut = that.instanceHeartBeatTimeOut;
+        this.ipDeleteTimeout = that.ipDeleteTimeout;
+        return this;
     }
 }

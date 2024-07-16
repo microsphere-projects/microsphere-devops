@@ -19,9 +19,15 @@ package io.microsphere.nacos.client.v1.naming;
 import io.microsphere.nacos.client.http.HttpMethod;
 import io.microsphere.nacos.client.transport.OpenApiClient;
 import io.microsphere.nacos.client.transport.OpenApiRequest;
+import io.microsphere.nacos.client.v1.naming.model.BaseInstance;
+import io.microsphere.nacos.client.v1.naming.model.DeleteInstance;
+import io.microsphere.nacos.client.v1.naming.model.GenericInstance;
 import io.microsphere.nacos.client.v1.naming.model.Instance;
 import io.microsphere.nacos.client.v1.naming.model.InstancesList;
+import io.microsphere.nacos.client.v1.naming.model.NewInstance;
+import io.microsphere.nacos.client.v1.naming.model.QueryInstance;
 import io.microsphere.nacos.client.v1.naming.model.Service;
+import io.microsphere.nacos.client.v1.naming.model.UpdateInstance;
 
 import java.util.Set;
 
@@ -29,7 +35,6 @@ import static io.microsphere.nacos.client.http.HttpMethod.DELETE;
 import static io.microsphere.nacos.client.http.HttpMethod.GET;
 import static io.microsphere.nacos.client.http.HttpMethod.POST;
 import static io.microsphere.nacos.client.http.HttpMethod.PUT;
-import static io.microsphere.nacos.client.util.JsonUtils.toJSON;
 import static io.microsphere.nacos.client.util.OpenApiUtils.isOkResponse;
 import static io.microsphere.nacos.client.util.StringUtils.collectionToCommaDelimitedString;
 
@@ -50,20 +55,20 @@ public class OpenApiInstanceClient implements InstanceClient {
     }
 
     @Override
-    public boolean register(Instance instance) {
-        OpenApiRequest request = buildInstanceRequest(instance, POST);
+    public boolean register(NewInstance newInstance) {
+        OpenApiRequest request = requestBuilder(newInstance, POST).build();
         return responseMessage(request);
     }
 
     @Override
-    public boolean deregister(Instance instance) {
-        OpenApiRequest request = buildInstanceRequest(instance, DELETE);
+    public boolean deregister(DeleteInstance instance) {
+        OpenApiRequest request = requestBuilder(instance, DELETE).build();
         return responseMessage(request);
     }
 
     @Override
-    public boolean refresh(Instance instance) {
-        OpenApiRequest request = buildInstanceRequest(instance, PUT);
+    public boolean refresh(UpdateInstance updateInstance) {
+        OpenApiRequest request = requestBuilder(updateInstance, PUT).build();
         return responseMessage(request);
     }
 
@@ -80,27 +85,33 @@ public class OpenApiInstanceClient implements InstanceClient {
     }
 
     @Override
-    public Instance getInstance(Instance instance) {
-        OpenApiRequest request = buildInstanceRequest(instance, GET);
+    public Instance getInstance(QueryInstance queryInstance) {
+        OpenApiRequest request = requestBuilder(queryInstance, GET).build();
         return this.openApiClient.execute(request, Instance.class);
     }
 
-    private OpenApiRequest buildInstanceRequest(Instance instance, HttpMethod method) {
+    private OpenApiRequest.Builder requestBuilder(NewInstance instance, HttpMethod method) {
+        return requestBuilder((GenericInstance) instance, method)
+                .queryParameter("healthy", instance.getHealthy());
+    }
+
+    private OpenApiRequest.Builder requestBuilder(GenericInstance instance, HttpMethod method) {
+        return requestBuilder((BaseInstance) instance, method)
+                .queryParameter("weight", instance.getWeight())
+                .queryParameter("enabled", instance.getEnabled())
+                .queryParameter("ephemeral", instance.getEphemeral())
+                .queryParameter("metadata", instance.getMetadataAsJSON());
+    }
+
+    private OpenApiRequest.Builder requestBuilder(BaseInstance instance, HttpMethod method) {
         return OpenApiRequest.Builder.create("/v1/ns/instance")
                 .method(method)
                 .queryParameter("namespaceId", instance.getNamespaceId())
                 .queryParameter("groupName", instance.getGroupName())
                 .queryParameter("serviceName", instance.getServiceName())
                 .queryParameter("clusterName", instance.getClusterName())
-                .queryParameter("instanceId", instance.getInstanceId())
                 .queryParameter("ip", instance.getIp())
-                .queryParameter("port", instance.getPort())
-                .queryParameter("weight", instance.getWeight())
-                .queryParameter("enabled", instance.isEnabled())
-                .queryParameter("healthy", instance.isHealthy())
-                .queryParameter("ephemeral", instance.isEphemeral())
-                .queryParameter("metadata", toJSON(instance.getMetadata()))
-                .build();
+                .queryParameter("port", instance.getPort());
     }
 
     private boolean responseMessage(OpenApiRequest request) {

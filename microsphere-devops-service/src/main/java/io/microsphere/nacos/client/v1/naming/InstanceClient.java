@@ -17,9 +17,13 @@
 package io.microsphere.nacos.client.v1.naming;
 
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
+import io.microsphere.nacos.client.v1.naming.model.DeleteInstance;
 import io.microsphere.nacos.client.v1.naming.model.Instance;
 import io.microsphere.nacos.client.v1.naming.model.InstancesList;
+import io.microsphere.nacos.client.v1.naming.model.NewInstance;
+import io.microsphere.nacos.client.v1.naming.model.QueryInstance;
 import io.microsphere.nacos.client.v1.naming.model.Service;
+import io.microsphere.nacos.client.v1.naming.model.UpdateInstance;
 
 import java.util.Set;
 
@@ -36,7 +40,7 @@ import java.util.Set;
 public interface InstanceClient {
 
     /**
-     * Register a new {@link Instance} with parameters :
+     * Register a {@link NewInstance new ionstance} with parameters :
      * <table>
      * <thead>
      * <tr>
@@ -116,13 +120,13 @@ public interface InstanceClient {
      * </tbody>
      * </table>
      *
-     * @param instance a new {@link Instance}
+     * @param newInstance a new {@link Instance}
      * @return <code>true</code> if register successfully, otherwise <code>false</code>
      */
-    boolean register(Instance instance);
+    boolean register(NewInstance newInstance);
 
     /**
-     * Deregister a new {@link Instance} with parameters :
+     * Deregister a {@link DeleteInstance} with parameters :
      * <table>
      * <thead>
      * <tr>
@@ -178,13 +182,13 @@ public interface InstanceClient {
      * </tbody>
      * </table>
      *
-     * @param instance a new {@link Instance}
+     * @param deleteInstance a new {@link Instance}
      * @return <code>true</code> if deregister successfully, otherwise <code>false</code>
      */
-    boolean deregister(Instance instance);
+    boolean deregister(DeleteInstance deleteInstance);
 
     /**
-     * Refresh the registered {@link Instance} with parameters:
+     * Refresh the registered {@link UpdateInstance} with parameters:
      * <table>
      * <thead>
      * <tr>
@@ -258,10 +262,10 @@ public interface InstanceClient {
      * </tbody>
      * </table>
      *
-     * @param instance the existed {@link Instance}
+     * @param updateInstance the existed {@link Instance}
      * @return <code>true</code> if refresh successfully, otherwise <code>false</code>
      */
-    boolean refresh(Instance instance);
+    boolean refresh(UpdateInstance updateInstance);
 
     /**
      * Get the {@link InstancesList} of the specified namespaceId and serviceName
@@ -311,9 +315,8 @@ public interface InstanceClient {
      */
     InstancesList getInstancesList(String namespaceId, String groupName, String serviceName, Set<String> clusters, boolean healthyOnly);
 
-
     /**
-     * Get the {@link Instance} of the specified {@link Instance} with parameters :
+     * Get the {@link Instance} of the specified {@link QueryInstance} with parameters :
      * <table>
      * <thead>
      * <tr>
@@ -369,8 +372,10 @@ public interface InstanceClient {
      * </tbody>
      * </table>
      *
-     * @param instance
+     * @param queryInstance
      * @return
      */
-    Instance getInstance(Instance instance);
+    Instance getInstance(QueryInstance queryInstance);
+
+
 }
