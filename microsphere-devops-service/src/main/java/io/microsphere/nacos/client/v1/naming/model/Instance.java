@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * The model of Instance
+ * The {@link Model model} {@link Class} of Instance
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Model
@@ -30,16 +30,15 @@ import java.util.Objects;
  */
 public class Instance implements Model {
 
-
     private static final long serialVersionUID = -605793020763891332L;
 
     private String namespaceId;
 
     private String groupName;
 
-    private String instanceId;
-
     private String serviceName;
+
+    private String instanceId;
 
     private String service;
 
