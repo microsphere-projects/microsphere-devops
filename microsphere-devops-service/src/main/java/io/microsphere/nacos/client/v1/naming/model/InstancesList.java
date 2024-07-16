@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The model of {@link Instance Instances} List
+ * The {@link Model model} {@link Class} of {@link Instance Instances} List
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Model
