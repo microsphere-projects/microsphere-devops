@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
+import java.util.function.Function;
 
 /**
  * The Gson's {@link JsonDeserializer} abstract class provides the template method
@@ -60,11 +61,18 @@ public abstract class GsonDeserializer<T> implements JsonDeserializer<T> {
      * @return the field value as string if found,or <code>null</code>
      */
     protected String getString(JsonObject jsonObject, String fieldName) {
-        JsonElement fieldElement = jsonObject.get(fieldName);
-        if (fieldElement == null || fieldElement instanceof JsonNull) {
-            return null;
-        }
-        return fieldElement.getAsString();
+        return getFieldValue(jsonObject, fieldName, JsonElement::getAsString);
+    }
+
+    /**
+     * Get the float value from the {@link JsonObject} by field name
+     *
+     * @param jsonObject {@link JsonObject}
+     * @param fieldName  the field name
+     * @return the field value as float
+     */
+    protected float getFloat(JsonObject jsonObject, String fieldName) {
+        return getFieldValue(jsonObject, fieldName, JsonElement::getAsFloat);
     }
 
     /**
@@ -77,5 +85,13 @@ public abstract class GsonDeserializer<T> implements JsonDeserializer<T> {
     protected int getInt(JsonObject jsonObject, String fieldName) {
         JsonElement fieldElement = jsonObject.get(fieldName);
         return fieldElement.getAsInt();
+    }
+
+    protected <T> T getFieldValue(JsonObject jsonObject, String fieldName, Function<JsonElement, T> asTypeFunction) {
+        JsonElement fieldElement = jsonObject.get(fieldName);
+        if (fieldElement == null || fieldElement instanceof JsonNull) {
+            return null;
+        }
+        return asTypeFunction.apply(fieldElement);
     }
 }
