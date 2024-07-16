@@ -122,7 +122,7 @@ public class InstanceClientTest extends OpenApiTest {
         instance1.setNamespaceId(TEST_NAMESPACE_ID);
         BatchUpdateMetadataResult result = client.batchUpdateMetadata(Arrays.asList(instance1), singletonMap("test-key", "test-value"));
         assertFalse(result.getUpdated().isEmpty());
-        
+
         // Test deregister()
         DeleteInstance deleteInstance = new DeleteInstance().from(instance);
         assertTrue(client.deregister(deleteInstance));
