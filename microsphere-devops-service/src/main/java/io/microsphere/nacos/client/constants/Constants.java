@@ -134,4 +134,9 @@ public interface Constants {
      */
     String DEFAULT_CLUSTER_NAME = "DEFAULT";
 
+    /**
+     * the separator for service name between raw service name and group.
+     */
+    String GROUP_SERVICE_NAME_SEPARATOR = "@@";
+
 }
