@@ -20,7 +20,7 @@ import io.microsphere.nacos.client.common.model.Model;
 import io.microsphere.nacos.client.v1.server.ServerStatus;
 
 /**
- * The model of Server Metrics
+ * The {@link Model model} {@link Class} of Server Metrics
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Model
