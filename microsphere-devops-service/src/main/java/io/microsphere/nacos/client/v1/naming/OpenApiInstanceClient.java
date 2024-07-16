@@ -27,6 +27,7 @@ import io.microsphere.nacos.client.v1.naming.model.InstancesList;
 import io.microsphere.nacos.client.v1.naming.model.NewInstance;
 import io.microsphere.nacos.client.v1.naming.model.QueryInstance;
 import io.microsphere.nacos.client.v1.naming.model.Service;
+import io.microsphere.nacos.client.v1.naming.model.UpdateHealthInstance;
 import io.microsphere.nacos.client.v1.naming.model.UpdateInstance;
 
 import java.util.Set;
@@ -90,9 +91,28 @@ public class OpenApiInstanceClient implements InstanceClient {
         return this.openApiClient.execute(request, Instance.class);
     }
 
+    @Override
+    public boolean updateHealth(UpdateHealthInstance updateHealthInstance) {
+        OpenApiRequest request = buildRequest(updateHealthInstance, PUT);
+        return responseMessage(request);
+    }
+
     private OpenApiRequest.Builder requestBuilder(NewInstance instance, HttpMethod method) {
         return requestBuilder((GenericInstance) instance, method)
                 .queryParameter("healthy", instance.getHealthy());
+    }
+
+    private OpenApiRequest buildRequest(UpdateHealthInstance instance, HttpMethod method) {
+        return OpenApiRequest.Builder.create("/v1/ns/health/instance")
+                .method(method)
+                .queryParameter("namespaceId", instance.getNamespaceId())
+                .queryParameter("groupName", instance.getGroupName())
+                .queryParameter("serviceName", instance.getServiceName())
+                .queryParameter("clusterName", instance.getClusterName())
+                .queryParameter("ip", instance.getIp())
+                .queryParameter("port", instance.getPort())
+                .queryParameter("healthy", instance.isHealthy())
+                .build();
     }
 
     private OpenApiRequest.Builder requestBuilder(GenericInstance instance, HttpMethod method) {
