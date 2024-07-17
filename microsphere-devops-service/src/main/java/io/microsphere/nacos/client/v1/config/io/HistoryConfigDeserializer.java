@@ -78,7 +78,7 @@ public class HistoryConfigDeserializer extends GsonDeserializer<HistoryConfig> {
         String dataId = getString(jsonObject, DATA_ID_MEMBER_NAME);
         String content = getString(jsonObject, CONTENT_MEMBER_NAME);
         String revision = getString(jsonObject, REVISION_MEMBER_NAME);
-        Integer lastRevision = getInteger(jsonObject, LAST_REVISION_MEMBER_NAME);
+        Long lastRevision = getLong(jsonObject, LAST_REVISION_MEMBER_NAME);
         String appName = getString(jsonObject, APP_NAME_MEMBER_NAME);
         String md5 = getString(jsonObject, MD5_MEMBER_NAME);
         String operatorIp = getString(jsonObject, OPERATOR_IP_MEMBER_NAME);
@@ -94,7 +94,7 @@ public class HistoryConfigDeserializer extends GsonDeserializer<HistoryConfig> {
         historyConfig.setGroup(group);
         historyConfig.setDataId(dataId);
         historyConfig.setContent(content);
-        historyConfig.setRevision(Integer.parseInt(revision));
+        historyConfig.setRevision(Long.parseLong(revision));
         historyConfig.setLastRevision(lastRevision);
         historyConfig.setAppName(appName);
         historyConfig.setMd5(md5);
