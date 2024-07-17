@@ -22,6 +22,7 @@ import io.microsphere.nacos.client.io.DeserializationException;
 import io.microsphere.nacos.client.io.Deserializer;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 
 import static io.microsphere.nacos.client.ErrorCode.CLIENT_ERROR;
 import static io.microsphere.nacos.client.ErrorCode.DESERIALIZATION_ERROR;
@@ -55,7 +56,7 @@ public abstract class AbstractOpenApiClient implements OpenApiClient {
     }
 
     @Override
-    public <T extends Serializable> T execute(OpenApiRequest request, Class<T> payloadType) throws OpenApiClientException {
+    public <T> T execute(OpenApiRequest request, Type payloadType) throws OpenApiClientException {
         Deserializer deserializer = getDeserializer();
         T payload = null;
         try {
