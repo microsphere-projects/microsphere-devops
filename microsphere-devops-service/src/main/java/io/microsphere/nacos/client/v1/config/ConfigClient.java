@@ -300,7 +300,7 @@ public interface ConfigClient {
      * @param id     {@link Config#getId()  the id of Config}
      * @return {@link HistoryConfig} if found, otherwise <code>null</code>
      */
-    default HistoryConfig getPreviousHistoryConfig(String dataId, long id) {
+    default HistoryConfig getPreviousHistoryConfig(String dataId, String id) {
         return getPreviousHistoryConfig(DEFAULT_GROUP_NAME, dataId, id);
     }
 
@@ -313,7 +313,7 @@ public interface ConfigClient {
      * @param id     {@link Config#getId()  the id of Config}
      * @return {@link HistoryConfig} if found, otherwise <code>null</code>
      */
-    default HistoryConfig getPreviousHistoryConfig(String group, String dataId, long id) {
+    default HistoryConfig getPreviousHistoryConfig(String group, String dataId, String id) {
         return getPreviousHistoryConfig(null, group, dataId, id);
     }
 
@@ -327,6 +327,7 @@ public interface ConfigClient {
      * @param dataId      the data id of {@link Config}
      * @param id          {@link Config#getId()  the id of Config}
      * @return {@link HistoryConfig} if found, otherwise <code>null</code>
+     * @since Nacos 1.4.0
      */
-    HistoryConfig getPreviousHistoryConfig(String namespaceId, String group, String dataId, long id);
+    HistoryConfig getPreviousHistoryConfig(String namespaceId, String group, String dataId, String id);
 }
