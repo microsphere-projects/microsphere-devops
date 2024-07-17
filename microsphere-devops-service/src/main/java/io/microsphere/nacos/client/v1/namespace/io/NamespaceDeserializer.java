@@ -20,6 +20,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import io.microsphere.nacos.client.io.GsonDeserializer;
+import io.microsphere.nacos.client.v1.namespace.NamespaceClient;
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
 
 import java.lang.reflect.Type;
@@ -29,6 +30,7 @@ import java.lang.reflect.Type;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Namespace
+ * @see NamespaceClient#getNamespace(String)
  * @see GsonDeserializer
  * @since 1.0.0
  */
