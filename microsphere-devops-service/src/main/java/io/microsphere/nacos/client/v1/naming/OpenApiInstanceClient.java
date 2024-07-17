@@ -47,6 +47,7 @@ import static io.microsphere.nacos.client.http.HttpMethod.PUT;
 import static io.microsphere.nacos.client.util.JsonUtils.toJSON;
 import static io.microsphere.nacos.client.util.OpenApiUtils.isOkResponse;
 import static io.microsphere.nacos.client.util.StringUtils.collectionToCommaDelimitedString;
+import static io.microsphere.nacos.client.util.StringUtils.isBlank;
 import static io.microsphere.nacos.client.v1.naming.ConsistencyType.EPHEMERAL;
 import static java.lang.String.format;
 
@@ -99,13 +100,18 @@ public class OpenApiInstanceClient implements InstanceClient {
                 .queryParameter("clusters", collectionToCommaDelimitedString(clusters))
                 .queryParameter("healthyOnly", healthyOnly)
                 .build();
-        return this.openApiClient.execute(request, InstancesList.class);
+        InstancesList instancesList = this.openApiClient.execute(request, InstancesList.class);
+        List<Instance> instances = instancesList.getHosts();
+        completeInstance(instances, namespaceId, groupName, serviceName);
+        return instancesList;
     }
 
     @Override
     public Instance getInstance(QueryInstance queryInstance) {
         OpenApiRequest request = requestBuilder(queryInstance, GET).build();
-        return this.openApiClient.execute(request, Instance.class);
+        Instance instance = this.openApiClient.execute(request, Instance.class);
+        completeInstance(instance, queryInstance);
+        return instance;
     }
 
     @Override
@@ -216,6 +222,31 @@ public class OpenApiInstanceClient implements InstanceClient {
                 .queryParameter("clusterName", instance.getClusterName())
                 .queryParameter("ip", instance.getIp())
                 .queryParameter("port", instance.getPort());
+    }
+
+    private void completeInstance(Iterable<Instance> instances, String namespaceId, String groupName, String serviceName) {
+        for (Instance instance : instances) {
+            completeInstance(instance, namespaceId, groupName, serviceName);
+        }
+    }
+
+    private void completeInstance(Instance instance, BaseInstance baseInstance) {
+        String namespaceId = instance.getNamespaceId();
+        String groupName = instance.getGroupName();
+        String serviceName = instance.getServiceName();
+        completeInstance(instance, namespaceId, groupName, serviceName);
+    }
+
+    private void completeInstance(Instance instance, String namespaceId, String groupName, String serviceName) {
+        if (isBlank(instance.getNamespaceId())) {
+            instance.setNamespaceId(namespaceId);
+        }
+        if (isBlank(instance.getGroupName())) {
+            instance.setGroupName(groupName);
+        }
+        if (isBlank(instance.getServiceName())) {
+            instance.setServiceName(serviceName);
+        }
     }
 
     private boolean responseMessage(OpenApiRequest request) {
