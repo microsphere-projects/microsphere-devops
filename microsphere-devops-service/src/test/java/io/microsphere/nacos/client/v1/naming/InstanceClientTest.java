@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static io.microsphere.nacos.client.v1.naming.ServiceClientTest.TEST_CLUSTER;
+import static io.microsphere.nacos.client.v1.naming.ServiceClientTest.TEST_SERVICE_NAME;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonMap;
@@ -51,16 +53,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class InstanceClientTest extends OpenApiTest {
-
-    private static final String TEST_NAMESPACE_ID = "test";
-
-    private static final String TEST_GROUP_NAME = "test-group";
-
-    private static final String TEST_SERVICE_NAME = "test-service";
-
-    private static final String TEST_CLUSTER = "DEFAULT";
-
-    private static final Set<String> TEST_CLUSTERS = singleton(TEST_CLUSTER);
 
     @Test
     public void test() {
