@@ -32,12 +32,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static io.microsphere.nacos.client.v1.naming.ServiceClientTest.TEST_CLUSTER;
 import static io.microsphere.nacos.client.v1.naming.ServiceClientTest.TEST_SERVICE_NAME;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
 import static java.util.Collections.singletonMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
