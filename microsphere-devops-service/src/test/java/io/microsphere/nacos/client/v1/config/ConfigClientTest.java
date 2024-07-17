@@ -29,6 +29,7 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -80,7 +81,24 @@ public class ConfigClientTest extends OpenApiTest {
         assertEquals(ConfigClient.DEFAULT_PAGE_SIZE, page.getPageSize());
         List<HistoryConfig> historyConfigs = page.getElements();
         assertTrue(historyConfigs.size() > 1);
-        assertHistoryConfig(historyConfigs.get(0));
+        HistoryConfig historyConfig = historyConfigs.get(0);
+        assertHistoryConfig(historyConfig);
+
+        // test getHistoryConfig();
+        HistoryConfig historyConfig1 = client.getHistoryConfig(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID, historyConfig.getRevision());
+        assertHistoryConfig(historyConfig1);
+        assertEquals(historyConfig.getRevision(), historyConfig1.getRevision());
+        assertEquals(historyConfig.getNid(), historyConfig1.getNid());
+        assertEquals(historyConfig.getLastRevision(), historyConfig1.getLastRevision());
+        assertEquals(historyConfig.getDescription(), historyConfig1.getDescription());
+        assertEquals(historyConfig.getOperator(), historyConfig1.getOperator());
+        assertEquals(historyConfig.getOperatorIp(), historyConfig1.getOperatorIp());
+        assertEquals(historyConfig.getOperationType(), historyConfig1.getOperationType());
+        assertEquals(historyConfig.getCreatedTime(), historyConfig1.getCreatedTime());
+        assertEquals(historyConfig.getLastModifiedTime(), historyConfig1.getLastModifiedTime());
+        assertNull(historyConfig1.getDescription());
+        assertNotNull(historyConfig1.getMd5());
+        assertNotNull(historyConfig1.getContent());
     }
 
     private void assertHistoryConfig(HistoryConfig historyConfig) {
