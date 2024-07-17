@@ -43,6 +43,8 @@ public class OpenApiConfigClient implements ConfigClient {
 
     private static final String HISTORY_ENDPOINT = "/v1/cs/history";
 
+    private static final String HISTORY_PREVIOUS_ENDPOINT = "/v1/cs/history/previous";
+
     /**
      * The request parameter name of "tenant" a.k.a id of "namespace" for Nacos configuration: "tenant"
      */
@@ -138,6 +140,11 @@ public class OpenApiConfigClient implements ConfigClient {
      */
     private static final String REVISION_PARAM_NAME = "nid";
 
+    /**
+     * The request parameter name of history id for Nacos configuration : "nid"
+     */
+    private static final String ID_PARAM_NAME = "id";
+
     private final OpenApiClient openApiClient;
 
     public OpenApiConfigClient(OpenApiClient openApiClient) {
@@ -210,12 +217,15 @@ public class OpenApiConfigClient implements ConfigClient {
         OpenApiRequest request = historyConfigRequestBuilder(namespaceId, group, dataId, GET)
                 .queryParameter(REVISION_PARAM_NAME, revision)
                 .build();
-        return this.openApiClient.execute(request, HistoryConfig.class);
+        return responseHistoryConfig(request);
     }
 
     @Override
-    public HistoryConfig getPreviousHistoryConfig(String namespaceId, String group, String dataId, long id) {
-        return null;
+    public HistoryConfig getPreviousHistoryConfig(String namespaceId, String group, String dataId, String id) {
+        OpenApiRequest request = requestBuilder(HISTORY_PREVIOUS_ENDPOINT, namespaceId, group, dataId, GET)
+                .queryParameter(ID_PARAM_NAME, id)
+                .build();
+        return responseHistoryConfig(request);
     }
 
     private OpenApiRequest buildGetConfigRequest(String namespaceId, String group, String dataId, boolean showDetails) {
@@ -238,5 +248,9 @@ public class OpenApiConfigClient implements ConfigClient {
 
     private boolean responseBoolean(OpenApiRequest request) {
         return this.openApiClient.execute(request, boolean.class);
+    }
+
+    private HistoryConfig responseHistoryConfig(OpenApiRequest request) {
+        return this.openApiClient.execute(request, HistoryConfig.class);
     }
 }
