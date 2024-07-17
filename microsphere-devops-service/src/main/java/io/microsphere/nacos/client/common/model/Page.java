@@ -16,6 +16,7 @@
  */
 package io.microsphere.nacos.client.common.model;
 
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -28,7 +29,7 @@ import java.util.List;
  */
 public class Page<E> implements Model {
 
-    private static final long serialVersionUID = 8645374487393833831L;
+    private static final long serialVersionUID = 5930271718830258627L;
 
     private final int pageNumber;
 
