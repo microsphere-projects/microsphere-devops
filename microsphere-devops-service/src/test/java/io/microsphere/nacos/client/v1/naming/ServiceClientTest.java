@@ -25,8 +25,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 
-import static io.microsphere.nacos.client.v1.naming.ServiceClient.DEFAULT_PAGE_NUMBER;
-import static io.microsphere.nacos.client.v1.naming.ServiceClient.DEFAULT_PAGE_SIZE;
+import static io.microsphere.nacos.client.constants.Constants.PAGE_NUMBER;
+import static io.microsphere.nacos.client.constants.Constants.PAGE_SIZE;
 import static java.util.Collections.singletonMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -55,11 +55,11 @@ public class ServiceClientTest extends OpenApiTest {
         Page<String> page = client.getServiceNames(TEST_NAMESPACE_ID);
         List<String> serviceNames = page.getElements();
 
-        assertEquals(DEFAULT_PAGE_NUMBER, page.getPageNumber());
-        assertEquals(DEFAULT_PAGE_SIZE, page.getPageSize());
-        assertTrue(page.getTotalElements() > DEFAULT_PAGE_SIZE);
-        assertEquals(DEFAULT_PAGE_SIZE, page.getNumberOfElements());
-        assertEquals(DEFAULT_PAGE_SIZE, serviceNames.size());
+        assertEquals(PAGE_NUMBER, page.getPageNumber());
+        assertEquals(PAGE_SIZE, page.getPageSize());
+        assertTrue(page.getTotalElements() > PAGE_SIZE);
+        assertEquals(PAGE_SIZE, page.getNumberOfElements());
+        assertEquals(PAGE_SIZE, serviceNames.size());
 
 
         // Test getService()
