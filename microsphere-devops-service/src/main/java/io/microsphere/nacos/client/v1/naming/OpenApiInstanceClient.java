@@ -231,9 +231,9 @@ public class OpenApiInstanceClient implements InstanceClient {
     }
 
     private void completeInstance(Instance instance, BaseInstance baseInstance) {
-        String namespaceId = instance.getNamespaceId();
-        String groupName = instance.getGroupName();
-        String serviceName = instance.getServiceName();
+        String namespaceId = baseInstance.getNamespaceId();
+        String groupName = baseInstance.getGroupName();
+        String serviceName = baseInstance.getServiceName();
         completeInstance(instance, namespaceId, groupName, serviceName);
     }
 
