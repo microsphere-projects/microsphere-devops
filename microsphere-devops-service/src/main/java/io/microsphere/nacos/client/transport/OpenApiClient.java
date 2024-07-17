@@ -20,6 +20,7 @@ import io.microsphere.nacos.client.io.Deserializer;
 import io.microsphere.nacos.client.io.Serializer;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 
 /**
  * The Nacos Client for Open API
@@ -48,7 +49,7 @@ public interface OpenApiClient extends AutoCloseable {
      * @return the payload instance
      * @throws OpenApiClientException
      */
-    <T extends Serializable> T execute(OpenApiRequest request, Class<T> payloadType) throws OpenApiClientException;
+    <T> T execute(OpenApiRequest request, Type payloadType) throws OpenApiClientException;
 
     /**
      * Get the instance of {@link Serializer}
