@@ -4,7 +4,7 @@ import io.microsphere.devops.api.entity.Application
 import io.microsphere.devops.api.entity.ApplicationInstance
 import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.api.entity.Namespace
-import io.microsphere.devops.api.enums.ClusterType
+import io.microsphere.devops.api.entity.Namespace.Status
 import junit.framework.TestCase.assertEquals
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -37,14 +37,14 @@ class RepositoriesTest @Autowired constructor(
 
     @Test
     fun `Test ClusterRepository CRUD Operations`() {
-        for (type in ClusterType.values()) {
+        for (type in Cluster.Type.values()) {
             var cluster = Cluster(type.value, type, "http://127.0.0.1");
             cluster.description = type.description;
             clusterRepository.save(cluster);
         }
         entityManager.flush();
 
-        for (type in ClusterType.values()) {
+        for (type in Cluster.Type.values()) {
             var clusters = clusterRepository.findAllByType(type);
             assertThat(clusters).isNotNull();
             assertEquals(1, clusters.size);
@@ -59,7 +59,7 @@ class RepositoriesTest @Autowired constructor(
 
     @Test
     fun testRepositories() {
-        var cluster = Cluster("Nacos", ClusterType.NACOS, "http://localhost:8848");
+        var cluster = Cluster("Nacos", Cluster.Type.NACOS, "http://localhost:8848");
         cluster.description = "Cluster Description";
 
         var namespace = Namespace("test", Status.ACTIVE, cluster);
