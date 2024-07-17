@@ -62,6 +62,16 @@ public interface Constants {
     String ENCODING_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "encoding";
 
     /**
+     * The property name of the page number for Nacos Client: "microsphere.nacos.client.page-number"
+     */
+    String PAGE_NUMBER_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "page-number";
+
+    /**
+     * The property name of the page size for Nacos Client: "microsphere.nacos.client.page-size"
+     */
+    String PAGE_SIZE_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "page-size";
+
+    /**
      * The default value of the maximum number of connections for Nacos Client : 1000
      */
     int DEFAULT_MAX_CONNECTIONS = 1000;
@@ -85,6 +95,16 @@ public interface Constants {
      * The default value of the file encoding : "UTF-8"
      */
     String DEFAULT_ENCODING = "UTF-8";
+
+    /**
+     * Default page number : 1
+     */
+    int DEFAULT_PAGE_NUMBER = 1;
+
+    /**
+     * Default page size : 10
+     */
+    int DEFAULT_PAGE_SIZE = 10;
 
     /**
      * The maximum number of connections for Nacos Client
@@ -118,6 +138,20 @@ public interface Constants {
      * The encoding for Nacos Client
      */
     String ENCODING = getProperty(ENCODING_PROPERTY_NAME, DEFAULT_ENCODING);
+
+    /**
+     * The page number for Nacos Client, the default value is 1
+     *
+     * @see #DEFAULT_PAGE_NUMBER
+     */
+    int PAGE_NUMBER = getInteger(PAGE_NUMBER_PROPERTY_NAME, DEFAULT_PAGE_NUMBER);
+
+    /**
+     * The page size for Nacos Client, the default value is 10
+     *
+     * @see #DEFAULT_PAGE_SIZE
+     */
+    int PAGE_SIZE = getInteger(PAGE_SIZE_PROPERTY_NAME, DEFAULT_PAGE_SIZE);
 
     /**
      * The default namespace ID : "public"
