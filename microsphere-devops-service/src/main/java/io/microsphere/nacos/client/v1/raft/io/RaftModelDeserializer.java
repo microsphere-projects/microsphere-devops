@@ -21,6 +21,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import io.microsphere.nacos.client.io.Deserializer;
 import io.microsphere.nacos.client.io.GsonDeserializer;
+import io.microsphere.nacos.client.v1.raft.RaftClient;
 import io.microsphere.nacos.client.v1.raft.model.RaftModel;
 import io.microsphere.nacos.client.v1.raft.model.RaftPeer;
 
@@ -31,6 +32,8 @@ import java.lang.reflect.Type;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see RaftModel
+ * @see RaftClient#getRaftModel()
+ * @see GsonDeserializer
  * @since 1.0.0
  */
 public class RaftModelDeserializer extends GsonDeserializer<RaftModel> {
