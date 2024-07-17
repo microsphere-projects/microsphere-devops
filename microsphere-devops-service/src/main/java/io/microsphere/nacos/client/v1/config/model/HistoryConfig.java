@@ -33,32 +33,32 @@ public class HistoryConfig extends GenericConfig {
     /**
      * a.k.a "nid"
      */
-    private Integer revision;
+    private Long revision;
 
     /**
      * last "nid"
      */
-    private Integer lastRevision;
+    private Long lastRevision;
 
     private ConfigOperationType operationType;
 
-    public Integer getNid() {
+    public Long getNid() {
         return getRevision();
     }
 
-    public Integer getRevision() {
+    public Long getRevision() {
         return revision;
     }
 
-    public Integer getLastRevision() {
+    public Long getLastRevision() {
         return lastRevision;
     }
 
-    public void setLastRevision(Integer lastRevision) {
+    public void setLastRevision(Long lastRevision) {
         this.lastRevision = lastRevision;
     }
 
-    public void setRevision(Integer revision) {
+    public void setRevision(Long revision) {
         this.revision = revision;
     }
 
