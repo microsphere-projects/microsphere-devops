@@ -16,12 +16,16 @@
  */
 package io.microsphere.nacos.client.v1.config;
 
+import io.microsphere.nacos.client.common.model.Page;
 import io.microsphere.nacos.client.constants.Constants;
 import io.microsphere.nacos.client.v1.config.model.Config;
+import io.microsphere.nacos.client.v1.config.model.HistoryConfig;
 import io.microsphere.nacos.client.v1.config.model.NewConfig;
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
 
 import static io.microsphere.nacos.client.constants.Constants.DEFAULT_GROUP_NAME;
+import static io.microsphere.nacos.client.constants.Constants.PAGE_NUMBER;
+import static io.microsphere.nacos.client.constants.Constants.PAGE_SIZE;
 
 /**
  * The Nacos Client for {@link Config}
@@ -107,8 +111,8 @@ public interface ConfigClient {
     }
 
     /**
-     * Publish(or Update) the content of {@link Config} with the specified {@code namespaceId}, {@code dataId},
-     * {@code group}
+     * Publish(or Update) the content of {@link Config} with the specified {@code namespaceId}, {@code group} and
+     * {@code dataId}
      *
      * @param namespaceId {@link Namespace#getNamespaceId() the id of namespace}, a.k.a the "tenant" (optional).
      *                    if not specified, the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace} will be used.
@@ -122,8 +126,8 @@ public interface ConfigClient {
     }
 
     /**
-     * Publish(or Update) the content of {@link Config} with the specified {@code namespaceId}, {@code dataId},
-     * {@code group} and {@code configType}
+     * Publish(or Update) the content of {@link Config} with the specified {@code namespaceId}, {@code group},
+     * {@code dataId}, and {@code configType}
      *
      * @param namespaceId {@link Namespace#getNamespaceId() the id of namespace}, a.k.a the "tenant" (optional).
      *                    if not specified, the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace} will be used.
@@ -185,4 +189,133 @@ public interface ConfigClient {
      * @return <code>true</code> if delete successfully, otherwise <code>false</code>
      */
     boolean deleteConfig(String namespaceId, String group, String dataId);
+
+    /**
+     * Get the pagination of {@link HistoryConfig HistoryConfigs} by the specified namespaceId and group and dataId
+     * using the configured page number and page size, from the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace}
+     * and the {@link Constants#DEFAULT_GROUP_NAME "DEFAULT_GROUP" group}
+     *
+     * @param dataId the data id of {@link Config}
+     * @return non-null {@link Page<HistoryConfig>}
+     */
+    default Page<HistoryConfig> getHistoryConfigs(String dataId) {
+        return getHistoryConfigs(DEFAULT_GROUP_NAME, dataId);
+    }
+
+    /**
+     * Get the pagination of {@link HistoryConfig HistoryConfigs} by the specified namespaceId and group and dataId
+     * using the configured page number and page size, from the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace}
+     *
+     * @param group  the group of {@link Config}
+     * @param dataId the data id of {@link Config}
+     * @return non-null {@link Page<HistoryConfig>}
+     */
+    default Page<HistoryConfig> getHistoryConfigs(String group, String dataId) {
+        return getHistoryConfigs(null, group, dataId);
+    }
+
+    /**
+     * Get the pagination of {@link HistoryConfig HistoryConfigs} by the specified namespaceId and group and dataId
+     * using the configured page number and page size
+     *
+     * @param namespaceId {@link Namespace#getNamespaceId() the id of namespace}, a.k.a the "tenant" (optional).
+     *                    if not specified, the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace} will be used.
+     * @param group       the group of {@link Config}
+     * @param dataId      the data id of {@link Config}
+     * @return non-null {@link Page<HistoryConfig>}
+     */
+    default Page<HistoryConfig> getHistoryConfigs(String namespaceId, String group, String dataId) {
+        return getHistoryConfigs(namespaceId, group, dataId, PAGE_NUMBER, PAGE_SIZE);
+    }
+
+    /**
+     * Get the pagination of {@link HistoryConfig HistoryConfigs} by the specified namespaceId and group and dataId
+     *
+     * @param namespaceId {@link Namespace#getNamespaceId() the id of namespace}, a.k.a the "tenant" (optional).
+     *                    if not specified, the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace} will be used.
+     * @param group       the group of {@link Config}
+     * @param dataId      the data id of {@link Config}
+     * @param pageNumber  the number of page, starts with 1
+     * @param pageSize    the expected size of one page
+     * @return non-null {@link Page<HistoryConfig>}
+     */
+    Page<HistoryConfig> getHistoryConfigs(String namespaceId, String group, String dataId, int pageNumber, int pageSize);
+
+    /**
+     * Get the {@link HistoryConfig HistoryConfig} by the specified {@code namespaceId}, {@code group}, {@code dataId}
+     * and {@code revision} from the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace} and the
+     * {@link Constants#DEFAULT_GROUP_NAME "DEFAULT_GROUP" group}
+     *
+     * @param dataId   the data id of {@link Config}
+     * @param revision {@link HistoryConfig#getRevision() the revision of HistoryConfig}
+     * @return {@link HistoryConfig} if found, otherwise <code>null</code>
+     */
+    default HistoryConfig getHistoryConfig(String dataId, long revision) {
+        return getHistoryConfig(DEFAULT_GROUP_NAME, dataId, revision);
+    }
+
+    /**
+     * Get the {@link HistoryConfig HistoryConfig} by the specified {@code namespaceId}, {@code group}, {@code dataId}
+     * and {@code revision} from the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace}
+     *
+     * @param group    the group of {@link Config}
+     * @param dataId   the data id of {@link Config}
+     * @param revision {@link HistoryConfig#getRevision() the revision of HistoryConfig}
+     * @return {@link HistoryConfig} if found, otherwise <code>null</code>
+     */
+    default HistoryConfig getHistoryConfig(String group, String dataId, long revision) {
+        return getHistoryConfig(null, group, dataId, revision);
+    }
+
+    /**
+     * Get the {@link HistoryConfig HistoryConfig} by the specified {@code namespaceId}, {@code group}, {@code dataId}
+     * and {@code revision}
+     *
+     * @param namespaceId {@link Namespace#getNamespaceId() the id of namespace}, a.k.a the "tenant" (optional).
+     *                    if not specified, the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace} will be used.
+     * @param group       the group of {@link Config}
+     * @param dataId      the data id of {@link Config}
+     * @param revision    {@link HistoryConfig#getRevision() the revision of HistoryConfig}
+     * @return {@link HistoryConfig} if found, otherwise <code>null</code>
+     */
+    HistoryConfig getHistoryConfig(String namespaceId, String group, String dataId, long revision);
+
+    /**
+     * Get the {@link HistoryConfig HistoryConfig} by the specified {@code namespaceId}, {@code group}, {@code dataId}
+     * and {@code id} from the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace} and the
+     * {@link Constants#DEFAULT_GROUP_NAME "DEFAULT_GROUP" group}
+     *
+     * @param dataId the data id of {@link Config}
+     * @param id     {@link Config#getId()  the id of Config}
+     * @return {@link HistoryConfig} if found, otherwise <code>null</code>
+     */
+    default HistoryConfig getPreviousHistoryConfig(String dataId, long id) {
+        return getPreviousHistoryConfig(DEFAULT_GROUP_NAME, dataId, id);
+    }
+
+    /**
+     * Get the {@link HistoryConfig HistoryConfig} by the specified {@code namespaceId}, {@code group}, {@code dataId}
+     * and {@code id} from the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace}
+     *
+     * @param group  the group of {@link Config}
+     * @param dataId the data id of {@link Config}
+     * @param id     {@link Config#getId()  the id of Config}
+     * @return {@link HistoryConfig} if found, otherwise <code>null</code>
+     */
+    default HistoryConfig getPreviousHistoryConfig(String group, String dataId, long id) {
+        return getPreviousHistoryConfig(null, group, dataId, id);
+    }
+
+    /**
+     * Get the {@link HistoryConfig HistoryConfig} by the specified {@code namespaceId}, {@code group}, {@code dataId}
+     * and {@code id}
+     *
+     * @param namespaceId {@link Namespace#getNamespaceId() the id of namespace}, a.k.a the "tenant" (optional).
+     *                    if not specified, the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace} will be used.
+     * @param group       the group of {@link Config}
+     * @param dataId      the data id of {@link Config}
+     * @param id          {@link Config#getId()  the id of Config}
+     * @return {@link HistoryConfig} if found, otherwise <code>null</code>
+     */
+    HistoryConfig getPreviousHistoryConfig(String namespaceId, String group, String dataId, long id);
 }
