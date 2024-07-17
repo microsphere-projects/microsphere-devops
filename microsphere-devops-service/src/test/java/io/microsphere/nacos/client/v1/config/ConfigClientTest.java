@@ -18,6 +18,8 @@ package io.microsphere.nacos.client.v1.config;
 
 import io.microsphere.nacos.client.OpenApiTest;
 import io.microsphere.nacos.client.common.model.Page;
+import io.microsphere.nacos.client.v1.config.model.Config;
+import io.microsphere.nacos.client.v1.config.model.GenericConfig;
 import io.microsphere.nacos.client.v1.config.model.HistoryConfig;
 import io.microsphere.nacos.client.v1.config.model.NewConfig;
 import org.junit.jupiter.api.Test;
@@ -99,20 +101,50 @@ public class ConfigClientTest extends OpenApiTest {
         assertNull(historyConfig1.getDescription());
         assertNotNull(historyConfig1.getMd5());
         assertNotNull(historyConfig1.getContent());
+
+        // Test getConfig()
+        Config config = client.getConfig(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID);
+        String id = config.getId();
+        assertConfig(config);
+
+        // Test getPreviousHistoryConfig()
+        HistoryConfig historyConfig2 = client.getPreviousHistoryConfig(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID, id);
+        assertEquals(config.getNamespaceId(), historyConfig2.getNamespaceId());
+        assertEquals(config.getGroup(), historyConfig2.getGroup());
+        assertEquals(config.getDataId(), historyConfig2.getDataId());
+        assertEquals(config.getAppName(), historyConfig2.getAppName());
     }
 
     private void assertHistoryConfig(HistoryConfig historyConfig) {
-        assertEquals(TEST_NAMESPACE_ID, historyConfig.getNamespaceId());
-        assertEquals(TEST_GROUP_NAME, historyConfig.getGroup());
-        assertEquals(TEST_DATA_ID, historyConfig.getDataId());
-        assertEquals(APP_NAME, historyConfig.getAppName());
+        assertGenericConfig(historyConfig);
         assertNotNull(historyConfig.getRevision());
         assertNotNull(historyConfig.getLastRevision());
-        assertNotNull(historyConfig.getOperatorIp());
-        assertNotNull(historyConfig.getOperator());
         assertNotNull(historyConfig.getOperationType());
-        assertNotNull(historyConfig.getCreatedTime());
-        assertNotNull(historyConfig.getLastModifiedTime());
+    }
+
+    private void assertConfig(Config config) {
+        assertGenericConfig(config);
+        assertNotNull(config.getId());
+        assertNotNull(config.getContent());
+        assertNotNull(config.getDescription());
+        assertNotNull(config.getTags());
+        assertNotNull(config.getMd5());
+        assertNotNull(config.getUse());
+        assertNotNull(config.getEffect());
+        assertNotNull(config.getSchema());
+        assertNotNull(config.getType());
+
+    }
+
+    private void assertGenericConfig(GenericConfig config) {
+        assertEquals(TEST_NAMESPACE_ID, config.getNamespaceId());
+        assertEquals(TEST_GROUP_NAME, config.getGroup());
+        assertEquals(TEST_DATA_ID, config.getDataId());
+        assertEquals(APP_NAME, config.getAppName());
+        assertNotNull(config.getOperatorIp());
+        assertNotNull(config.getOperator());
+        assertNotNull(config.getCreatedTime());
+        assertNotNull(config.getLastModifiedTime());
     }
 
     private NewConfig createNewConfig() {
