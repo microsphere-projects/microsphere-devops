@@ -18,8 +18,8 @@ package io.microsphere.nacos.client.v1.auth;
 
 import io.microsphere.nacos.client.NacosClientConfig;
 import io.microsphere.nacos.client.OpenApiTest;
-import io.microsphere.nacos.client.common.auth.model.Authentication;
 import io.microsphere.nacos.client.common.auth.OpenApiAuthenticationClient;
+import io.microsphere.nacos.client.common.auth.model.Authentication;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
