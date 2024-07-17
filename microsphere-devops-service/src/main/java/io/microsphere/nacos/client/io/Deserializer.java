@@ -22,6 +22,7 @@ import io.microsphere.nacos.client.transport.OpenApiClient;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.lang.reflect.Type;
 
 import static io.microsphere.nacos.client.constants.Constants.ENCODING;
 import static io.microsphere.nacos.client.util.IOUtils.readAsString;
@@ -44,7 +45,7 @@ public interface Deserializer {
      * @return the deserialized object
      * @throws DeserializationException
      */
-    default <T extends Serializable> T deserialize(InputStream inputStream, Class<T> deserializedType) throws DeserializationException {
+    default <T> T deserialize(InputStream inputStream, Type deserializedType) throws DeserializationException {
         String content = null;
         try {
             content = readAsString(inputStream, getEncoding());
@@ -62,7 +63,7 @@ public interface Deserializer {
      * @return the deserialized object
      * @throws DeserializationException
      */
-    <T extends Serializable> T deserialize(String content, Class<T> deserializedType) throws DeserializationException;
+    <T> T deserialize(String content, Type deserializedType) throws DeserializationException;
 
 
     /**
