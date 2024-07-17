@@ -17,13 +17,18 @@
 package io.microsphere.nacos.client.v1.config;
 
 import io.microsphere.nacos.client.OpenApiTest;
+import io.microsphere.nacos.client.common.model.Page;
+import io.microsphere.nacos.client.v1.config.model.HistoryConfig;
 import io.microsphere.nacos.client.v1.config.model.NewConfig;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -68,6 +73,28 @@ public class ConfigClientTest extends OpenApiTest {
         // test publishConfigContent() to update the content
         assertTrue(client.publishConfigContent(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID, "Update Content"));
 
+        // test getHistoryConfigs()
+        Page<HistoryConfig> page = client.getHistoryConfigs(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID);
+        assertTrue(page.isFirst());
+        assertEquals(1, page.getPageNumber());
+        assertEquals(ConfigClient.DEFAULT_PAGE_SIZE, page.getPageSize());
+        List<HistoryConfig> historyConfigs = page.getElements();
+        assertTrue(historyConfigs.size() > 1);
+        assertHistoryConfig(historyConfigs.get(0));
+    }
+
+    private void assertHistoryConfig(HistoryConfig historyConfig) {
+        assertEquals(TEST_NAMESPACE_ID, historyConfig.getNamespaceId());
+        assertEquals(TEST_GROUP_NAME, historyConfig.getGroup());
+        assertEquals(TEST_DATA_ID, historyConfig.getDataId());
+        assertEquals(APP_NAME, historyConfig.getAppName());
+        assertNotNull(historyConfig.getRevision());
+        assertNotNull(historyConfig.getLastRevision());
+        assertNotNull(historyConfig.getOperatorIp());
+        assertNotNull(historyConfig.getOperator());
+        assertNotNull(historyConfig.getOperationType());
+        assertNotNull(historyConfig.getCreatedTime());
+        assertNotNull(historyConfig.getLastModifiedTime());
     }
 
     private NewConfig createNewConfig() {

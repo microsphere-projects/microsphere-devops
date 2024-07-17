@@ -166,24 +166,13 @@ public class OpenApiConfigClient implements ConfigClient {
         String schema = newConfig.getSchema();
         ConfigType configType = newConfig.getType();
         String type = configType == null ? null : configType.getValue();
-        OpenApiRequest request = requestBuilder(namespaceId, group, dataId, POST)
-                .queryParameter(CONTENT_PARAM_NAME, content)
-                .queryParameter(TAGS_PARAM_NAME, tags)
-                .queryParameter(APP_NAME_PARAM_NAME, appName)
-                .queryParameter(OPERATOR_PARAM_NAME, operator)
-                .queryParameter(DESCRIPTION_PARAM_NAME, description)
-                .queryParameter(USE_PARAM_NAME, use)
-                .queryParameter(EFFECT_PARAM_NAME, effect)
-                .queryParameter(SCHEMA_PARAM_NAME, schema)
-                .queryParameter(TYPE_PARAM_NAME, type)
-                .build();
+        OpenApiRequest request = configRequestBuilder(namespaceId, group, dataId, POST).queryParameter(CONTENT_PARAM_NAME, content).queryParameter(TAGS_PARAM_NAME, tags).queryParameter(APP_NAME_PARAM_NAME, appName).queryParameter(OPERATOR_PARAM_NAME, operator).queryParameter(DESCRIPTION_PARAM_NAME, description).queryParameter(USE_PARAM_NAME, use).queryParameter(EFFECT_PARAM_NAME, effect).queryParameter(SCHEMA_PARAM_NAME, schema).queryParameter(TYPE_PARAM_NAME, type).build();
         return responseBoolean(request);
     }
 
     @Override
     public boolean deleteConfig(String namespaceId, String group, String dataId) {
-        OpenApiRequest request = requestBuilder(namespaceId, group, dataId, DELETE)
-                .build();
+        OpenApiRequest request = configRequestBuilder(namespaceId, group, dataId, DELETE).build();
         return responseBoolean(request);
     }
 
@@ -199,12 +188,16 @@ public class OpenApiConfigClient implements ConfigClient {
             throw new IllegalArgumentException("The argument 'pageSize' must less than or equal 1");
         }
 
-        OpenApiRequest request = requestBuilder(namespaceId, group, dataId, GET)
+        OpenApiRequest request = historyConfigRequestBuilder(namespaceId, group, dataId, GET)
                 .queryParameter(SEARCH_PARAM_NAME, SEARCH_PARAM_VALUE)
                 .queryParameter(PAGE_NUMBER_PARAM_NAME, pageNumber)
                 .queryParameter(PAGE_SIZE_PARAM_NAME, pageSize)
                 .build();
-        return this.openApiClient.execute(request, HistoryConfigPage.class);
+
+        HistoryConfigPage page = this.openApiClient.execute(request, HistoryConfigPage.class);
+        page.setPageNumber(pageNumber);
+        page.setPageSize(pageSize);
+        return page;
     }
 
     @Override
@@ -218,17 +211,21 @@ public class OpenApiConfigClient implements ConfigClient {
     }
 
     private OpenApiRequest buildGetConfigRequest(String namespaceId, String group, String dataId, boolean showDetails) {
-        return requestBuilder(namespaceId, group, dataId, GET)
+        return configRequestBuilder(namespaceId, group, dataId, GET)
                 .queryParameter(SHOW_PARAM_NAME, showDetails ? "all" : null)
                 .build();
     }
 
-    private OpenApiRequest.Builder requestBuilder(String namespaceId, String group, String dataId, HttpMethod method) {
-        return OpenApiRequest.Builder.create(CONFIG_ENDPOINT)
-                .method(method)
-                .queryParameter(TENANT_PARAM_NAME, namespaceId)
-                .queryParameter(GROUP_PARAM_NAME, group)
-                .queryParameter(DATA_ID_PARAM_NAME, dataId);
+    private OpenApiRequest.Builder historyConfigRequestBuilder(String namespaceId, String group, String dataId, HttpMethod method) {
+        return requestBuilder(HISTORY_ENDPOINT, namespaceId, group, dataId, method);
+    }
+
+    private OpenApiRequest.Builder configRequestBuilder(String namespaceId, String group, String dataId, HttpMethod method) {
+        return requestBuilder(CONFIG_ENDPOINT, namespaceId, group, dataId, method);
+    }
+
+    private OpenApiRequest.Builder requestBuilder(String endpoint, String namespaceId, String group, String dataId, HttpMethod method) {
+        return OpenApiRequest.Builder.create(endpoint).method(method).queryParameter(TENANT_PARAM_NAME, namespaceId).queryParameter(GROUP_PARAM_NAME, group).queryParameter(DATA_ID_PARAM_NAME, dataId);
     }
 
     private boolean responseBoolean(OpenApiRequest request) {

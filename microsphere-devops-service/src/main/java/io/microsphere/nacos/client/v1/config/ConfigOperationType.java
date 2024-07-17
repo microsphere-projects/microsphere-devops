@@ -43,7 +43,7 @@ public enum ConfigOperationType {
 
     public static ConfigOperationType of(String value) {
         for (ConfigOperationType type : values()) {
-            if (type.getValue().equals(value)) {
+            if (type.getValue().equals(value.trim())) {
                 return type;
             }
         }

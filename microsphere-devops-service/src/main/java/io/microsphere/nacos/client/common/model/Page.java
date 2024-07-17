@@ -120,7 +120,7 @@ public class Page<E> implements Model {
      * @return if the current {@link Page} is the first one, return <code>true</code>, otherwise <code>false</code>
      */
     public boolean isFirst() {
-        return pageNumber == 0;
+        return pageNumber == 1;
     }
 
     /**

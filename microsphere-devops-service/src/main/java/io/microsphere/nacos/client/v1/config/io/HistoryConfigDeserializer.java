@@ -68,7 +68,7 @@ public class HistoryConfigDeserializer extends GsonDeserializer<HistoryConfig> {
     /**
      * e.g : 2010-05-05T00:00:00.000+08:00
      */
-    private static final String DATE_FORMAT = "YYYY-MM-DD'T'HH:mm::ss.SSSXXX";
+    private static final String DATE_FORMAT = "YYYY-MM-DD'T'HH:mm:ss.SSSXXX";
 
     @Override
     protected HistoryConfig deserialize(JsonElement json, Type typeOfT) throws JsonParseException {
