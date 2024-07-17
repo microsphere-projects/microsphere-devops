@@ -147,12 +147,17 @@ public interface ConfigClient {
      * @return <code>true</code> if publish successfully, otherwise <code>false</code>
      */
     default boolean publishConfigContent(String namespaceId, String group, String dataId, String content, ConfigType configType) {
-        NewConfig newConfig = new NewConfig();
-        newConfig.setNamespaceId(namespaceId);
-        newConfig.setGroup(group);
-        newConfig.setDataId(dataId);
+        NewConfig newConfig = getConfig(namespaceId, group, dataId);
+        if (newConfig == null) { // Not Found
+            newConfig = new NewConfig();
+            newConfig.setNamespaceId(namespaceId);
+            newConfig.setGroup(group);
+            newConfig.setDataId(dataId);
+        }
         newConfig.setContent(content);
-        newConfig.setType(configType);
+        if (configType != null) {
+            newConfig.setType(configType);
+        }
         return publishConfig(newConfig);
     }
 

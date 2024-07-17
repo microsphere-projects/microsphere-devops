@@ -23,10 +23,10 @@ import io.microsphere.nacos.client.v1.config.ConfigOperationType;
  * The {@link Model model} {@link Class} for Nacos History Configuration
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see GenericConfig
+ * @see BaseConfig
  * @since 1.0.0
  */
-public class HistoryConfig extends GenericConfig {
+public class HistoryConfig extends BaseConfig {
 
     private static final long serialVersionUID = -3283127326267383094L;
 

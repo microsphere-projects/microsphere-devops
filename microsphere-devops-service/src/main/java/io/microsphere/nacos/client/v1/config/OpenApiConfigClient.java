@@ -159,7 +159,7 @@ public class OpenApiConfigClient implements ConfigClient {
 
     @Override
     public Config getConfig(String namespaceId, String group, String dataId) {
-        OpenApiRequest request = buildGetConfigRequest(namespaceId, group, dataId, false);
+        OpenApiRequest request = buildGetConfigRequest(namespaceId, group, dataId, true);
         return openApiClient.execute(request, Config.class);
     }
 
@@ -178,7 +178,16 @@ public class OpenApiConfigClient implements ConfigClient {
         String schema = newConfig.getSchema();
         ConfigType configType = newConfig.getType();
         String type = configType == null ? null : configType.getValue();
-        OpenApiRequest request = configRequestBuilder(namespaceId, group, dataId, POST).queryParameter(CONTENT_PARAM_NAME, content).queryParameter(TAGS_PARAM_NAME, tags).queryParameter(APP_NAME_PARAM_NAME, appName).queryParameter(OPERATOR_PARAM_NAME, operator).queryParameter(DESCRIPTION_PARAM_NAME, description).queryParameter(USE_PARAM_NAME, use).queryParameter(EFFECT_PARAM_NAME, effect).queryParameter(SCHEMA_PARAM_NAME, schema).queryParameter(TYPE_PARAM_NAME, type).build();
+        OpenApiRequest request = configRequestBuilder(namespaceId, group, dataId, POST)
+                .queryParameter(CONTENT_PARAM_NAME, content)
+                .queryParameter(TAGS_PARAM_NAME, tags)
+                .queryParameter(APP_NAME_PARAM_NAME, appName)
+                .queryParameter(OPERATOR_PARAM_NAME, operator)
+                .queryParameter(DESCRIPTION_PARAM_NAME, description)
+                .queryParameter(USE_PARAM_NAME, use)
+                .queryParameter(EFFECT_PARAM_NAME, effect)
+                .queryParameter(SCHEMA_PARAM_NAME, schema)
+                .queryParameter(TYPE_PARAM_NAME, type).build();
         return responseBoolean(request);
     }
 
@@ -243,7 +252,10 @@ public class OpenApiConfigClient implements ConfigClient {
     }
 
     private OpenApiRequest.Builder requestBuilder(String endpoint, String namespaceId, String group, String dataId, HttpMethod method) {
-        return OpenApiRequest.Builder.create(endpoint).method(method).queryParameter(TENANT_PARAM_NAME, namespaceId).queryParameter(GROUP_PARAM_NAME, group).queryParameter(DATA_ID_PARAM_NAME, dataId);
+        return OpenApiRequest.Builder.create(endpoint).method(method)
+                .queryParameter(TENANT_PARAM_NAME, namespaceId)
+                .queryParameter(GROUP_PARAM_NAME, group)
+                .queryParameter(DATA_ID_PARAM_NAME, dataId);
     }
 
     private boolean responseBoolean(OpenApiRequest request) {

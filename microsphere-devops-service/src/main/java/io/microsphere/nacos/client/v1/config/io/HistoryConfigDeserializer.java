@@ -16,7 +16,6 @@
  */
 package io.microsphere.nacos.client.v1.config.io;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import io.microsphere.nacos.client.io.GsonDeserializer;
@@ -37,23 +36,11 @@ import java.text.SimpleDateFormat;
  * @see ConfigClient#getHistoryConfigs(String, String, String, int, int)
  * @since 1.0.0
  */
-public class HistoryConfigDeserializer extends GsonDeserializer<HistoryConfig> {
-
-    private static final String NAMESPACE_ID_MEMBER_NAME = "tenant";
-
-    private static final String GROUP_MEMBER_NAME = "group";
-
-    private static final String DATA_ID_MEMBER_NAME = "dataId";
+public class HistoryConfigDeserializer extends BaseConfigDeserializer<HistoryConfig> {
 
     private static final String REVISION_MEMBER_NAME = "id";
 
     private static final String LAST_REVISION_MEMBER_NAME = "lastId";
-
-    private static final String APP_NAME_MEMBER_NAME = "appName";
-
-    private static final String MD5_MEMBER_NAME = "md5";
-
-    private static final String CONTENT_MEMBER_NAME = "content";
 
     private static final String OPERATOR_IP_MEMBER_NAME = "srcIp";
 
@@ -71,35 +58,17 @@ public class HistoryConfigDeserializer extends GsonDeserializer<HistoryConfig> {
     private static final String DATE_FORMAT = "YYYY-MM-DD'T'HH:mm:ss.SSSXXX";
 
     @Override
-    protected HistoryConfig deserialize(JsonElement json, Type typeOfT) throws JsonParseException {
-        JsonObject jsonObject = json.getAsJsonObject();
-        String namespaceId = getString(jsonObject, NAMESPACE_ID_MEMBER_NAME);
-        String group = getString(jsonObject, GROUP_MEMBER_NAME);
-        String dataId = getString(jsonObject, DATA_ID_MEMBER_NAME);
-        String content = getString(jsonObject, CONTENT_MEMBER_NAME);
+    protected void deserialize(JsonObject jsonObject, HistoryConfig historyConfig, Type typeOfT) throws JsonParseException {
         String revision = getString(jsonObject, REVISION_MEMBER_NAME);
         Long lastRevision = getLong(jsonObject, LAST_REVISION_MEMBER_NAME);
-        String appName = getString(jsonObject, APP_NAME_MEMBER_NAME);
-        String md5 = getString(jsonObject, MD5_MEMBER_NAME);
-        String operatorIp = getString(jsonObject, OPERATOR_IP_MEMBER_NAME);
-        String operator = getString(jsonObject, OPERATOR_MEMBER_NAME);
         String operationType = getString(jsonObject, CONFIG_OPERATION_TYPE_MEMBER_NAME);
         String createdTime = getString(jsonObject, CREATED_TIME_TYPE_MEMBER_NAME);
         String lastModifiedTime = getString(jsonObject, LAST_MODIFIED_TIME_TYPE_MEMBER_NAME);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
-        HistoryConfig historyConfig = new HistoryConfig();
-        historyConfig.setNamespaceId(namespaceId);
-        historyConfig.setGroup(group);
-        historyConfig.setDataId(dataId);
-        historyConfig.setContent(content);
         historyConfig.setRevision(Long.parseLong(revision));
         historyConfig.setLastRevision(lastRevision);
-        historyConfig.setAppName(appName);
-        historyConfig.setMd5(md5);
-        historyConfig.setOperatorIp(operatorIp);
-        historyConfig.setOperator(operator);
         historyConfig.setOperationType(ConfigOperationType.of(operationType));
         try {
             historyConfig.setCreatedTime(dateFormat.parse(createdTime).getTime());
@@ -107,6 +76,20 @@ public class HistoryConfigDeserializer extends GsonDeserializer<HistoryConfig> {
         } catch (ParseException e) {
             throw new JsonParseException(e);
         }
-        return historyConfig;
+    }
+
+    @Override
+    protected HistoryConfig newConfig() {
+        return new HistoryConfig();
+    }
+
+    @Override
+    protected String getOperatorMemberName() {
+        return OPERATOR_MEMBER_NAME;
+    }
+
+    @Override
+    protected String getOperatorIpMemberName() {
+        return OPERATOR_IP_MEMBER_NAME;
     }
 }

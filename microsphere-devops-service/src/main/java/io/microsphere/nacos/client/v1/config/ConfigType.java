@@ -53,4 +53,13 @@ public enum ConfigType {
     public String getValue() {
         return value;
     }
+
+    public static ConfigType of(String value) {
+        for (ConfigType type : values()) {
+            if (type.getValue().equalsIgnoreCase(value.trim())) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Unsupported ConfigType value : " + value);
+    }
 }

@@ -27,7 +27,7 @@ import io.microsphere.nacos.client.common.model.Model;
  */
 public abstract class BaseConfig implements Model {
 
-    private static final long serialVersionUID = -1065152812874932193L;
+    private static final long serialVersionUID = -5328340486667782465L;
 
     private String namespaceId;
 
@@ -41,9 +41,13 @@ public abstract class BaseConfig implements Model {
 
     private String content;
 
-    private String description;
-
     private String operator;
+
+    private String operatorIp;
+
+    private Long createdTime;
+
+    private Long lastModifiedTime;
 
     public String getNamespaceId() {
         return namespaceId;
@@ -93,19 +97,35 @@ public abstract class BaseConfig implements Model {
         this.content = content;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getOperator() {
         return operator;
     }
 
     public void setOperator(String operator) {
         this.operator = operator;
+    }
+
+    public String getOperatorIp() {
+        return operatorIp;
+    }
+
+    public void setOperatorIp(String operatorIp) {
+        this.operatorIp = operatorIp;
+    }
+
+    public Long getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Long createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public Long getLastModifiedTime() {
+        return lastModifiedTime;
+    }
+
+    public void setLastModifiedTime(Long lastModifiedTime) {
+        this.lastModifiedTime = lastModifiedTime;
     }
 }

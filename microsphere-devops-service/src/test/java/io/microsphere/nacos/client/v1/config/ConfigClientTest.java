@@ -18,8 +18,8 @@ package io.microsphere.nacos.client.v1.config;
 
 import io.microsphere.nacos.client.OpenApiTest;
 import io.microsphere.nacos.client.common.model.Page;
+import io.microsphere.nacos.client.v1.config.model.BaseConfig;
 import io.microsphere.nacos.client.v1.config.model.Config;
-import io.microsphere.nacos.client.v1.config.model.GenericConfig;
 import io.microsphere.nacos.client.v1.config.model.HistoryConfig;
 import io.microsphere.nacos.client.v1.config.model.NewConfig;
 import org.junit.jupiter.api.Test;
@@ -69,6 +69,13 @@ public class ConfigClientTest extends OpenApiTest {
     public void test() {
         ConfigClient client = new OpenApiConfigClient(openApiClient);
 
+        // Test deleteConfig()
+        assertTrue(client.deleteConfig(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID));
+
+        // Test getConfig()
+        Config config = client.getConfig(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID);
+        assertNull(config);
+
         // test publishConfig() to create a new config
         NewConfig newConfig = createNewConfig();
         assertTrue(client.publishConfig(newConfig));
@@ -92,18 +99,16 @@ public class ConfigClientTest extends OpenApiTest {
         assertEquals(historyConfig.getRevision(), historyConfig1.getRevision());
         assertEquals(historyConfig.getNid(), historyConfig1.getNid());
         assertEquals(historyConfig.getLastRevision(), historyConfig1.getLastRevision());
-        assertEquals(historyConfig.getDescription(), historyConfig1.getDescription());
         assertEquals(historyConfig.getOperator(), historyConfig1.getOperator());
         assertEquals(historyConfig.getOperatorIp(), historyConfig1.getOperatorIp());
         assertEquals(historyConfig.getOperationType(), historyConfig1.getOperationType());
         assertEquals(historyConfig.getCreatedTime(), historyConfig1.getCreatedTime());
         assertEquals(historyConfig.getLastModifiedTime(), historyConfig1.getLastModifiedTime());
-        assertNull(historyConfig1.getDescription());
         assertNotNull(historyConfig1.getMd5());
         assertNotNull(historyConfig1.getContent());
 
-        // Test getConfig()
-        Config config = client.getConfig(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID);
+
+        config = client.getConfig(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID);
         String id = config.getId();
         assertConfig(config);
 
@@ -113,17 +118,20 @@ public class ConfigClientTest extends OpenApiTest {
         assertEquals(config.getGroup(), historyConfig2.getGroup());
         assertEquals(config.getDataId(), historyConfig2.getDataId());
         assertEquals(config.getAppName(), historyConfig2.getAppName());
+
+        // Test deleteConfig()
+        assertTrue(client.deleteConfig(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID));
     }
 
     private void assertHistoryConfig(HistoryConfig historyConfig) {
-        assertGenericConfig(historyConfig);
+        assertBaseConfig(historyConfig);
         assertNotNull(historyConfig.getRevision());
         assertNotNull(historyConfig.getLastRevision());
         assertNotNull(historyConfig.getOperationType());
     }
 
     private void assertConfig(Config config) {
-        assertGenericConfig(config);
+        assertBaseConfig(config);
         assertNotNull(config.getId());
         assertNotNull(config.getContent());
         assertNotNull(config.getDescription());
@@ -133,10 +141,9 @@ public class ConfigClientTest extends OpenApiTest {
         assertNotNull(config.getEffect());
         assertNotNull(config.getSchema());
         assertNotNull(config.getType());
-
     }
 
-    private void assertGenericConfig(GenericConfig config) {
+    private void assertBaseConfig(BaseConfig config) {
         assertEquals(TEST_NAMESPACE_ID, config.getNamespaceId());
         assertEquals(TEST_GROUP_NAME, config.getGroup());
         assertEquals(TEST_DATA_ID, config.getDataId());

@@ -27,7 +27,7 @@ import io.microsphere.nacos.client.common.model.Model;
  */
 public class Config extends NewConfig {
 
-    private static final long serialVersionUID = -6367344493119856472L;
+    private static final long serialVersionUID = 178417156057616475L;
 
     private String id;
 

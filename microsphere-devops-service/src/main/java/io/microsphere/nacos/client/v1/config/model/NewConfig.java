@@ -31,9 +31,11 @@ import static java.util.Arrays.asList;
  * @see GenericConfig
  * @since 1.0.0
  */
-public class NewConfig extends GenericConfig {
+public class NewConfig extends BaseConfig {
 
-    private static final long serialVersionUID = 8692392723791848007L;
+    private static final long serialVersionUID = 7120432352020094941L;
+
+    private String description;
 
     private Set<String> tags;
 
@@ -44,6 +46,14 @@ public class NewConfig extends GenericConfig {
     private ConfigType type;
 
     private String schema;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Set<String> getTags() {
         return tags;
