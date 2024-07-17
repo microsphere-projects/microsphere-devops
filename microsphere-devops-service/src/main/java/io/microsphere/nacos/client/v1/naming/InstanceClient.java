@@ -17,7 +17,7 @@
 package io.microsphere.nacos.client.v1.naming;
 
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
-import io.microsphere.nacos.client.v1.naming.model.BatchUpdateMetadataResult;
+import io.microsphere.nacos.client.v1.naming.model.BatchMetadataResult;
 import io.microsphere.nacos.client.v1.naming.model.DeleteInstance;
 import io.microsphere.nacos.client.v1.naming.model.Instance;
 import io.microsphere.nacos.client.v1.naming.model.InstancesList;
@@ -395,10 +395,10 @@ public interface InstanceClient {
      *
      * @param instances one or more {@link Instance instances}
      * @param metadata  Service Instances' Metadata
-     * @return {@link BatchUpdateMetadataResult}
+     * @return {@link BatchMetadataResult}
      * @since Nacos 1.4.x (Beta)
      */
-    default BatchUpdateMetadataResult batchUpdateMetadata(Iterable<Instance> instances, Map<String, String> metadata) {
+    default BatchMetadataResult batchUpdateMetadata(Iterable<Instance> instances, Map<String, String> metadata) {
         return batchUpdateMetadata(instances, metadata, EPHEMERAL);
     }
 
@@ -408,8 +408,31 @@ public interface InstanceClient {
      * @param instances       one or more {@link Instance instances}
      * @param metadata        Service Instances' Metadata
      * @param consistencyType {@link ConsistencyType}
-     * @return {@link BatchUpdateMetadataResult}
+     * @return {@link BatchMetadataResult}
      * @since Nacos 1.4.x (Beta)
      */
-    BatchUpdateMetadataResult batchUpdateMetadata(Iterable<Instance> instances, Map<String, String> metadata, ConsistencyType consistencyType);
+    BatchMetadataResult batchUpdateMetadata(Iterable<Instance> instances, Map<String, String> metadata, ConsistencyType consistencyType);
+
+    /**
+     * Batch Delete Service Instances' Metadata
+     *
+     * @param instances one or more {@link Instance instances}
+     * @param metadata  Service Instances' Metadata
+     * @return {@link BatchMetadataResult}
+     * @since Nacos 1.4.x (Beta)
+     */
+    default BatchMetadataResult batchDeleteMetadata(Iterable<Instance> instances, Map<String, String> metadata) {
+        return batchDeleteMetadata(instances, metadata, EPHEMERAL);
+    }
+
+    /**
+     * Batch Delete Service Instances' Metadata
+     *
+     * @param instances       one or more {@link Instance instances}
+     * @param metadata        Service Instances' Metadata
+     * @param consistencyType {@link ConsistencyType}
+     * @return {@link BatchMetadataResult}
+     * @since Nacos 1.4.x (Beta)
+     */
+    BatchMetadataResult batchDeleteMetadata(Iterable<Instance> instances, Map<String, String> metadata, ConsistencyType consistencyType);
 }
