@@ -20,6 +20,9 @@ import io.microsphere.nacos.client.common.model.Page;
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
 import io.microsphere.nacos.client.v1.naming.model.Service;
 
+import static io.microsphere.nacos.client.constants.Constants.PAGE_NUMBER;
+import static io.microsphere.nacos.client.constants.Constants.PAGE_SIZE;
+
 /**
  * The Nacos Client for Service
  *
@@ -30,15 +33,7 @@ import io.microsphere.nacos.client.v1.naming.model.Service;
  */
 public interface ServiceClient {
 
-    /**
-     * Default page number : 1
-     */
-    int DEFAULT_PAGE_NUMBER = 1;
 
-    /**
-     * Default page size : 10
-     */
-    int DEFAULT_PAGE_SIZE = 10;
 
     /**
      * Create a new {@link Service}
@@ -153,7 +148,7 @@ public interface ServiceClient {
      * @return non-null {@link Page}
      */
     default Page<String> getServiceNames(String namespaceId) {
-        return getServiceNames(namespaceId, DEFAULT_PAGE_NUMBER);
+        return getServiceNames(namespaceId, PAGE_NUMBER);
     }
 
     /**
@@ -164,7 +159,7 @@ public interface ServiceClient {
      * @return non-null {@link Page}
      */
     default Page<String> getServiceNames(String namespaceId, int pageNumber) {
-        return getServiceNames(namespaceId, pageNumber, DEFAULT_PAGE_SIZE);
+        return getServiceNames(namespaceId, pageNumber, PAGE_SIZE);
     }
 
     /**
