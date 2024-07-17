@@ -20,7 +20,7 @@ import io.microsphere.nacos.client.http.HttpMethod;
 import io.microsphere.nacos.client.transport.OpenApiClient;
 import io.microsphere.nacos.client.transport.OpenApiRequest;
 import io.microsphere.nacos.client.v1.naming.model.BaseInstance;
-import io.microsphere.nacos.client.v1.naming.model.BatchUpdateMetadataResult;
+import io.microsphere.nacos.client.v1.naming.model.BatchMetadataResult;
 import io.microsphere.nacos.client.v1.naming.model.DeleteInstance;
 import io.microsphere.nacos.client.v1.naming.model.GenericInstance;
 import io.microsphere.nacos.client.v1.naming.model.Instance;
@@ -59,6 +59,12 @@ import static java.lang.String.format;
  * @since 1.0.0
  */
 public class OpenApiInstanceClient implements InstanceClient {
+
+    private static final String METADATA_BATCH_ENDPOINT = "/v1/ns/instance/metadata/batch";
+
+    public static final String INSTANCE_ENDPOINT = "/v1/ns/instance";
+
+    public static final String HEALTH_INSTANCE_ENDPOINT = "/v1/ns/health/instance";
 
     private final OpenApiClient openApiClient;
 
@@ -109,9 +115,18 @@ public class OpenApiInstanceClient implements InstanceClient {
     }
 
     @Override
-    public BatchUpdateMetadataResult batchUpdateMetadata(Iterable<Instance> instances, Map<String, String> metadata, ConsistencyType consistencyType) {
-        OpenApiRequest.Builder requestBuilder = OpenApiRequest.Builder.create("/v1/ns/instance/metadata/batch")
-                .method(PUT);
+    public BatchMetadataResult batchUpdateMetadata(Iterable<Instance> instances, Map<String, String> metadata, ConsistencyType consistencyType) {
+        return batchMetadata(instances, metadata, consistencyType, PUT);
+    }
+
+    @Override
+    public BatchMetadataResult batchDeleteMetadata(Iterable<Instance> instances, Map<String, String> metadata, ConsistencyType consistencyType) {
+        return batchMetadata(instances, metadata, consistencyType, DELETE);
+    }
+
+    private BatchMetadataResult batchMetadata(Iterable<Instance> instances, Map<String, String> metadata, ConsistencyType consistencyType, HttpMethod method) {
+        OpenApiRequest.Builder requestBuilder = OpenApiRequest.Builder.create(METADATA_BATCH_ENDPOINT)
+                .method(method);
 
         Set<String> namespaceIds = new HashSet<>(2);
         Set<String> serviceNames = new HashSet<>(2);
@@ -143,7 +158,7 @@ public class OpenApiInstanceClient implements InstanceClient {
                 .queryParameter("metadata", metadataJSON);
 
         OpenApiRequest request = requestBuilder.build();
-        return this.openApiClient.execute(request, BatchUpdateMetadataResult.class);
+        return this.openApiClient.execute(request, BatchMetadataResult.class);
     }
 
     private Map<String, String> buildInstanceMap(Instance instance, ConsistencyType consistencyType) {
@@ -172,7 +187,7 @@ public class OpenApiInstanceClient implements InstanceClient {
     }
 
     private OpenApiRequest buildRequest(UpdateHealthInstance instance, HttpMethod method) {
-        return OpenApiRequest.Builder.create("/v1/ns/health/instance")
+        return OpenApiRequest.Builder.create(HEALTH_INSTANCE_ENDPOINT)
                 .method(method)
                 .queryParameter("namespaceId", instance.getNamespaceId())
                 .queryParameter("groupName", instance.getGroupName())
@@ -193,7 +208,7 @@ public class OpenApiInstanceClient implements InstanceClient {
     }
 
     private OpenApiRequest.Builder requestBuilder(BaseInstance instance, HttpMethod method) {
-        return OpenApiRequest.Builder.create("/v1/ns/instance")
+        return OpenApiRequest.Builder.create(INSTANCE_ENDPOINT)
                 .method(method)
                 .queryParameter("namespaceId", instance.getNamespaceId())
                 .queryParameter("groupName", instance.getGroupName())
