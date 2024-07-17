@@ -16,7 +16,6 @@
  */
 package io.microsphere.nacos.client.v1.namespace;
 
-import io.microsphere.nacos.client.NacosClientConfig;
 import io.microsphere.nacos.client.OpenApiTest;
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
 import org.junit.jupiter.api.Test;
@@ -46,12 +45,6 @@ public class OpenApiNamespaceClientTest extends OpenApiTest {
     private static final String MODIFIED_NAMESPACE_NAME = "test-001(modified)";
 
     private static final String MODIFIED_NAMESPACE_DESC = "test-001 DESC ...";
-
-    @Override
-    protected void customize(NacosClientConfig nacosClientConfig) {
-        nacosClientConfig.setUsername("nacos");
-        nacosClientConfig.setPassword("nacos");
-    }
 
     @Test
     public void test() {
