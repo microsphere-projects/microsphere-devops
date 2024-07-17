@@ -45,7 +45,7 @@ import static io.microsphere.nacos.client.v1.naming.ConsistencyType.EPHEMERAL;
 public interface InstanceClient {
 
     /**
-     * Register a {@link NewInstance new ionstance} with parameters :
+     * Register {@link NewInstance a new ionstance} with parameters :
      * <table>
      * <thead>
      * <tr>
@@ -125,7 +125,7 @@ public interface InstanceClient {
      * </tbody>
      * </table>
      *
-     * @param newInstance a new {@link Instance}
+     * @param newInstance {@link NewInstance a new instance}
      * @return <code>true</code> if register successfully, otherwise <code>false</code>
      */
     boolean register(NewInstance newInstance);
@@ -187,7 +187,7 @@ public interface InstanceClient {
      * </tbody>
      * </table>
      *
-     * @param deleteInstance a new {@link Instance}
+     * @param deleteInstance {@link DeleteInstance an instance to be deregistered}
      * @return <code>true</code> if deregister successfully, otherwise <code>false</code>
      */
     boolean deregister(DeleteInstance deleteInstance);
@@ -267,7 +267,7 @@ public interface InstanceClient {
      * </tbody>
      * </table>
      *
-     * @param updateInstance the existed {@link Instance}
+     * @param updateInstance {@link UpdateInstance an instance to be refreshed}
      * @return <code>true</code> if refresh successfully, otherwise <code>false</code>
      */
     boolean refresh(UpdateInstance updateInstance);
@@ -277,7 +277,7 @@ public interface InstanceClient {
      *
      * @param namespaceId the id of {@link Namespace}
      * @param serviceName the name of {@link Service}
-     * @return non-null
+     * @return non-null {@link InstancesList}
      */
     default InstancesList getInstancesList(String namespaceId, String serviceName) {
         return getInstancesList(namespaceId, null, serviceName);
@@ -289,7 +289,7 @@ public interface InstanceClient {
      * @param namespaceId the id of {@link Namespace}
      * @param groupName   the name of group (optional)
      * @param serviceName the name of {@link Service}
-     * @return non-null
+     * @return non-null {@link InstancesList}
      */
     default InstancesList getInstancesList(String namespaceId, String groupName, String serviceName) {
         return getInstancesList(namespaceId, groupName, serviceName, null);
@@ -302,7 +302,7 @@ public interface InstanceClient {
      * @param groupName   the name of group (optional)
      * @param serviceName the name of {@link Service}
      * @param clusters    the clusters (optional)
-     * @return non-null
+     * @return non-null {@link InstancesList}
      */
     default InstancesList getInstancesList(String namespaceId, String groupName, String serviceName, Set<String> clusters) {
         return getInstancesList(namespaceId, groupName, serviceName, clusters, false);
@@ -316,7 +316,7 @@ public interface InstanceClient {
      * @param serviceName the name of {@link Service}
      * @param clusters    the clusters (optional)
      * @param healthyOnly the healthy only
-     * @return non-null
+     * @return non-null {@link InstancesList}
      */
     InstancesList getInstancesList(String namespaceId, String groupName, String serviceName, Set<String> clusters, boolean healthyOnly);
 
@@ -378,7 +378,7 @@ public interface InstanceClient {
      * </table>
      *
      * @param queryInstance {@link QueryInstance}
-     * @return
+     * @return non-null {@link Instance}
      */
     Instance getInstance(QueryInstance queryInstance);
 
@@ -395,7 +395,7 @@ public interface InstanceClient {
      *
      * @param instances one or more {@link Instance instances}
      * @param metadata  Service Instances' Metadata
-     * @return {@link BatchMetadataResult}
+     * @return non-null {@link BatchMetadataResult}
      * @since Nacos 1.4.x (Beta)
      */
     default BatchMetadataResult batchUpdateMetadata(Iterable<Instance> instances, Map<String, String> metadata) {
@@ -408,7 +408,7 @@ public interface InstanceClient {
      * @param instances       one or more {@link Instance instances}
      * @param metadata        Service Instances' Metadata
      * @param consistencyType {@link ConsistencyType}
-     * @return {@link BatchMetadataResult}
+     * @return non-null  {@link BatchMetadataResult}
      * @since Nacos 1.4.x (Beta)
      */
     BatchMetadataResult batchUpdateMetadata(Iterable<Instance> instances, Map<String, String> metadata, ConsistencyType consistencyType);
@@ -418,7 +418,7 @@ public interface InstanceClient {
      *
      * @param instances one or more {@link Instance instances}
      * @param metadata  Service Instances' Metadata
-     * @return {@link BatchMetadataResult}
+     * @return non-null {@link BatchMetadataResult}
      * @since Nacos 1.4.x (Beta)
      */
     default BatchMetadataResult batchDeleteMetadata(Iterable<Instance> instances, Map<String, String> metadata) {
@@ -431,7 +431,7 @@ public interface InstanceClient {
      * @param instances       one or more {@link Instance instances}
      * @param metadata        Service Instances' Metadata
      * @param consistencyType {@link ConsistencyType}
-     * @return {@link BatchMetadataResult}
+     * @return non-null {@link BatchMetadataResult}
      * @since Nacos 1.4.x (Beta)
      */
     BatchMetadataResult batchDeleteMetadata(Iterable<Instance> instances, Map<String, String> metadata, ConsistencyType consistencyType);
