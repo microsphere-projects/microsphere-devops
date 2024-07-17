@@ -20,6 +20,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import io.microsphere.nacos.client.io.GsonDeserializer;
+import io.microsphere.nacos.client.v1.server.ServerClient;
 import io.microsphere.nacos.client.v1.server.model.ServerState;
 
 import java.lang.reflect.Type;
@@ -28,8 +29,9 @@ import java.lang.reflect.Type;
  * The {@link GsonDeserializer} class for {@link ServerState}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see GsonDeserializer
  * @see ServerState
+ * @see ServerClient#getServerState()
+ * @see GsonDeserializer
  * @since 1.0.0
  */
 public class ServerStateDeserializer extends GsonDeserializer<ServerState> {
