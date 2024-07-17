@@ -16,7 +16,6 @@
  */
 package io.microsphere.nacos.client.common.model;
 
-import java.io.Serial;
 import java.util.List;
 
 /**
