@@ -33,9 +33,17 @@ import static java.lang.String.format;
  */
 public abstract class OpenApiTest {
 
+    protected static final String TEST_NAMESPACE_ID = "test";
+
+    protected static final String TEST_GROUP_NAME = "test-group";
+
     protected static final String SERVER_ADDRESS_PROPERTY_NAME = "SERVER_ADDRESS";
 
     protected static final String SERVER_ADDRESS = System.getenv(SERVER_ADDRESS_PROPERTY_NAME);
+
+    protected static final String USER_NAME = "nacos";
+
+    protected static final String PASSWORD = "nacos";
 
     protected OpenApiClient openApiClient;
 
@@ -50,6 +58,8 @@ public abstract class OpenApiTest {
 
         NacosClientConfig config = new NacosClientConfig();
         config.setServerAddress(SERVER_ADDRESS);
+        config.setUsername(USER_NAME);
+        config.setPassword(PASSWORD);
         customize(config);
         this.openApiClient = new OpenApiHttpClient(config);
         this.nacosClientConfig = config;
