@@ -133,6 +133,11 @@ public class OpenApiConfigClient implements ConfigClient {
      */
     private static final String PAGE_SIZE_PARAM_NAME = "pageSize";
 
+    /**
+     * The request parameter name of history revision for Nacos configuration : "nid"
+     */
+    private static final String REVISION_PARAM_NAME = "nid";
+
     private final OpenApiClient openApiClient;
 
     public OpenApiConfigClient(OpenApiClient openApiClient) {
@@ -202,7 +207,10 @@ public class OpenApiConfigClient implements ConfigClient {
 
     @Override
     public HistoryConfig getHistoryConfig(String namespaceId, String group, String dataId, long revision) {
-        return null;
+        OpenApiRequest request = historyConfigRequestBuilder(namespaceId, group, dataId, GET)
+                .queryParameter(REVISION_PARAM_NAME, revision)
+                .build();
+        return this.openApiClient.execute(request, HistoryConfig.class);
     }
 
     @Override
