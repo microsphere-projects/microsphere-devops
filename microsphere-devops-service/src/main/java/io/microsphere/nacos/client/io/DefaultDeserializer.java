@@ -48,7 +48,7 @@ public class DefaultDeserializer implements Deserializer {
     }
 
     @Override
-    public <T extends Serializable> T deserialize(String content, Class<T> deserializedType) throws DeserializationException {
+    public <T> T deserialize(String content, Type deserializedType) throws DeserializationException {
         T object = null;
         try {
             object = this.gson.fromJson(content, deserializedType);
