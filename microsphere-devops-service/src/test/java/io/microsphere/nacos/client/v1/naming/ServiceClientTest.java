@@ -24,9 +24,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static io.microsphere.nacos.client.constants.Constants.PAGE_NUMBER;
 import static io.microsphere.nacos.client.constants.Constants.PAGE_SIZE;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -42,11 +44,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class ServiceClientTest extends OpenApiTest {
 
-    private static final String TEST_NAMESPACE_ID = "test";
+    static final String TEST_SERVICE_NAME = "test-service";
 
-    private static final String TEST_GROUP_NAME = "test-group";
+    static final String TEST_CLUSTER = "DEFAULT";
 
-    private static final String TEST_SERVICE_NAME = "test-service";
+    static final Set<String> TEST_CLUSTERS = singleton(TEST_CLUSTER);
 
     @Test
     public void test() {
