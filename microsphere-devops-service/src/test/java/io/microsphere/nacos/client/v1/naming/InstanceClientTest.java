@@ -19,6 +19,7 @@ package io.microsphere.nacos.client.v1.naming;
 import io.microsphere.nacos.client.ErrorCode;
 import io.microsphere.nacos.client.OpenApiTest;
 import io.microsphere.nacos.client.transport.OpenApiClientException;
+import io.microsphere.nacos.client.v1.naming.model.BaseInstance;
 import io.microsphere.nacos.client.v1.naming.model.BatchMetadataResult;
 import io.microsphere.nacos.client.v1.naming.model.DeleteInstance;
 import io.microsphere.nacos.client.v1.naming.model.Instance;
@@ -29,6 +30,7 @@ import io.microsphere.nacos.client.v1.naming.model.UpdateHealthInstance;
 import io.microsphere.nacos.client.v1.naming.model.UpdateInstance;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -68,14 +70,13 @@ public class InstanceClientTest extends OpenApiTest {
         Instance instance = createInstance();
         NewInstance newInstance = new NewInstance().from(instance);
         assertTrue(client.register(newInstance));
-        assertEquals(TEST_NAMESPACE_ID, instance.getNamespaceId());
-        assertEquals(TEST_GROUP_NAME, instance.getGroupName());
-        assertEquals(TEST_SERVICE_NAME, instance.getServiceName());
+        assertBaseInstance(instance);
         assertEquals(TEST_CLUSTER, instance.getClusterName());
 
         // Test getInstance()
         QueryInstance queryInstance = new QueryInstance().from(instance);
         Instance instance1 = client.getInstance(queryInstance);
+        assertBaseInstance(instance1);
         assertEquals(instance.getIp(), instance1.getIp());
         assertEquals(instance.getPort(), instance1.getPort());
         assertEquals(instance.getServiceName(), instance1.getServiceName());
@@ -116,12 +117,13 @@ public class InstanceClientTest extends OpenApiTest {
         assertNotNull(instancesList.getLastRefTime());
         assertNotNull(instancesList.getEnv());
         assertTrue(instancesList.getClusters().isEmpty());
-        assertFalse(instancesList.getHosts().isEmpty());
         assertTrue(instancesList.getMetadata().isEmpty());
+        List<Instance> instances = instancesList.getHosts();
+        assertFalse(instances.isEmpty());
+        instances.forEach(this::assertBaseInstance);
 
         // Test batchUpdateMetadata()
-        Map<String, String> metadata = singletonMap("test-key", "test-value");
-        instance1.setNamespaceId(TEST_NAMESPACE_ID);
+        Map<String, String> metadata = singletonMap("test-key-2", "test-value-2");
         BatchMetadataResult result = client.batchUpdateMetadata(asList(instance1), metadata);
         assertFalse(result.getUpdated().isEmpty());
 
@@ -132,6 +134,12 @@ public class InstanceClientTest extends OpenApiTest {
         // Test deregister()
         DeleteInstance deleteInstance = new DeleteInstance().from(instance);
         assertTrue(client.deregister(deleteInstance));
+    }
+
+    private void assertBaseInstance(BaseInstance instance) {
+        assertEquals(TEST_NAMESPACE_ID, instance.getNamespaceId());
+        assertEquals(TEST_GROUP_NAME, instance.getGroupName());
+        assertEquals(TEST_SERVICE_NAME, instance.getServiceName());
     }
 
     private Instance createInstance() {
