@@ -21,13 +21,13 @@ import io.microsphere.nacos.client.common.model.Model;
 import java.util.List;
 
 /**
- * The Batch Update {@link Model model} {@link Class} of Service Instances' Metadata
+ * The Batch Operation {@link Model model} {@link Class} of Service Instances' Metadata
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Model
  * @since 1.0.0
  */
-public class BatchUpdateMetadataResult implements Model {
+public class BatchMetadataResult implements Model {
 
     private List<String> updated;
 
