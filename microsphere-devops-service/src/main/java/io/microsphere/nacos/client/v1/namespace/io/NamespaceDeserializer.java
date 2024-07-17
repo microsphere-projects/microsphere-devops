@@ -34,27 +34,27 @@ import java.lang.reflect.Type;
  */
 public class NamespaceDeserializer extends GsonDeserializer<Namespace> {
 
-    private static final String NAMESPACE_ID_FIELD_NAME = "namespace";
+    private static final String NAMESPACE_ID_MEMBER_NAME = "namespace";
 
-    private static final String NAMESPACE_NAME_FIELD_NAME = "namespaceShowName";
+    private static final String NAMESPACE_NAME_MEMBER_NAME = "namespaceShowName";
 
-    private static final String NAMESPACE_DESC_FIELD_NAME = "namespaceDesc";
+    private static final String NAMESPACE_DESC_MEMBER_NAME = "namespaceDesc";
 
-    private static final String QUOTA_FIELD_NAME = "quota";
+    private static final String QUOTA_MEMBER_NAME = "quota";
 
-    private static final String CONFIG_COUNT_FIELD_NAME = "configCount";
+    private static final String CONFIG_COUNT_MEMBER_NAME = "configCount";
 
-    private static final String TYPE_FIELD_NAME = "type";
+    private static final String TYPE_MEMBER_NAME = "type";
 
     @Override
     protected Namespace deserialize(JsonElement json, Type typeOfT) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
-        String namespaceId = getString(jsonObject, NAMESPACE_ID_FIELD_NAME);
-        String namespaceName = getString(jsonObject, NAMESPACE_NAME_FIELD_NAME);
-        String namespaceDesc = getString(jsonObject, NAMESPACE_DESC_FIELD_NAME);
-        Integer quota = getInteger(jsonObject, QUOTA_FIELD_NAME);
-        Integer configCount = getInteger(jsonObject, CONFIG_COUNT_FIELD_NAME);
-        Integer type = getInteger(jsonObject, TYPE_FIELD_NAME);
+        String namespaceId = getString(jsonObject, NAMESPACE_ID_MEMBER_NAME);
+        String namespaceName = getString(jsonObject, NAMESPACE_NAME_MEMBER_NAME);
+        String namespaceDesc = getString(jsonObject, NAMESPACE_DESC_MEMBER_NAME);
+        Integer quota = getInteger(jsonObject, QUOTA_MEMBER_NAME);
+        Integer configCount = getInteger(jsonObject, CONFIG_COUNT_MEMBER_NAME);
+        Integer type = getInteger(jsonObject, TYPE_MEMBER_NAME);
         Namespace namespace = new Namespace();
         namespace.setNamespaceId(namespaceId);
         namespace.setNamespaceName(namespaceName);

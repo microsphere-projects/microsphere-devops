@@ -35,12 +35,12 @@ import java.lang.reflect.Type;
  */
 public class RaftModelDeserializer extends GsonDeserializer<RaftModel> {
 
-    private static final String LEADER_FIELD_NAME = "leader";
+    private static final String LEADER_MEMBER_NAME = "leader";
 
     @Override
     protected RaftModel deserialize(JsonElement json, Type typeOfT) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
-        String leaderJson = getString(jsonObject, LEADER_FIELD_NAME);
+        String leaderJson = getString(jsonObject, LEADER_MEMBER_NAME);
         Deserializer deserializer = getDeserializer();
         RaftPeer leader = deserializer.deserialize(leaderJson, RaftPeer.class);
         RaftModel raftModel = new RaftModel();

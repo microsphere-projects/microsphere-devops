@@ -3,3 +3,5 @@ io.microsphere.nacos.client.v1.namespace.io.NamespaceDeserializer
 io.microsphere.nacos.client.v1.server.io.ServerMetricsDeserializer
 io.microsphere.nacos.client.v1.server.io.ServerDeserializer
 io.microsphere.nacos.client.v1.raft.io.RaftModelDeserializer
+io.microsphere.nacos.client.v1.config.io.HistoryConfigPageDeserializer
+io.microsphere.nacos.client.v1.config.io.HistoryConfigDeserializer

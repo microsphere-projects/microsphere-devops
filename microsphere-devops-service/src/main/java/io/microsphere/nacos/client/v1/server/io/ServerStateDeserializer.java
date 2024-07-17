@@ -34,18 +34,18 @@ import java.lang.reflect.Type;
  */
 public class ServerStateDeserializer extends GsonDeserializer<ServerState> {
 
-    private static final String STANDALONE_MODE_FIELD_NAME = "standalone_mode";
+    private static final String STANDALONE_MODE_MEMBER_NAME = "standalone_mode";
 
-    private static final String FUNCTION_MODE_FIELD_NAME = "function_mode";
+    private static final String FUNCTION_MODE_MEMBER_NAME = "function_mode";
 
-    private static final String VERSION_FIELD_NAME = "version";
+    private static final String VERSION_MEMBER_NAME = "version";
 
     @Override
     protected ServerState deserialize(JsonElement json, Type typeOfT) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
-        String standaloneMode = getString(jsonObject, STANDALONE_MODE_FIELD_NAME);
-        String functionMode = getString(jsonObject, FUNCTION_MODE_FIELD_NAME);
-        String version = getString(jsonObject, VERSION_FIELD_NAME);
+        String standaloneMode = getString(jsonObject, STANDALONE_MODE_MEMBER_NAME);
+        String functionMode = getString(jsonObject, FUNCTION_MODE_MEMBER_NAME);
+        String version = getString(jsonObject, VERSION_MEMBER_NAME);
         ServerState serverState = new ServerState();
         serverState.setMode(standaloneMode);
         serverState.setFunctionMode(functionMode);

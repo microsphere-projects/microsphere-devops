@@ -30,22 +30,34 @@ public class Page<E> implements Model {
 
     private static final long serialVersionUID = 5930271718830258627L;
 
-    private final int pageNumber;
-
-    private final int pageSize;
-
     private final int totalPages;
 
     private final int totalElements;
 
     private final List<E> elements;
 
-    public Page(int pageNumber, int pageSize, int totalElements, List<E> elements) {
+    private int pageNumber;
+
+    private int pageSize;
+
+    public Page(int totalElements, List<E> elements, int pageNumber, int pageSize) {
+        this((elements.size() == 0 ? 1 : (int) Math.ceil((double) totalElements / (double) pageSize)), totalElements, elements);
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
-        this.totalPages = elements.size() == 0 ? 1 : (int) Math.ceil((double) totalElements / (double) pageSize);
+    }
+
+    public Page(int totalPages, int totalElements, List<E> elements) {
+        this.totalPages = totalPages;
         this.totalElements = totalElements;
         this.elements = elements;
+    }
+
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
     /**

@@ -35,23 +35,23 @@ import java.lang.reflect.Type;
  */
 public class ServerMetricsDeserializer extends GsonDeserializer<ServerMetrics> {
 
-    private static final String STATUS_FIELD_NAME = "status";
+    private static final String STATUS_MEMBER_NAME = "status";
 
-    private static final String SERVICE_COUNT_FIELD_NAME = "serviceCount";
+    private static final String SERVICE_COUNT_MEMBER_NAME = "serviceCount";
 
-    private static final String INSTANCE_COUNT_FIELD_NAME = "instanceCount";
+    private static final String INSTANCE_COUNT_MEMBER_NAME = "instanceCount";
 
-    private static final String RAFT_NOTIFY_TASK_COUNT_FIELD_NAME = "raftNotifyTaskCount";
+    private static final String RAFT_NOTIFY_TASK_COUNT_MEMBER_NAME = "raftNotifyTaskCount";
 
-    private static final String RESPONSIBLE_SERVICE_COUNT_FIELD_NAME = "responsibleServiceCount";
+    private static final String RESPONSIBLE_SERVICE_COUNT_MEMBER_NAME = "responsibleServiceCount";
 
-    private static final String RESPONSIBLE_INSTANCE_COUNT_FIELD_NAME = "responsibleInstanceCount";
+    private static final String RESPONSIBLE_INSTANCE_COUNT_MEMBER_NAME = "responsibleInstanceCount";
 
-    private static final String SYSTEM_CPU_LOAD_FIELD_NAME = "cpu";
+    private static final String SYSTEM_CPU_LOAD_MEMBER_NAME = "cpu";
 
-    private static final String SYSTEM_LOAD_AVERAGE_FIELD_NAME = "load";
+    private static final String SYSTEM_LOAD_AVERAGE_MEMBER_NAME = "load";
 
-    private static final String MEMORY_USAGE_FIELD_NAME = "mem";
+    private static final String MEMORY_USAGE_MEMBER_NAME = "mem";
 
     /**
      * Deserialize an instance of {@link ServerStatus}
@@ -64,15 +64,15 @@ public class ServerMetricsDeserializer extends GsonDeserializer<ServerMetrics> {
     @Override
     protected ServerMetrics deserialize(JsonElement json, Type typeOfT) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
-        String status = getString(jsonObject, STATUS_FIELD_NAME);
-        int serviceCount = getInteger(jsonObject, SERVICE_COUNT_FIELD_NAME);
-        int instanceCount = getInteger(jsonObject, INSTANCE_COUNT_FIELD_NAME);
-        int raftNotifyTaskCount = getInteger(jsonObject, RAFT_NOTIFY_TASK_COUNT_FIELD_NAME);
-        int responsibleServiceCount = getInteger(jsonObject, RESPONSIBLE_SERVICE_COUNT_FIELD_NAME);
-        int responsibleInstanceCount = getInteger(jsonObject, RESPONSIBLE_INSTANCE_COUNT_FIELD_NAME);
-        float systemCpuLoad = getFloat(jsonObject, SYSTEM_CPU_LOAD_FIELD_NAME);
-        float systemLoadAverage = getFloat(jsonObject, SYSTEM_LOAD_AVERAGE_FIELD_NAME);
-        float memoryUsage = getFloat(jsonObject, MEMORY_USAGE_FIELD_NAME);
+        String status = getString(jsonObject, STATUS_MEMBER_NAME);
+        int serviceCount = getInteger(jsonObject, SERVICE_COUNT_MEMBER_NAME);
+        int instanceCount = getInteger(jsonObject, INSTANCE_COUNT_MEMBER_NAME);
+        int raftNotifyTaskCount = getInteger(jsonObject, RAFT_NOTIFY_TASK_COUNT_MEMBER_NAME);
+        int responsibleServiceCount = getInteger(jsonObject, RESPONSIBLE_SERVICE_COUNT_MEMBER_NAME);
+        int responsibleInstanceCount = getInteger(jsonObject, RESPONSIBLE_INSTANCE_COUNT_MEMBER_NAME);
+        float systemCpuLoad = getFloat(jsonObject, SYSTEM_CPU_LOAD_MEMBER_NAME);
+        float systemLoadAverage = getFloat(jsonObject, SYSTEM_LOAD_AVERAGE_MEMBER_NAME);
+        float memoryUsage = getFloat(jsonObject, MEMORY_USAGE_MEMBER_NAME);
 
         ServerMetrics serverMetrics = new ServerMetrics();
         serverMetrics.setServerStatus(ServerStatus.valueOf(status));

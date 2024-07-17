@@ -25,7 +25,6 @@ import io.microsphere.nacos.client.v1.namespace.model.Namespace;
 
 import static io.microsphere.nacos.client.constants.Constants.DEFAULT_GROUP_NAME;
 import static io.microsphere.nacos.client.constants.Constants.PAGE_NUMBER;
-import static io.microsphere.nacos.client.constants.Constants.PAGE_SIZE;
 
 /**
  * The Nacos Client for {@link Config}
@@ -35,6 +34,16 @@ import static io.microsphere.nacos.client.constants.Constants.PAGE_SIZE;
  * @since 1.0.0
  */
 public interface ConfigClient {
+
+    /**
+     * The default page size
+     */
+    int DEFAULT_PAGE_SIZE = 100;
+
+    /**
+     * The maximum page size
+     */
+    int MAX_PAGE_SIZE = 500;
 
     /**
      * Get the content of {@link Config} from the specified {@code dataId} from
@@ -225,7 +234,7 @@ public interface ConfigClient {
      * @return non-null {@link Page<HistoryConfig>}
      */
     default Page<HistoryConfig> getHistoryConfigs(String namespaceId, String group, String dataId) {
-        return getHistoryConfigs(namespaceId, group, dataId, PAGE_NUMBER, PAGE_SIZE);
+        return getHistoryConfigs(namespaceId, group, dataId, PAGE_NUMBER, DEFAULT_PAGE_SIZE);
     }
 
     /**
@@ -238,6 +247,8 @@ public interface ConfigClient {
      * @param pageNumber  the number of page, starts with 1
      * @param pageSize    the expected size of one page
      * @return non-null {@link Page<HistoryConfig>}
+     * @throws IllegalArgumentException if the {@code pageNumber} or {@code pageSize} is less than 1,
+     *                                  and the {@code pageSize} is greater than {@link #MAX_PAGE_SIZE 500}
      */
     Page<HistoryConfig> getHistoryConfigs(String namespaceId, String group, String dataId, int pageNumber, int pageSize);
 

@@ -83,7 +83,7 @@ public class OpenApiServiceClient implements ServiceClient {
                 .queryParameter("pageSize", pageSize)
                 .build();
         ServiceList serviceList = this.openApiClient.execute(request, ServiceList.class);
-        return new Page<>(pageNumber, pageSize, serviceList.getCount(), serviceList.getDoms());
+        return new Page<>(serviceList.getCount(), serviceList.getDoms(), pageNumber, pageSize);
     }
 
     private OpenApiRequest buildServiceRequest(String namespaceId, String groupName, String serviceName, HttpMethod method) {

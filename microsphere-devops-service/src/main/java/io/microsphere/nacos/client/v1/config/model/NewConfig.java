@@ -19,7 +19,10 @@ package io.microsphere.nacos.client.v1.config.model;
 import io.microsphere.nacos.client.common.model.Model;
 import io.microsphere.nacos.client.v1.config.ConfigType;
 
+import java.util.HashSet;
 import java.util.Set;
+
+import static java.util.Arrays.asList;
 
 /**
  * The {@link Model model} {@link Class} for Nacos Configuration to be published
@@ -30,9 +33,7 @@ import java.util.Set;
  */
 public class NewConfig extends GenericConfig {
 
-    private static final long serialVersionUID = -5572705052874197065L;
-
-    private String tag;
+    private static final long serialVersionUID = 8692392723791848007L;
 
     private Set<String> tags;
 
@@ -44,20 +45,22 @@ public class NewConfig extends GenericConfig {
 
     private String schema;
 
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
     public Set<String> getTags() {
         return tags;
     }
 
     public void setTags(Set<String> tags) {
         this.tags = tags;
+    }
+
+    public void addTags(String oneTag, String... anotherTags) {
+        Set<String> tags = this.tags;
+        if (tags == null) {
+            tags = new HashSet<>(1 + anotherTags.length);
+            this.tags = tags;
+        }
+        tags.add(oneTag);
+        tags.addAll(asList(anotherTags));
     }
 
     public String getUse() {

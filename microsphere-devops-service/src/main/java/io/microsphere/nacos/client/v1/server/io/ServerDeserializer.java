@@ -34,23 +34,23 @@ import java.lang.reflect.Type;
  */
 public class ServerDeserializer extends GsonDeserializer<Server> {
 
-    private static final String IP_FIELD_NAME = "ip";
+    private static final String IP_MEMBER_NAME = "ip";
 
-    private static final String PORT_FIELD_NAME = "servePort";
+    private static final String PORT_MEMBER_NAME = "servePort";
 
-    private static final String SITE_FIELD_NAME = "site";
+    private static final String SITE_MEMBER_NAME = "site";
 
-    private static final String WEIGHT_FIELD_NAME = "weight";
+    private static final String WEIGHT_MEMBER_NAME = "weight";
 
-    private static final String AD_WEIGHT_FIELD_NAME = "adWeight";
+    private static final String AD_WEIGHT_MEMBER_NAME = "adWeight";
 
-    private static final String ALIVE_FIELD_NAME = "alive";
+    private static final String ALIVE_MEMBER_NAME = "alive";
 
-    private static final String LAST_REF_TIME_FIELD_NAME = "lastRefTime";
+    private static final String LAST_REF_TIME_MEMBER_NAME = "lastRefTime";
 
-    private static final String LAST_REF_TIME_STR_FIELD_NAME = "lastRefTimeStr";
+    private static final String LAST_REF_TIME_STR_MEMBER_NAME = "lastRefTimeStr";
 
-    private static final String KEY_FIELD_NAME = "key";
+    private static final String KEY_MEMBER_NAME = "key";
 
     /**
      * Deserialize an instance of {@link Server}
@@ -63,15 +63,15 @@ public class ServerDeserializer extends GsonDeserializer<Server> {
     @Override
     protected Server deserialize(JsonElement json, Type typeOfT) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
-        String ip = getString(jsonObject, IP_FIELD_NAME);
-        int port = getInteger(jsonObject, PORT_FIELD_NAME);
-        String site = getString(jsonObject, SITE_FIELD_NAME);
-        Float weight = getFloat(jsonObject, WEIGHT_FIELD_NAME);
-        Float adWeight = getFloat(jsonObject, AD_WEIGHT_FIELD_NAME);
-        Boolean alive = getBoolean(jsonObject, ALIVE_FIELD_NAME);
-        Long lastRefTime = getLong(jsonObject, LAST_REF_TIME_FIELD_NAME);
-        String lastRefTimeStr = getString(jsonObject, LAST_REF_TIME_STR_FIELD_NAME);
-        String key = getString(jsonObject, KEY_FIELD_NAME);
+        String ip = getString(jsonObject, IP_MEMBER_NAME);
+        int port = getInteger(jsonObject, PORT_MEMBER_NAME);
+        String site = getString(jsonObject, SITE_MEMBER_NAME);
+        Float weight = getFloat(jsonObject, WEIGHT_MEMBER_NAME);
+        Float adWeight = getFloat(jsonObject, AD_WEIGHT_MEMBER_NAME);
+        Boolean alive = getBoolean(jsonObject, ALIVE_MEMBER_NAME);
+        Long lastRefTime = getLong(jsonObject, LAST_REF_TIME_MEMBER_NAME);
+        String lastRefTimeStr = getString(jsonObject, LAST_REF_TIME_STR_MEMBER_NAME);
+        String key = getString(jsonObject, KEY_MEMBER_NAME);
 
         Server server = new Server();
         server.setIp(ip);
