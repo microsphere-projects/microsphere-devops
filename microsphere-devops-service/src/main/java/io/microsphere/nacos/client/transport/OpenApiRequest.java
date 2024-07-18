@@ -20,6 +20,7 @@ import io.microsphere.nacos.client.http.HttpMethod;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableMap;
@@ -30,6 +31,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see OpenApiRequestParam
+ * @see OpenApiRequestHeader
  * @see OpenApiClient
  * @see OpenApiResponse
  * @since 1.0.0
@@ -42,11 +44,14 @@ public class OpenApiRequest {
 
     private final Map<String, String> queryParameters;
 
-    protected OpenApiRequest(String endpoint, HttpMethod method, Map<String, String> queryParameters) {
+    private final Map<String, String> headers;
+
+    protected OpenApiRequest(String endpoint, HttpMethod method, Map<String, String> queryParameters, Map<String, String> headers) {
         requireNonNull(endpoint, "The 'endpoint' argument must not be null");
         this.endpoint = endpoint;
         this.method = method == null ? HttpMethod.GET : method;
         this.queryParameters = queryParameters;
+        this.headers = headers;
     }
 
     /**
@@ -96,6 +101,8 @@ public class OpenApiRequest {
 
         private Map<String, String> queryParameters;
 
+        private Map<String, String> headers;
+
         Builder(String endpoint) {
             requireNonNull(endpoint, "The 'endpoint' argument must not be null");
             this.endpoint = endpoint;
@@ -114,25 +121,59 @@ public class OpenApiRequest {
             return queryParameter(param.getName(), param.toValue(value));
         }
 
-        public Builder queryParameter(String name, Object value) {
+        protected Builder queryParameter(String name, Object value) {
             return queryParameter(name, value == null ? null : value.toString());
         }
 
-        public Builder queryParameter(String name, String value) {
+        protected Builder queryParameter(String name, String value) {
+            return set(name, value, this::getQueryParameters);
+        }
+
+        public Builder header(OpenApiRequestHeader header, String value) {
+            return header(header.getName(), value);
+        }
+
+        public Builder header(OpenApiRequestHeader header, Object value) {
+            return header(header.getName(), header.toValue(value));
+        }
+
+        protected Builder header(String name, Object value) {
+            return header(name, value == null ? null : value.toString());
+        }
+
+        protected Builder header(String name, String value) {
+            return set(name, value, this::getHeaders);
+        }
+
+        private Builder set(String name, String value, Supplier<Map<String, String>> mapSupplier) {
             if (name == null && value == null) {
                 return this;
             }
+            Map<String, String> map = mapSupplier.get();
+            map.put(name, value);
+            return this;
+        }
+
+        private Map<String, String> getQueryParameters() {
             Map<String, String> params = this.queryParameters;
             if (params == null) {
                 params = new HashMap<>();
                 this.queryParameters = params;
             }
-            params.put(name, value);
-            return this;
+            return params;
+        }
+
+        private Map<String, String> getHeaders() {
+            Map<String, String> headers = this.headers;
+            if (headers == null) {
+                headers = new HashMap<>();
+                this.headers = headers;
+            }
+            return headers;
         }
 
         public OpenApiRequest build() {
-            return new OpenApiRequest(this.endpoint, this.method, this.queryParameters);
+            return new OpenApiRequest(this.endpoint, this.method, this.queryParameters, this.headers);
         }
 
         public static Builder from(OpenApiRequest request) {

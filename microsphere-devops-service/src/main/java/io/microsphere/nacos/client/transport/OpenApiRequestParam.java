@@ -30,6 +30,7 @@ import static io.microsphere.nacos.client.util.StringUtils.collectionToCommaDeli
  * The enumeration for Open API Request Parameters
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @see OpenApiRequestHeader
  * @see OpenApiRequest
  * @see OpenApiHttpClient
  * @since 1.0.0
