@@ -131,7 +131,7 @@ public class OpenApiInstanceClient implements InstanceClient {
 
     @Override
     public boolean updateHealth(UpdateHealthInstance updateHealthInstance) {
-        OpenApiRequest request = buildRequest(updateHealthInstance, PUT);
+        OpenApiRequest request = buildHealthRequest(updateHealthInstance, PUT);
         return responseMessage(request);
     }
 
@@ -205,7 +205,7 @@ public class OpenApiInstanceClient implements InstanceClient {
                 .queryParameter(INSTANCE_HEALTHY, instance.getHealthy());
     }
 
-    private OpenApiRequest buildRequest(UpdateHealthInstance instance, HttpMethod method) {
+    private OpenApiRequest buildHealthRequest(UpdateHealthInstance instance, HttpMethod method) {
         return OpenApiRequest.Builder.create(INSTANCE_HEALTH_ENDPOINT)
                 .method(method)
                 .queryParameter(NAMESPACE_ID, instance.getNamespaceId())
@@ -230,7 +230,7 @@ public class OpenApiInstanceClient implements InstanceClient {
         return OpenApiRequest.Builder.create(INSTANCE_ENDPOINT)
                 .method(method)
                 .queryParameter(NAMESPACE_ID, instance.getNamespaceId())
-                .queryParameter(SERVICE_NAME, instance.getGroupName())
+                .queryParameter(SERVICE_GROUP_NAME, instance.getGroupName())
                 .queryParameter(SERVICE_NAME, instance.getServiceName())
                 .queryParameter(CLUSTER_NAME, instance.getClusterName())
                 .queryParameter(INSTANCE_IP, instance.getIp())
