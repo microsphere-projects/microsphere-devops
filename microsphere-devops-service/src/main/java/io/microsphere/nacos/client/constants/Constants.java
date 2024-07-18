@@ -191,4 +191,141 @@ public interface Constants {
      */
     String GROUP_SERVICE_NAME_SEPARATOR = "@@";
 
+
+    // Open API Request Parameters
+
+    /**
+     * The request parameter name of Nacos Authentication username : "username"
+     */
+    String USER_NAME_PARAM_NAME = "username";
+
+    /**
+     * The request parameter name of Nacos Authentication password : "password"
+     */
+    String PASSWORD_PARAM_NAME = "password";
+
+    /**
+     * The request parameter name of Nacos Authentication access token : "accessToken"
+     */
+    String ACCESS_TOKEN_PARAM_NAME = "accessToken";
+
+    /**
+     * The request parameter name of the id of parameter for Nacos: "namespaceId"
+     */
+    String NAMESPACE_ID_PARAM_NAME = "namespaceId";
+
+    /**
+     * The request parameter name of Nacos Discovery's group name : "groupName"
+     */
+    String GROUP_NAME_PARAM_NAME = "groupName";
+
+    /**
+     * The request parameter name of Nacos Discovery's service name : "serviceName"
+     */
+    String SERVICE_NAME_PARAM_NAME = "serviceName";
+
+    /**
+     * The request parameter name of Nacos Discovery's service name : "clusterName"
+     */
+    String CLUSTER_NAME_PARAM_NAME = "clusterName";
+
+    /**
+     * The request parameter name of "tenant" a.k.a id of Nacos configuration's namespace: "tenant"
+     */
+    String CONFIG_TENANT_PARAM_NAME = "tenant";
+
+    /**
+     * The request parameter name of Nacos configuration's group : "group"
+     */
+    String CONFIG_GROUP_PARAM_NAME = "group";
+
+    /**
+     * The request parameter name of Nacos configuration's dataId : "dataId"
+     */
+    String CONFIG_DATA_ID_PARAM_NAME = "dataId";
+
+    /**
+     * The request parameter name of Nacos "show" details : "show"
+     */
+    String SHOW_PARAM_NAME = "show";
+
+    /**
+     * The request parameter name of Nacos configuration's content : "content"
+     */
+    String CONFIG_CONTENT_PARAM_NAME = "content";
+
+    /**
+     * The request parameter name of Nacos configuration's tag : "tag"
+     */
+    String TAG_PARAM_NAME = "tag";
+
+    /**
+     * The request parameter name of Nacos configuration's application name: "appName"
+     */
+    String APP_NAME_PARAM_NAME = "appName";
+
+    /**
+     * The request parameter name of Nacos configuration's operator: "src_user"
+     */
+    String OPERATOR_PARAM_NAME = "src_user";
+
+    /**
+     * The request parameter name of Nacos configuration's tags: "config_tags"
+     */
+    String CONFIG_TAGS_PARAM_NAME = "config_tags";
+
+    /**
+     * The request parameter name of Nacos configuration's description : "desc"
+//     */
+    String DESCRIPTION_PARAM_NAME = "desc";
+
+    /**
+     * The request parameter name of Nacos configuration's use : "use"
+     */
+    String CONFIG_USE_PARAM_NAME = "use";
+
+    /**
+     * The request parameter name of Nacos configuration's effect : "effect"
+     */
+    String CONFIG_EFFECT_PARAM_NAME = "effect";
+
+    /**
+     * The request parameter name of "Nacos configuration's type : "type"
+     */
+    String CONFIG_TYPE_PARAM_NAME = "type";
+
+    /**
+     * The request parameter name of Nacos configuration's schema : "schema"
+     */
+    String CONFIG_SCHEMA_PARAM_NAME = "schema";
+
+    /**
+     * The request parameter name of Nacos configuration's history search: "search"
+     */
+    String SEARCH_PARAM_NAME = "search";
+
+    /**
+     * The request parameter value of Nacos configuration's history search: "accurate"
+     */
+    String SEARCH_PARAM_VALUE = "accurate";
+
+    /**
+     * The request parameter name of Nacos page number : "pageNo"
+     */
+    String PAGE_NUMBER_PARAM_NAME = "pageNo";
+
+    /**
+     * The request parameter name of Nacos page size : "pageSize"
+     */
+    String PAGE_SIZE_PARAM_NAME = "pageSize";
+
+    /**
+     * The request parameter name of Nacos configuration's history revision : "nid"
+     */
+    String CONFIG_REVISION_PARAM_NAME = "nid";
+
+    /**
+     * The request parameter name of Nacos configuration's id : "id"
+     */
+    String CONFIG_ID_PARAM_NAME = "id";
 }
