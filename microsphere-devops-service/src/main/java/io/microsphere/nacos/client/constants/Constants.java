@@ -191,6 +191,20 @@ public interface Constants {
      */
     String GROUP_SERVICE_NAME_SEPARATOR = "@@";
 
+    char LISTENING_CONFIG_SEPARATOR_CHAR = (char) 1;
+
+    char LISTENING_CONFIG_FIELD_SEPARATOR_CHAR = (char) 2;
+
+    /**
+     * The separator for listening configs
+     */
+    String LISTENING_CONFIG_SEPARATOR = Character.toString(LISTENING_CONFIG_SEPARATOR_CHAR);
+
+    /**
+     * The separator for listening config's fields
+     */
+    String LISTENING_CONFIG_FIELD_SEPARATOR = Character.toString(LISTENING_CONFIG_FIELD_SEPARATOR_CHAR);
+
 
     // Open API Request Parameters
 

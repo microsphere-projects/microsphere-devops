@@ -67,7 +67,7 @@ public class ConfigClientTest extends OpenApiTest {
 
     @Test
     public void test() {
-        ConfigClient client = new OpenApiConfigClient(openApiClient);
+        ConfigClient client = new OpenApiConfigClient(this.openApiClient, this.nacosClientConfig);
 
         // Test deleteConfig()
         assertTrue(client.deleteConfig(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID));

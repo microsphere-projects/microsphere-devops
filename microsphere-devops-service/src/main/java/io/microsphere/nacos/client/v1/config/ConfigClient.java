@@ -18,6 +18,7 @@ package io.microsphere.nacos.client.v1.config;
 
 import io.microsphere.nacos.client.common.model.Page;
 import io.microsphere.nacos.client.constants.Constants;
+import io.microsphere.nacos.client.v1.config.event.ConfigChangedListener;
 import io.microsphere.nacos.client.v1.config.model.Config;
 import io.microsphere.nacos.client.v1.config.model.HistoryConfig;
 import io.microsphere.nacos.client.v1.config.model.NewConfig;
@@ -335,4 +336,74 @@ public interface ConfigClient {
      * @since Nacos 1.4.0
      */
     HistoryConfig getPreviousHistoryConfig(String namespaceId, String group, String dataId, String id);
+
+    /**
+     * Add a {@link ConfigChangedListener} to listen the {@link Config} being changed under
+     * the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace} and the
+     * {@link Constants#DEFAULT_GROUP_NAME "DEFAULT_GROUP" group}
+     *
+     * @param dataId   the data id of {@link Config}
+     * @param listener an instance of {@link ConfigChangedListener}
+     */
+    default void addEventListener(String dataId, ConfigChangedListener listener) {
+        addEventListener(DEFAULT_GROUP_NAME, dataId, listener);
+    }
+
+    /**
+     * Add a {@link ConfigChangedListener} to listen the {@link Config} being changed under
+     * the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace}
+     *
+     * @param dataId   the data id of {@link Config}
+     * @param group    the group of {@link Config}
+     * @param listener an instance of {@link ConfigChangedListener}
+     */
+    default void addEventListener(String group, String dataId, ConfigChangedListener listener) {
+        addEventListener(null, group, dataId, listener);
+    }
+
+    /**
+     * Add a {@link ConfigChangedListener} to listen the {@link Config} being changed
+     *
+     * @param namespaceId {@link Namespace#getNamespaceId() the id of namespace}, a.k.a the "tenant" (optional).
+     *                    if not specified, the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace} will be used.
+     * @param group       the group of {@link Config}
+     * @param dataId      the data id of {@link Config}
+     * @param listener    an instance of {@link ConfigChangedListener}
+     */
+    void addEventListener(String namespaceId, String group, String dataId, ConfigChangedListener listener);
+
+    /**
+     * Remove a {@link ConfigChangedListener} to listen the {@link Config} being changed under
+     * the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace} and the
+     * {@link Constants#DEFAULT_GROUP_NAME "DEFAULT_GROUP" group}
+     *
+     * @param dataId   the data id of {@link Config}
+     * @param listener an instance of {@link ConfigChangedListener}
+     */
+    default void removeEventListener(String dataId, ConfigChangedListener listener) {
+        removeEventListener(DEFAULT_GROUP_NAME, dataId, listener);
+    }
+
+    /**
+     * Remove a {@link ConfigChangedListener} to listen the {@link Config} being changed under
+     * the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace}
+     *
+     * @param dataId   the data id of {@link Config}
+     * @param group    the group of {@link Config}
+     * @param listener an instance of {@link ConfigChangedListener}
+     */
+    default void removeEventListener(String group, String dataId, ConfigChangedListener listener) {
+        removeEventListener(null, group, dataId, listener);
+    }
+
+    /**
+     * Remove a {@link ConfigChangedListener} to listen the {@link Config} being changed
+     *
+     * @param namespaceId {@link Namespace#getNamespaceId() the id of namespace}, a.k.a the "tenant" (optional).
+     *                    if not specified, the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace} will be used.
+     * @param group       the group of {@link Config}
+     * @param dataId      the data id of {@link Config}
+     * @param listener    an instance of {@link ConfigChangedListener}
+     */
+    void removeEventListener(String namespaceId, String group, String dataId, ConfigChangedListener listener);
 }
