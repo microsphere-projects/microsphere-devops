@@ -18,10 +18,8 @@ package io.microsphere.nacos.client.common.auth;
 
 import io.microsphere.nacos.client.NacosClientConfig;
 import io.microsphere.nacos.client.common.auth.model.Authentication;
-import io.microsphere.nacos.client.http.HttpMethod;
 import io.microsphere.nacos.client.transport.OpenApiClient;
 import io.microsphere.nacos.client.transport.OpenApiRequest;
-import io.microsphere.nacos.client.transport.OpenApiRequestParam;
 
 import static io.microsphere.nacos.client.http.HttpMethod.POST;
 import static io.microsphere.nacos.client.transport.OpenApiRequestParam.PASSWORD;

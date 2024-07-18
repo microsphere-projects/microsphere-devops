@@ -21,7 +21,6 @@ import io.microsphere.nacos.client.transport.OpenApiClient;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.lang.reflect.Type;
 
 import static io.microsphere.nacos.client.constants.Constants.ENCODING;
