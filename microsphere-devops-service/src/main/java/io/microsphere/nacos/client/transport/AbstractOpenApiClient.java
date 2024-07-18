@@ -21,13 +21,12 @@ import io.microsphere.nacos.client.NacosClientConfig;
 import io.microsphere.nacos.client.io.DeserializationException;
 import io.microsphere.nacos.client.io.Deserializer;
 
-import java.io.Serializable;
 import java.lang.reflect.Type;
 
 import static io.microsphere.nacos.client.ErrorCode.CLIENT_ERROR;
 import static io.microsphere.nacos.client.ErrorCode.DESERIALIZATION_ERROR;
-import static io.microsphere.nacos.client.http.HttpRequestParams.ACCESS_TOKEN;
 import static io.microsphere.nacos.client.transport.OpenApiRequest.Builder.from;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.ACCESS_TOKEN;
 import static io.microsphere.nacos.client.util.IOUtils.readAsString;
 import static io.microsphere.nacos.client.util.StringUtils.isBlank;
 import static java.lang.String.format;
@@ -51,7 +50,7 @@ public abstract class AbstractOpenApiClient implements OpenApiClient {
     public final OpenApiResponse execute(OpenApiRequest request) throws OpenApiClientException {
         String accessToken = getAccessToken();
         OpenApiRequest openApiRequest = accessToken == null ? request :
-                from(request).queryParameter(ACCESS_TOKEN.getName(), accessToken).build();
+                from(request).queryParameter(ACCESS_TOKEN, accessToken).build();
         return doExecute(openApiRequest);
     }
 
