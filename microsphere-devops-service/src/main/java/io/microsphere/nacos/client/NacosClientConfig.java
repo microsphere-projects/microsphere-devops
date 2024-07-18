@@ -17,9 +17,11 @@
 package io.microsphere.nacos.client;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import static io.microsphere.nacos.client.constants.Constants.CONNECTION_TIMEOUT;
 import static io.microsphere.nacos.client.constants.Constants.ENCODING;
+import static io.microsphere.nacos.client.constants.Constants.LONG_POLLING_TIMEOUT;
 import static io.microsphere.nacos.client.constants.Constants.MAX_CONNECTIONS;
 import static io.microsphere.nacos.client.constants.Constants.MAX_PER_ROUTE_CONNECTIONS;
 import static io.microsphere.nacos.client.constants.Constants.READ_TIMEOUT;
@@ -88,6 +90,11 @@ public class NacosClientConfig implements Serializable {
      * The read timeout for Nacos Client
      */
     private int readTimeout = READ_TIMEOUT;
+
+    /**
+     * The long polling timeout for Nacos Client
+     */
+    private int longPollingTimeout = LONG_POLLING_TIMEOUT;
 
     /**
      * The encoding for Nacos Client
@@ -182,6 +189,14 @@ public class NacosClientConfig implements Serializable {
         this.readTimeout = readTimeout;
     }
 
+    public int getLongPollingTimeout() {
+        return longPollingTimeout;
+    }
+
+    public void setLongPollingTimeout(int longPollingTimeout) {
+        this.longPollingTimeout = longPollingTimeout;
+    }
+
     public String getEncoding() {
         return encoding;
     }
@@ -192,6 +207,32 @@ public class NacosClientConfig implements Serializable {
 
     public boolean isAuthorizationEnabled() {
         return this.username != null && this.password != null;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof NacosClientConfig that)) return false;
+
+        return maxConnections == that.maxConnections && maxPerRoute == that.maxPerRoute && connectionTimeout == that.connectionTimeout && readTimeout == that.readTimeout && longPollingTimeout == that.longPollingTimeout && Objects.equals(serverAddress, that.serverAddress) && Objects.equals(scheme, that.scheme) && Objects.equals(contextPath, that.contextPath) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(accessKey, that.accessKey) && Objects.equals(secretKey, that.secretKey) && Objects.equals(encoding, that.encoding);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(serverAddress);
+        result = 31 * result + Objects.hashCode(scheme);
+        result = 31 * result + Objects.hashCode(contextPath);
+        result = 31 * result + Objects.hashCode(username);
+        result = 31 * result + Objects.hashCode(password);
+        result = 31 * result + Objects.hashCode(accessKey);
+        result = 31 * result + Objects.hashCode(secretKey);
+        result = 31 * result + maxConnections;
+        result = 31 * result + maxPerRoute;
+        result = 31 * result + connectionTimeout;
+        result = 31 * result + readTimeout;
+        result = 31 * result + longPollingTimeout;
+        result = 31 * result + Objects.hashCode(encoding);
+        return result;
     }
 
     @Override
@@ -208,6 +249,7 @@ public class NacosClientConfig implements Serializable {
                 ", maxPerRoute=" + maxPerRoute +
                 ", connectionTimeout=" + connectionTimeout +
                 ", readTimeout=" + readTimeout +
+                ", longPollingTimeout=" + longPollingTimeout +
                 ", encoding='" + encoding + '\'' +
                 '}';
     }
