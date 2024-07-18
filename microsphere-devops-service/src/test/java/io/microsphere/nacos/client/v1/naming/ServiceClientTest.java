@@ -16,22 +16,26 @@
  */
 package io.microsphere.nacos.client.v1.naming;
 
+import io.microsphere.nacos.client.ErrorCode;
 import io.microsphere.nacos.client.OpenApiTest;
 import io.microsphere.nacos.client.common.model.Page;
+import io.microsphere.nacos.client.transport.OpenApiClientException;
 import io.microsphere.nacos.client.v1.naming.model.Selector;
 import io.microsphere.nacos.client.v1.naming.model.Service;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static io.microsphere.nacos.client.ErrorCode.INTERNAL_SERVER_ERROR;
 import static io.microsphere.nacos.client.constants.Constants.PAGE_NUMBER;
 import static io.microsphere.nacos.client.constants.Constants.PAGE_SIZE;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -50,33 +54,36 @@ public class ServiceClientTest extends OpenApiTest {
 
     static final Set<String> TEST_CLUSTERS = singleton(TEST_CLUSTER);
 
+    private ServiceClient client;
+
+    @BeforeEach
+    public void before() {
+        client = new OpenApiServiceClient(openApiClient);
+        try {
+            client.deleteService(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_SERVICE_NAME);
+        } catch (Throwable ignore) {
+        }
+    }
+
     @Test
     public void test() {
+
         // Test getServiceNames()
-        ServiceClient client = new OpenApiServiceClient(openApiClient);
-        Page<String> page = client.getServiceNames(TEST_NAMESPACE_ID);
+        Page<String> page = client.getServiceNames(TEST_NAMESPACE_ID, TEST_GROUP_NAME);
         List<String> serviceNames = page.getElements();
 
         assertEquals(PAGE_NUMBER, page.getPageNumber());
         assertEquals(PAGE_SIZE, page.getPageSize());
-        assertTrue(page.getTotalElements() < PAGE_SIZE);
-
-        // Test getService()
-        for (String serviceName : serviceNames) {
-            Service service = client.getService(TEST_NAMESPACE_ID, serviceName);
-            assertEquals(serviceName, service.getName());
-            assertEquals(TEST_NAMESPACE_ID, service.getNamespaceId());
-        }
-
+        assertTrue(page.isEmpty());
+        assertTrue(serviceNames.isEmpty());
 
         // Test createService()
         // Bug? failed response from Nacos Server
         Service service = createService();
         assertTrue(client.createService(service));
 
-
         // Test getService()
-        Service testService = client.getService(TEST_NAMESPACE_ID, TEST_SERVICE_NAME);
+        Service testService = client.getService(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_SERVICE_NAME);
         assertEquals(TEST_NAMESPACE_ID, testService.getNamespaceId());
         assertEquals(TEST_GROUP_NAME, testService.getGroupName());
         assertEquals(TEST_SERVICE_NAME, testService.getName());
@@ -88,13 +95,22 @@ public class ServiceClientTest extends OpenApiTest {
         service.setProtectThreshold(0.5f);
         assertTrue(client.updateService(service));
 
+        testService = client.getService(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_SERVICE_NAME);
+        assertEquals(0.5f, testService.getProtectThreshold());
 
         // Test DeleteService()
         assertTrue(client.deleteService(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_SERVICE_NAME));
 
         // Test getService() : not found
-        testService = client.getService(TEST_NAMESPACE_ID, TEST_SERVICE_NAME);
-        assertNull(testService);
+        OpenApiClientException failure = null;
+        try {
+            testService = client.getService(TEST_NAMESPACE_ID, TEST_SERVICE_NAME);
+        } catch (OpenApiClientException e) {
+            failure = e;
+        }
+
+        assertNotNull(failure);
+        assertEquals(INTERNAL_SERVER_ERROR, failure.getErrorCode());
     }
 
     private Service createService() {
