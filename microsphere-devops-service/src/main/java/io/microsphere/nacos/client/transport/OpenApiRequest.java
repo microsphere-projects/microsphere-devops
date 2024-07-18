@@ -105,6 +105,14 @@ public class OpenApiRequest {
             return this;
         }
 
+        public Builder queryParameter(OpenApiRequestParam param, String value) {
+            return queryParameter(param.getName(), value);
+        }
+
+        public Builder queryParameter(OpenApiRequestParam param, Object value) {
+            return queryParameter(param.getName(), param.toValue(value));
+        }
+
         public Builder queryParameter(String name, Object value) {
             return queryParameter(name, value == null ? null : value.toString());
         }
