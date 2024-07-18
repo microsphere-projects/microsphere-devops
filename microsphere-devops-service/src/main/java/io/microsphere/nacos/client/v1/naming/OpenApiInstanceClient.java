@@ -53,9 +53,9 @@ import static io.microsphere.nacos.client.transport.OpenApiRequestParam.INSTANCE
 import static io.microsphere.nacos.client.transport.OpenApiRequestParam.INSTANCE_HEALTHY;
 import static io.microsphere.nacos.client.transport.OpenApiRequestParam.INSTANCE_HEALTHY_ONLY;
 import static io.microsphere.nacos.client.transport.OpenApiRequestParam.INSTANCE_IP;
-import static io.microsphere.nacos.client.transport.OpenApiRequestParam.METADATA;
 import static io.microsphere.nacos.client.transport.OpenApiRequestParam.INSTANCE_PORT;
 import static io.microsphere.nacos.client.transport.OpenApiRequestParam.INSTANCE_WEIGHT;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.METADATA;
 import static io.microsphere.nacos.client.transport.OpenApiRequestParam.NAMESPACE_ID;
 import static io.microsphere.nacos.client.transport.OpenApiRequestParam.SERVICE_GROUP_NAME;
 import static io.microsphere.nacos.client.transport.OpenApiRequestParam.SERVICE_NAME;

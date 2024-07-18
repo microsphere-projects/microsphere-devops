@@ -16,7 +16,6 @@
  */
 package io.microsphere.nacos.client.v1.naming;
 
-import io.microsphere.nacos.client.ErrorCode;
 import io.microsphere.nacos.client.OpenApiTest;
 import io.microsphere.nacos.client.common.model.Page;
 import io.microsphere.nacos.client.transport.OpenApiClientException;
