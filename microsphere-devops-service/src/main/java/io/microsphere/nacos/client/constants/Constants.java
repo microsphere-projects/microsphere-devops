@@ -21,6 +21,7 @@ import io.microsphere.nacos.client.transport.OpenApiRequest;
 import static java.lang.Integer.getInteger;
 import static java.lang.System.getProperty;
 import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * The Constants
@@ -57,6 +58,11 @@ public interface Constants {
     String READ_TIMEOUT_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "read-timeout";
 
     /**
+     * The property name of the long polling timeout for Nacos Client: "microsphere.nacos.client.long-polling-timeout"
+     */
+    String LONG_POLL_TIMEOUT_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "long-polling-timeout";
+
+    /**
      * The property name of the file encoding: "microsphere.nacos.client.encoding"
      */
     String ENCODING_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "encoding";
@@ -90,6 +96,11 @@ public interface Constants {
      * The default value of the read timeout for Nacos Client : 3 minutes
      */
     int DEFAULT_READ_TIMEOUT = (int) MINUTES.toMillis(3);
+
+    /**
+     * The default value of the long polling timeout for Nacos Client : 30 seconds
+     */
+    int DEFAULT_LONG_POLLING_TIMEOUT = (int) SECONDS.toMicros(30);
 
     /**
      * The default value of the file encoding : "UTF-8"
@@ -133,6 +144,13 @@ public interface Constants {
      * @see #DEFAULT_READ_TIMEOUT
      */
     int READ_TIMEOUT = getInteger(READ_TIMEOUT_PROPERTY_NAME, DEFAULT_READ_TIMEOUT);
+
+    /**
+     * The long polling timeout for Nacos Client
+     *
+     * @see #DEFAULT_LONG_POLLING_TIMEOUT
+     */
+    int LONG_POLLING_TIMEOUT = getInteger(LONG_POLL_TIMEOUT_PROPERTY_NAME, DEFAULT_LONG_POLLING_TIMEOUT);
 
     /**
      * The encoding for Nacos Client
