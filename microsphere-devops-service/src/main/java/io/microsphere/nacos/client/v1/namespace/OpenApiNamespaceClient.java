@@ -99,7 +99,7 @@ public class OpenApiNamespaceClient implements NamespaceClient {
     public boolean deleteNamespace(String namespaceId) {
         OpenApiRequest request = OpenApiRequest.Builder.create(NAMESPACES_ENDPOINT)
                 .method(HttpMethod.DELETE)
-                .queryParameter("namespaceId", namespaceId)
+                .queryParameter(NAMESPACE_ID, namespaceId)
                 .build();
         return this.openApiClient.execute(request, boolean.class);
     }
