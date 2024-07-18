@@ -18,36 +18,11 @@ package io.microsphere.nacos.client.transport;
 
 import io.microsphere.nacos.client.v1.naming.ConsistencyType;
 
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static io.microsphere.nacos.client.constants.Constants.ACCESS_TOKEN_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.APP_NAME_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.CLUSTER_NAME_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.CONFIG_CONTENT_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.CONFIG_DATA_ID_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.CONFIG_EFFECT_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.CONFIG_GROUP_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.CONFIG_ID_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.CONFIG_REVISION_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.CONFIG_SCHEMA_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.CONFIG_SEARCH_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.CONFIG_TAGS_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.CONFIG_TENANT_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.CONFIG_TYPE_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.CONFIG_USE_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.DESCRIPTION_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.NAMESPACE_ID_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.OPERATOR_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.PAGE_NUMBER_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.PAGE_SIZE_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.PASSWORD_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.SERVICE_GROUP_NAME_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.SERVICE_NAME_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.SHOW_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.TAG_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.USER_NAME_PARAM_NAME;
 import static io.microsphere.nacos.client.util.JsonUtils.toJSON;
 import static io.microsphere.nacos.client.util.StringUtils.collectionToCommaDelimitedString;
 
@@ -61,43 +36,52 @@ import static io.microsphere.nacos.client.util.StringUtils.collectionToCommaDeli
  */
 public enum OpenApiRequestParam {
 
-    USER_NAME(USER_NAME_PARAM_NAME),
+    // Commons
 
-    PASSWORD(PASSWORD_PARAM_NAME),
+    /**
+     * The request of Nacos Authentication username
+     */
+    USER_NAME("username"),
 
-    ACCESS_TOKEN(ACCESS_TOKEN_PARAM_NAME),
+    /**
+     * The request parameter of Nacos Authentication password
+     */
+    PASSWORD("password"),
 
-    NAMESPACE_ID(NAMESPACE_ID_PARAM_NAME),
+    /**
+     * The request parameter of Nacos Authentication access token
+     */
+    ACCESS_TOKEN("accessToken"),
 
     /**
      * The request parameter of Nacos page number
      */
-    PAGE_NUMBER(PAGE_NUMBER_PARAM_NAME),
+    PAGE_NUMBER("pageNo"),
 
     /**
      * The request parameter of Nacos page size
      */
-    PAGE_SIZE(PAGE_SIZE_PARAM_NAME),
+    PAGE_SIZE("pageSize"),
 
     /**
      * The request parameter of Nacos "show" details
      */
-    SHOW(SHOW_PARAM_NAME),
+    SHOW("show"),
 
     /**
      * The request parameter of Nacos application name
      */
-    APP_NAME(APP_NAME_PARAM_NAME),
+    APP_NAME("appName"),
 
     /**
      * The request parameter of Nacos operator
      */
-    OPERATOR(OPERATOR_PARAM_NAME),
+    OPERATOR("src_user"),
 
     /**
      * The request parameter of Nacos description
      */
-    DESCRIPTION(DESCRIPTION_PARAM_NAME),
+    DESCRIPTION("desc"),
 
     /**
      * The request parameter of Nacos consistency type
@@ -127,6 +111,11 @@ public enum OpenApiRequestParam {
     SERVER_SWITCH_DEBUG("debug", boolean.class),
 
     // Namespace
+
+    /**
+     * The request parameter of Nacos Namespace ID
+     */
+    NAMESPACE_ID("namespaceId"),
 
     /**
      * The request parameter of Nacos Namespace's id
@@ -165,79 +154,79 @@ public enum OpenApiRequestParam {
      *
      * @see #NAMESPACE_ID
      */
-    CONFIG_TENANT(CONFIG_TENANT_PARAM_NAME),
+    CONFIG_TENANT("tenant"),
 
     /**
      * The request parameter of Nacos configuration's history search
      */
-    CONFIG_SEARCH(CONFIG_SEARCH_PARAM_NAME),
+    CONFIG_SEARCH("search"),
 
     /**
      * The request parameter of Nacos configuration's group
      */
-    CONFIG_GROUP(CONFIG_GROUP_PARAM_NAME),
+    CONFIG_GROUP("group"),
 
     /**
      * The request parameter of Nacos configuration's dataId
      */
-    CONFIG_DATA_ID(CONFIG_DATA_ID_PARAM_NAME),
+    CONFIG_DATA_ID("dataId"),
 
     /**
      * The request parameter of Nacos configuration's content
      */
-    CONFIG_CONTENT(CONFIG_CONTENT_PARAM_NAME),
+    CONFIG_CONTENT("content"),
 
     /**
      * The request parameter of Nacos configuration's tag
      */
-    CONFIG_TAG(TAG_PARAM_NAME),
+    CONFIG_TAG("tag"),
 
     /**
      * The request parameter of Nacos configuration's tags
      */
-    CONFIG_TAGS(CONFIG_TAGS_PARAM_NAME),
+    CONFIG_TAGS("config_tags"),
 
     /**
      * The request parameter of Nacos configuration's use
      */
-    CONFIG_USE(CONFIG_USE_PARAM_NAME),
+    CONFIG_USE("use"),
 
     /**
      * The request parameter of Nacos configuration's effect
      */
-    CONFIG_EFFECT(CONFIG_EFFECT_PARAM_NAME),
+    CONFIG_EFFECT("effect"),
 
     /**
      * The request parameter of "Nacos configuration's type
      */
-    CONFIG_TYPE(CONFIG_TYPE_PARAM_NAME),
+    CONFIG_TYPE("type"),
 
     /**
      * The request parameter of Nacos configuration's schema
      */
-    CONFIG_SCHEMA(CONFIG_SCHEMA_PARAM_NAME),
+    CONFIG_SCHEMA("schema"),
 
     /**
      * The request parameter of Nacos configuration's history revision : "nid"
      */
-    CONFIG_REVISION(CONFIG_REVISION_PARAM_NAME),
+    CONFIG_REVISION("nid"),
 
     /**
      * The request parameter of Nacos configuration's id : "id"
      */
-    CONFIG_ID(CONFIG_ID_PARAM_NAME),
+    CONFIG_ID("id"),
 
     // Discovery
 
     /**
      * The request parameter of Nacos Discovery's group name
      */
-    SERVICE_GROUP_NAME(SERVICE_GROUP_NAME_PARAM_NAME),
+    SERVICE_GROUP_NAME("groupName"),
 
     /**
      * The request parameter of Nacos Discovery's service name
      */
-    SERVICE_NAME(SERVICE_NAME_PARAM_NAME),
+    SERVICE_NAME("serviceName"),
 
     /**
      * The request parameter of Nacos Discovery's service protect threshold
@@ -252,7 +241,7 @@ public enum OpenApiRequestParam {
     /**
      * The request parameter of Nacos Discovery's cluster
      */
-    CLUSTER_NAME(CLUSTER_NAME_PARAM_NAME),
+    CLUSTER_NAME("clusterName"),
 
     /**
      * The request parameter of Nacos Discovery's clusters
@@ -318,17 +307,20 @@ public enum OpenApiRequestParam {
     },
     ;
     /**
-     * The HTTP request parameter name
+     * The request parameter name
      */
     private final String name;
 
-    private final Class<?> type;
+    /**
+     * The request parameter type
+     */
+    private final Type type;
 
     OpenApiRequestParam(String name) {
         this(name, String.class);
     }
 
-    OpenApiRequestParam(String name, Class<?> type) {
+    OpenApiRequestParam(String name, Type type) {
         this.name = name;
         this.type = type;
     }
@@ -347,7 +339,7 @@ public enum OpenApiRequestParam {
      *
      * @return non-null
      */
-    public Class<?> getType() {
+    public Type getType() {
         return type;
     }
 
