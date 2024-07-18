@@ -28,6 +28,7 @@ import io.microsphere.nacos.client.v1.naming.model.NewInstance;
 import io.microsphere.nacos.client.v1.naming.model.QueryInstance;
 import io.microsphere.nacos.client.v1.naming.model.UpdateHealthInstance;
 import io.microsphere.nacos.client.v1.naming.model.UpdateInstance;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -52,12 +53,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class InstanceClientTest extends OpenApiTest {
 
+    private InstanceClient client;
+
+    private Instance instance;
+
+    @BeforeEach
+    public void before() {
+        this.client = new OpenApiInstanceClient(this.openApiClient);
+        this.instance = createInstance();
+        DeleteInstance deleteInstance = new DeleteInstance();
+        deleteInstance.from(instance);
+        this.client.deregister(deleteInstance);
+    }
+
     @Test
     public void test() {
-        OpenApiInstanceClient client = new OpenApiInstanceClient(this.openApiClient);
 
         // Test register()
-        Instance instance = createInstance();
         NewInstance newInstance = new NewInstance().from(instance);
         assertTrue(client.register(newInstance));
         assertBaseInstance(instance);
