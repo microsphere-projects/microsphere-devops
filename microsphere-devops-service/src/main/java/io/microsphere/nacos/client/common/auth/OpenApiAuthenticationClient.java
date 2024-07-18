@@ -21,6 +21,11 @@ import io.microsphere.nacos.client.common.auth.model.Authentication;
 import io.microsphere.nacos.client.http.HttpMethod;
 import io.microsphere.nacos.client.transport.OpenApiClient;
 import io.microsphere.nacos.client.transport.OpenApiRequest;
+import io.microsphere.nacos.client.transport.OpenApiRequestParam;
+
+import static io.microsphere.nacos.client.http.HttpMethod.POST;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.PASSWORD;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.USER_NAME;
 
 /**
  * The {@link AuthenticationClient} for <a href="https://nacos.io/docs/v1/auth/">Open API</a>
@@ -43,9 +48,9 @@ public class OpenApiAuthenticationClient implements AuthenticationClient {
     @Override
     public Authentication authenticate() {
         OpenApiRequest request = OpenApiRequest.Builder.create("/v1/auth/login")
-                .method(HttpMethod.POST)
-                .queryParameter("username", nacosClientConfig.getUsername())
-                .queryParameter("password", nacosClientConfig.getPassword())
+                .method(POST)
+                .queryParameter(USER_NAME, nacosClientConfig.getUsername())
+                .queryParameter(PASSWORD, nacosClientConfig.getPassword())
                 .build();
 
         return openApiClient.execute(request, Authentication.class);
