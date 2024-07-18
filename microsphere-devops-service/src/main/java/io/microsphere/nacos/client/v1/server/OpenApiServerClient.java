@@ -24,6 +24,9 @@ import io.microsphere.nacos.client.v1.server.model.ServerSwitch;
 import io.microsphere.nacos.client.v1.server.model.ServersList;
 
 import static io.microsphere.nacos.client.http.HttpMethod.PUT;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.SERVER_SWITCH_DEBUG;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.SERVER_SWITCH_ENTRY;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.SERVER_SWITCH_VALUE;
 import static io.microsphere.nacos.client.util.OpenApiUtils.isOkResponse;
 
 /**
@@ -65,9 +68,9 @@ public class OpenApiServerClient implements ServerClient {
     public boolean updateServerSwitch(String switchName, String switchValue, boolean debug) {
         OpenApiRequest request = OpenApiRequest.Builder.create(SERVER_SWITCH_ENDPOINT)
                 .method(PUT)
-                .queryParameter("entry", switchName)
-                .queryParameter("value", switchValue)
-                .queryParameter("debug", debug)
+                .queryParameter(SERVER_SWITCH_ENTRY, switchName)
+                .queryParameter(SERVER_SWITCH_VALUE, switchValue)
+                .queryParameter(SERVER_SWITCH_DEBUG, debug)
                 .build();
         return isOkResponse(this.openApiClient, request);
     }

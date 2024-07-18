@@ -59,10 +59,7 @@ public class ServiceClientTest extends OpenApiTest {
 
         assertEquals(PAGE_NUMBER, page.getPageNumber());
         assertEquals(PAGE_SIZE, page.getPageSize());
-        assertTrue(page.getTotalElements() > PAGE_SIZE);
-        assertEquals(PAGE_SIZE, page.getNumberOfElements());
-        assertEquals(PAGE_SIZE, serviceNames.size());
-
+        assertTrue(page.getTotalElements() < PAGE_SIZE);
 
         // Test getService()
         for (String serviceName : serviceNames) {

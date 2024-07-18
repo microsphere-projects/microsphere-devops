@@ -44,9 +44,22 @@ import static io.microsphere.nacos.client.http.HttpMethod.DELETE;
 import static io.microsphere.nacos.client.http.HttpMethod.GET;
 import static io.microsphere.nacos.client.http.HttpMethod.POST;
 import static io.microsphere.nacos.client.http.HttpMethod.PUT;
-import static io.microsphere.nacos.client.util.JsonUtils.toJSON;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.CLUSTERS;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.CLUSTER_NAME;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.CONSISTENCY_TYPE;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.INSTANCES;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.INSTANCE_ENABLED;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.INSTANCE_EPHEMERAL;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.INSTANCE_HEALTHY;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.INSTANCE_HEALTHY_ONLY;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.INSTANCE_IP;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.METADATA;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.INSTANCE_PORT;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.INSTANCE_WEIGHT;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.NAMESPACE_ID;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.SERVICE_GROUP_NAME;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.SERVICE_NAME;
 import static io.microsphere.nacos.client.util.OpenApiUtils.isOkResponse;
-import static io.microsphere.nacos.client.util.StringUtils.collectionToCommaDelimitedString;
 import static io.microsphere.nacos.client.util.StringUtils.isBlank;
 import static io.microsphere.nacos.client.v1.naming.ConsistencyType.EPHEMERAL;
 import static java.lang.String.format;
@@ -61,11 +74,13 @@ import static java.lang.String.format;
  */
 public class OpenApiInstanceClient implements InstanceClient {
 
-    private static final String METADATA_BATCH_ENDPOINT = "/v1/ns/instance/metadata/batch";
-
     public static final String INSTANCE_ENDPOINT = "/v1/ns/instance";
 
-    public static final String HEALTH_INSTANCE_ENDPOINT = "/v1/ns/health/instance";
+    public static final String INSTANCES_LIST_ENDPOINT = "/v1/ns/instance/list";
+
+    public static final String INSTANCE_HEALTH_ENDPOINT = "/v1/ns/health/instance";
+
+    private static final String METADATA_BATCH_ENDPOINT = "/v1/ns/instance/metadata/batch";
 
     private final OpenApiClient openApiClient;
 
@@ -93,12 +108,12 @@ public class OpenApiInstanceClient implements InstanceClient {
 
     @Override
     public InstancesList getInstancesList(String namespaceId, String groupName, String serviceName, Set<String> clusters, boolean healthyOnly) {
-        OpenApiRequest request = OpenApiRequest.Builder.create("/v1/ns/instance/list")
-                .queryParameter("namespaceId", namespaceId)
-                .queryParameter("groupName", groupName)
-                .queryParameter("serviceName", serviceName)
-                .queryParameter("clusters", collectionToCommaDelimitedString(clusters))
-                .queryParameter("healthyOnly", healthyOnly)
+        OpenApiRequest request = OpenApiRequest.Builder.create(INSTANCES_LIST_ENDPOINT)
+                .queryParameter(NAMESPACE_ID, namespaceId)
+                .queryParameter(SERVICE_GROUP_NAME, groupName)
+                .queryParameter(SERVICE_NAME, serviceName)
+                .queryParameter(CLUSTERS, clusters)
+                .queryParameter(INSTANCE_HEALTHY_ONLY, healthyOnly)
                 .build();
         InstancesList instancesList = this.openApiClient.execute(request, InstancesList.class);
         List<Instance> instances = instancesList.getHosts();
@@ -153,15 +168,13 @@ public class OpenApiInstanceClient implements InstanceClient {
 
         String namespaceId = namespaceIds.iterator().next();
         String serviceName = serviceNames.iterator().next();
-        String instancesJSON = toJSON(instanceMaps);
-        String metadataJSON = toJSON(metadata);
 
         requestBuilder
-                .queryParameter("namespaceId", namespaceId)
-                .queryParameter("serviceName", serviceName)
-                .queryParameter("consistencyType", consistencyType.getValue())
-                .queryParameter("instances", instancesJSON)
-                .queryParameter("metadata", metadataJSON);
+                .queryParameter(NAMESPACE_ID, namespaceId)
+                .queryParameter(SERVICE_NAME, serviceName)
+                .queryParameter(CONSISTENCY_TYPE, consistencyType)
+                .queryParameter(INSTANCES, instanceMaps)
+                .queryParameter(METADATA, metadata);
 
         OpenApiRequest request = requestBuilder.build();
         return this.openApiClient.execute(request, BatchMetadataResult.class);
@@ -189,39 +202,39 @@ public class OpenApiInstanceClient implements InstanceClient {
 
     private OpenApiRequest.Builder requestBuilder(NewInstance instance, HttpMethod method) {
         return requestBuilder((GenericInstance) instance, method)
-                .queryParameter("healthy", instance.getHealthy());
+                .queryParameter(INSTANCE_HEALTHY, instance.getHealthy());
     }
 
     private OpenApiRequest buildRequest(UpdateHealthInstance instance, HttpMethod method) {
-        return OpenApiRequest.Builder.create(HEALTH_INSTANCE_ENDPOINT)
+        return OpenApiRequest.Builder.create(INSTANCE_HEALTH_ENDPOINT)
                 .method(method)
-                .queryParameter("namespaceId", instance.getNamespaceId())
-                .queryParameter("groupName", instance.getGroupName())
-                .queryParameter("serviceName", instance.getServiceName())
-                .queryParameter("clusterName", instance.getClusterName())
-                .queryParameter("ip", instance.getIp())
-                .queryParameter("port", instance.getPort())
-                .queryParameter("healthy", instance.isHealthy())
+                .queryParameter(NAMESPACE_ID, instance.getNamespaceId())
+                .queryParameter(SERVICE_GROUP_NAME, instance.getGroupName())
+                .queryParameter(SERVICE_NAME, instance.getServiceName())
+                .queryParameter(CLUSTER_NAME, instance.getClusterName())
+                .queryParameter(INSTANCE_IP, instance.getIp())
+                .queryParameter(INSTANCE_PORT, instance.getPort())
+                .queryParameter(INSTANCE_HEALTHY, instance.isHealthy())
                 .build();
     }
 
     private OpenApiRequest.Builder requestBuilder(GenericInstance instance, HttpMethod method) {
         return requestBuilder((BaseInstance) instance, method)
-                .queryParameter("weight", instance.getWeight())
-                .queryParameter("enabled", instance.getEnabled())
-                .queryParameter("ephemeral", instance.getEphemeral())
-                .queryParameter("metadata", instance.getMetadataAsJSON());
+                .queryParameter(INSTANCE_WEIGHT, instance.getWeight())
+                .queryParameter(INSTANCE_ENABLED, instance.getEnabled())
+                .queryParameter(INSTANCE_EPHEMERAL, instance.getEphemeral())
+                .queryParameter(METADATA, instance.getMetadata());
     }
 
     private OpenApiRequest.Builder requestBuilder(BaseInstance instance, HttpMethod method) {
         return OpenApiRequest.Builder.create(INSTANCE_ENDPOINT)
                 .method(method)
-                .queryParameter("namespaceId", instance.getNamespaceId())
-                .queryParameter("groupName", instance.getGroupName())
-                .queryParameter("serviceName", instance.getServiceName())
-                .queryParameter("clusterName", instance.getClusterName())
-                .queryParameter("ip", instance.getIp())
-                .queryParameter("port", instance.getPort());
+                .queryParameter(NAMESPACE_ID, instance.getNamespaceId())
+                .queryParameter(SERVICE_NAME, instance.getGroupName())
+                .queryParameter(SERVICE_NAME, instance.getServiceName())
+                .queryParameter(CLUSTER_NAME, instance.getClusterName())
+                .queryParameter(INSTANCE_IP, instance.getIp())
+                .queryParameter(INSTANCE_PORT, instance.getPort());
     }
 
     private void completeInstance(Iterable<Instance> instances, String namespaceId, String groupName, String serviceName) {

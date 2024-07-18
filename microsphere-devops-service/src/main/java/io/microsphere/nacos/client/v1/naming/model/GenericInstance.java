@@ -20,8 +20,6 @@ import io.microsphere.nacos.client.common.model.Model;
 
 import java.util.Map;
 
-import static io.microsphere.nacos.client.util.JsonUtils.toJSON;
-
 /**
  * The generic {@link Model model} {@link Class} of Service Instance
  *
@@ -61,10 +59,6 @@ public class GenericInstance extends BaseInstance {
 
     public void setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
-    }
-
-    public String getMetadataAsJSON() {
-        return toJSON(this.metadata);
     }
 
     public GenericInstance from(GenericInstance that) {

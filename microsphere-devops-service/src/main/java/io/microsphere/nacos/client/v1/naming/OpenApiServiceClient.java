@@ -29,6 +29,14 @@ import static io.microsphere.nacos.client.http.HttpMethod.DELETE;
 import static io.microsphere.nacos.client.http.HttpMethod.GET;
 import static io.microsphere.nacos.client.http.HttpMethod.POST;
 import static io.microsphere.nacos.client.http.HttpMethod.PUT;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.METADATA;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.NAMESPACE_ID;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.PAGE_NUMBER;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.PAGE_SIZE;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.SERVICE_GROUP_NAME;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.SERVICE_NAME;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.SERVICE_PROTECT_THRESHOLD;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.SERVICE_SELECTOR;
 import static io.microsphere.nacos.client.util.OpenApiUtils.isOkResponse;
 import static java.util.Collections.singletonMap;
 
@@ -42,7 +50,9 @@ import static java.util.Collections.singletonMap;
  */
 public class OpenApiServiceClient implements ServiceClient {
 
-    private static final String RESPONSE_OK_MESSAGE = "ok";
+    public static final String SERVICE_ENDPOINT = "/v1/ns/service";
+
+    public static final String SERVICES_LIST_ENDPOINT = "/v1/ns/service/list";
 
     private final OpenApiClient openApiClient;
 
@@ -76,35 +86,35 @@ public class OpenApiServiceClient implements ServiceClient {
 
     @Override
     public Page<String> getServiceNames(String namespaceId, String groupName, int pageNumber, int pageSize) {
-        OpenApiRequest request = OpenApiRequest.Builder.create("/v1/ns/service/list")
-                .queryParameter("namespaceId", namespaceId)
-                .queryParameter("groupName", groupName)
-                .queryParameter("pageNo", pageNumber)
-                .queryParameter("pageSize", pageSize)
+        OpenApiRequest request = OpenApiRequest.Builder.create(SERVICES_LIST_ENDPOINT)
+                .queryParameter(NAMESPACE_ID, namespaceId)
+                .queryParameter(SERVICE_GROUP_NAME, groupName)
+                .queryParameter(PAGE_NUMBER, pageNumber)
+                .queryParameter(PAGE_SIZE, pageSize)
                 .build();
         ServiceList serviceList = this.openApiClient.execute(request, ServiceList.class);
         return new Page<>(serviceList.getCount(), serviceList.getDoms(), pageNumber, pageSize);
     }
 
     private OpenApiRequest buildServiceRequest(String namespaceId, String groupName, String serviceName, HttpMethod method) {
-        OpenApiRequest request = OpenApiRequest.Builder.create("/v1/ns/service")
+        OpenApiRequest request = OpenApiRequest.Builder.create(SERVICE_ENDPOINT)
                 .method(method)
-                .queryParameter("namespaceId", namespaceId)
-                .queryParameter("groupName", groupName)
-                .queryParameter("serviceName", serviceName)
+                .queryParameter(NAMESPACE_ID, namespaceId)
+                .queryParameter(SERVICE_GROUP_NAME, groupName)
+                .queryParameter(SERVICE_NAME, serviceName)
                 .build();
         return request;
     }
 
     private OpenApiRequest buildServiceRequest(Service service, HttpMethod method) {
-        return OpenApiRequest.Builder.create("/v1/ns/service")
+        return OpenApiRequest.Builder.create(SERVICE_ENDPOINT)
                 .method(method)
-                .queryParameter("namespaceId", service.getNamespaceId())
-                .queryParameter("groupName", service.getGroupName())
-                .queryParameter("serviceName", service.getName())
-                .queryParameter("protectThreshold", service.getProtectThreshold())
-                .queryParameter("metadata", JsonUtils.toJSON(service.getMetadata()))
-                .queryParameter("selector", toJSON(service.getSelector()))
+                .queryParameter(NAMESPACE_ID, service.getNamespaceId())
+                .queryParameter(SERVICE_GROUP_NAME, service.getGroupName())
+                .queryParameter(SERVICE_NAME, service.getName())
+                .queryParameter(SERVICE_PROTECT_THRESHOLD, service.getProtectThreshold())
+                .queryParameter(METADATA, service.getMetadata())
+                .queryParameter(SERVICE_SELECTOR, toJSON(service.getSelector()))
                 .build();
     }
 

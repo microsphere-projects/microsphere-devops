@@ -16,6 +16,12 @@
  */
 package io.microsphere.nacos.client.transport;
 
+import io.microsphere.nacos.client.v1.naming.ConsistencyType;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 import static io.microsphere.nacos.client.constants.Constants.ACCESS_TOKEN_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.APP_NAME_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.CLUSTER_NAME_PARAM_NAME;
@@ -26,22 +32,24 @@ import static io.microsphere.nacos.client.constants.Constants.CONFIG_GROUP_PARAM
 import static io.microsphere.nacos.client.constants.Constants.CONFIG_ID_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.CONFIG_REVISION_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.CONFIG_SCHEMA_PARAM_NAME;
+import static io.microsphere.nacos.client.constants.Constants.CONFIG_SEARCH_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.CONFIG_TAGS_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.CONFIG_TENANT_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.CONFIG_TYPE_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.CONFIG_USE_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.DESCRIPTION_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.GROUP_NAME_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.NAMESPACE_ID_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.OPERATOR_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.PAGE_NUMBER_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.PAGE_SIZE_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.PASSWORD_PARAM_NAME;
-import static io.microsphere.nacos.client.constants.Constants.SEARCH_PARAM_NAME;
+import static io.microsphere.nacos.client.constants.Constants.SERVICE_GROUP_NAME_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.SERVICE_NAME_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.SHOW_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.TAG_PARAM_NAME;
 import static io.microsphere.nacos.client.constants.Constants.USER_NAME_PARAM_NAME;
+import static io.microsphere.nacos.client.util.JsonUtils.toJSON;
+import static io.microsphere.nacos.client.util.StringUtils.collectionToCommaDelimitedString;
 
 /**
  * The enumeration for Open API Request Parameters
@@ -60,17 +68,6 @@ public enum OpenApiRequestParam {
     ACCESS_TOKEN(ACCESS_TOKEN_PARAM_NAME),
 
     NAMESPACE_ID(NAMESPACE_ID_PARAM_NAME),
-
-    GROUP_NAME(GROUP_NAME_PARAM_NAME),
-
-    SERVICE_NAME(SERVICE_NAME_PARAM_NAME),
-
-    CLUSTER_NAME(CLUSTER_NAME_PARAM_NAME),
-
-    TENANT(CONFIG_TENANT_PARAM_NAME),
-
-    SEARCH(SEARCH_PARAM_NAME),
-
 
     /**
      * The request parameter of Nacos page number
@@ -101,6 +98,33 @@ public enum OpenApiRequestParam {
      * The request parameter of Nacos description
      */
     DESCRIPTION(DESCRIPTION_PARAM_NAME),
+
+    /**
+     * The request parameter of Nacos consistency type
+     */
+    CONSISTENCY_TYPE("consistencyType", ConsistencyType.class) {
+        @Override
+        public String toValue(Object rawValue) {
+            return ((ConsistencyType) rawValue).getValue();
+        }
+    },
+
+    // Server
+
+    /**
+     * The request parameter of Nacos server switch entry
+     */
+    SERVER_SWITCH_ENTRY("entry"),
+
+    /**
+     * The request parameter of Nacos server switch value
+     */
+    SERVER_SWITCH_VALUE("value"),
+
+    /**
+     * The request parameter of Nacos server switch debug
+     */
+    SERVER_SWITCH_DEBUG("debug", boolean.class),
 
     // Namespace
 
@@ -135,6 +159,18 @@ public enum OpenApiRequestParam {
     NAMESPACE_DESCRIPTION("namespaceDesc"),
 
     // Configuration
+
+    /**
+     * The request parameter of "tenant" a.k.a id of Nacos configuration's namespace
+     *
+     * @see #NAMESPACE_ID
+     */
+    CONFIG_TENANT(CONFIG_TENANT_PARAM_NAME),
+
+    /**
+     * The request parameter of Nacos configuration's history search
+     */
+    CONFIG_SEARCH(CONFIG_SEARCH_PARAM_NAME),
 
     /**
      * The request parameter of Nacos configuration's group
@@ -191,8 +227,96 @@ public enum OpenApiRequestParam {
      */
     CONFIG_ID(CONFIG_ID_PARAM_NAME),
 
-    ;
+    // Discovery
 
+    /**
+     * The request parameter of Nacos Discovery's group name
+     */
+    SERVICE_GROUP_NAME(SERVICE_GROUP_NAME_PARAM_NAME),
+
+    /**
+     * The request parameter of Nacos Discovery's service name
+     */
+    SERVICE_NAME(SERVICE_NAME_PARAM_NAME),
+
+    /**
+     * The request parameter of Nacos Discovery's service protect threshold
+     */
+    SERVICE_PROTECT_THRESHOLD("protectThreshold", float.class),
+
+    /**
+     * The request parameter of Nacos Discovery's selector
+     */
+    SERVICE_SELECTOR("selector"),
+
+    /**
+     * The request parameter of Nacos Discovery's cluster
+     */
+    CLUSTER_NAME(CLUSTER_NAME_PARAM_NAME),
+
+    /**
+     * The request parameter of Nacos Discovery's clusters
+     */
+    CLUSTERS("clusters", Collection.class) {
+        @Override
+        public String toValue(Object rawValue) {
+            return collectionToCommaDelimitedString((Collection) rawValue);
+        }
+    },
+
+    METADATA("metadata", Map.class) {
+        @Override
+        public String toValue(Object rawValue) {
+            return toJSON((Map<String, String>) rawValue);
+        }
+    },
+
+    /**
+     * The request parameter of Nacos Discovery's instance healthy only
+     */
+    INSTANCE_HEALTHY_ONLY("healthyOnly", boolean.class),
+
+    /**
+     * The request parameter of Nacos Discovery's instance healthy
+     */
+    INSTANCE_HEALTHY("healthy", boolean.class),
+
+    /**
+     * The request parameter of Nacos Discovery's instance IP
+     */
+    INSTANCE_IP("ip"),
+
+    /**
+     * The request parameter of Nacos Discovery's instance port
+     */
+    INSTANCE_PORT("port", int.class),
+
+    /**
+     * The request parameter of Nacos Discovery's instance weight
+     */
+    INSTANCE_WEIGHT("weight", Double.class),
+
+    /**
+     * The request parameter of Nacos Discovery's instance enabled status
+     */
+    INSTANCE_ENABLED("enabled", boolean.class),
+
+    /**
+     * The request parameter of Nacos Discovery's instance ephemeral status
+     */
+    INSTANCE_EPHEMERAL("ephemeral", Boolean.class),
+
+    /**
+     * The request parameter of Nacos Discovery's instances JSON
+     */
+    INSTANCES("instances", List.class) {
+        @Override
+        public String toValue(Object rawValue) {
+            List<Map<String, String>> instances = (List<Map<String, String>>) rawValue;
+            return toJSON(instances);
+        }
+    },
+    ;
     /**
      * The HTTP request parameter name
      */

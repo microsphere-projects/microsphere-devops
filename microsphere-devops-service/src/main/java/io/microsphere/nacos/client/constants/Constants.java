@@ -217,7 +217,7 @@ public interface Constants {
     /**
      * The request parameter name of Nacos Discovery's group name : "groupName"
      */
-    String GROUP_NAME_PARAM_NAME = "groupName";
+    String SERVICE_GROUP_NAME_PARAM_NAME = "groupName";
 
     /**
      * The request parameter name of Nacos Discovery's service name : "serviceName"
@@ -302,7 +302,7 @@ public interface Constants {
     /**
      * The request parameter name of Nacos configuration's history search: "search"
      */
-    String SEARCH_PARAM_NAME = "search";
+    String CONFIG_SEARCH_PARAM_NAME = "search";
 
     /**
      * The request parameter value of Nacos configuration's history search: "accurate"

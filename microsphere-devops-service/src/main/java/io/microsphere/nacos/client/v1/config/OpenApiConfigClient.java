@@ -25,9 +25,29 @@ import io.microsphere.nacos.client.v1.config.model.HistoryConfig;
 import io.microsphere.nacos.client.v1.config.model.HistoryConfigPage;
 import io.microsphere.nacos.client.v1.config.model.NewConfig;
 
+import static io.microsphere.nacos.client.constants.Constants.SEARCH_PARAM_VALUE;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.APP_NAME;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.CONFIG_CONTENT;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.CONFIG_DATA_ID;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.DESCRIPTION;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.CONFIG_EFFECT;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.CONFIG_GROUP;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.CONFIG_ID;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.OPERATOR;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.PAGE_NUMBER;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.PAGE_SIZE;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.CONFIG_REVISION;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.CONFIG_SCHEMA;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.CONFIG_SEARCH;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.SHOW;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.CONFIG_TAGS;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.CONFIG_TENANT;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.CONFIG_TYPE;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.CONFIG_USE;
 import static io.microsphere.nacos.client.http.HttpMethod.DELETE;
 import static io.microsphere.nacos.client.http.HttpMethod.GET;
 import static io.microsphere.nacos.client.http.HttpMethod.POST;
+import static io.microsphere.nacos.client.transport.OpenApiRequestParam.PAGE_NUMBER;
 import static io.microsphere.nacos.client.util.StringUtils.collectionToCommaDelimitedString;
 
 /**
@@ -41,109 +61,9 @@ public class OpenApiConfigClient implements ConfigClient {
 
     private static final String CONFIG_ENDPOINT = "/v1/cs/configs";
 
-    private static final String HISTORY_ENDPOINT = "/v1/cs/history";
+    private static final String CONFIG_HISTORY_ENDPOINT = "/v1/cs/history";
 
-    private static final String HISTORY_PREVIOUS_ENDPOINT = "/v1/cs/history/previous";
-
-    /**
-     * The request parameter name of "tenant" a.k.a id of "namespace" for Nacos configuration: "tenant"
-     */
-    private static final String TENANT_PARAM_NAME = "tenant";
-
-    /**
-     * The request parameter name of "group" for Nacos configuration: "group"
-     */
-    private static final String GROUP_PARAM_NAME = "group";
-
-    /**
-     * The request parameter name of "dataId" for Nacos configuration: "dataId"
-     */
-    private static final String DATA_ID_PARAM_NAME = "dataId";
-
-    /**
-     * The request parameter name of "show" details for Nacos configuration: "show"
-     */
-    private static final String SHOW_PARAM_NAME = "show";
-
-    /**
-     * The request parameter name of content for Nacos configuration: "content"
-     */
-    private static final String CONTENT_PARAM_NAME = "content";
-
-    /**
-     * The request parameter name of "tag" for Nacos configuration: "tag"
-     */
-    private static final String TAG_PARAM_NAME = "tag";
-
-    /**
-     * The request parameter name of application name of Nacos configuration: "appName"
-     */
-    private static final String APP_NAME_PARAM_NAME = "appName";
-
-    /**
-     * The request parameter name of "operator" for Nacos configuration: "src_user"
-     */
-    private static final String OPERATOR_PARAM_NAME = "src_user";
-
-    /**
-     * The request parameter name of "tags" for Nacos configuration: "config_tags"
-     */
-    private static final String TAGS_PARAM_NAME = "config_tags";
-
-    /**
-     * The request parameter name of "description" for Nacos configuration: "desc"
-     */
-    private static final String DESCRIPTION_PARAM_NAME = "desc";
-
-    /**
-     * The request parameter name of "use" for Nacos configuration: "use"
-     */
-    private static final String USE_PARAM_NAME = "use";
-
-    /**
-     * The request parameter name of "effect" for Nacos configuration: "effect"
-     */
-    private static final String EFFECT_PARAM_NAME = "effect";
-
-    /**
-     * The request parameter name of "type" for Nacos configuration: "type"
-     */
-    private static final String TYPE_PARAM_NAME = "type";
-
-    /**
-     * The request parameter name of "schema" for Nacos configuration: "schema"
-     */
-    private static final String SCHEMA_PARAM_NAME = "schema";
-
-    /**
-     * The request parameter name of history for Nacos configuration: "search"
-     */
-    private static final String SEARCH_PARAM_NAME = "search";
-
-    /**
-     * The request parameter value of history for Nacos configuration: "accurate"
-     */
-    private static final String SEARCH_PARAM_VALUE = "accurate";
-
-    /**
-     * The request parameter name of history for Nacos configuration: "pageNo"
-     */
-    private static final String PAGE_NUMBER_PARAM_NAME = "pageNo";
-
-    /**
-     * The request parameter name of history for Nacos configuration: "pageSize"
-     */
-    private static final String PAGE_SIZE_PARAM_NAME = "pageSize";
-
-    /**
-     * The request parameter name of history revision for Nacos configuration : "nid"
-     */
-    private static final String REVISION_PARAM_NAME = "nid";
-
-    /**
-     * The request parameter name of history id for Nacos configuration : "nid"
-     */
-    private static final String ID_PARAM_NAME = "id";
+    private static final String CONFIG_HISTORY_PREVIOUS_ENDPOINT = "/v1/cs/history/previous";
 
     private final OpenApiClient openApiClient;
 
@@ -179,15 +99,15 @@ public class OpenApiConfigClient implements ConfigClient {
         ConfigType configType = newConfig.getType();
         String type = configType == null ? null : configType.getValue();
         OpenApiRequest request = configRequestBuilder(namespaceId, group, dataId, POST)
-                .queryParameter(CONTENT_PARAM_NAME, content)
-                .queryParameter(TAGS_PARAM_NAME, tags)
-                .queryParameter(APP_NAME_PARAM_NAME, appName)
-                .queryParameter(OPERATOR_PARAM_NAME, operator)
-                .queryParameter(DESCRIPTION_PARAM_NAME, description)
-                .queryParameter(USE_PARAM_NAME, use)
-                .queryParameter(EFFECT_PARAM_NAME, effect)
-                .queryParameter(SCHEMA_PARAM_NAME, schema)
-                .queryParameter(TYPE_PARAM_NAME, type).build();
+                .queryParameter(CONFIG_CONTENT, content)
+                .queryParameter(CONFIG_TAGS, tags)
+                .queryParameter(APP_NAME, appName)
+                .queryParameter(OPERATOR, operator)
+                .queryParameter(DESCRIPTION, description)
+                .queryParameter(CONFIG_USE, use)
+                .queryParameter(CONFIG_EFFECT, effect)
+                .queryParameter(CONFIG_SCHEMA, schema)
+                .queryParameter(CONFIG_TYPE, type).build();
         return responseBoolean(request);
     }
 
@@ -210,9 +130,9 @@ public class OpenApiConfigClient implements ConfigClient {
         }
 
         OpenApiRequest request = historyConfigRequestBuilder(namespaceId, group, dataId, GET)
-                .queryParameter(SEARCH_PARAM_NAME, SEARCH_PARAM_VALUE)
-                .queryParameter(PAGE_NUMBER_PARAM_NAME, pageNumber)
-                .queryParameter(PAGE_SIZE_PARAM_NAME, pageSize)
+                .queryParameter(CONFIG_SEARCH, SEARCH_PARAM_VALUE)
+                .queryParameter(PAGE_NUMBER, pageNumber)
+                .queryParameter(PAGE_SIZE, pageSize)
                 .build();
 
         HistoryConfigPage page = this.openApiClient.execute(request, HistoryConfigPage.class);
@@ -224,27 +144,27 @@ public class OpenApiConfigClient implements ConfigClient {
     @Override
     public HistoryConfig getHistoryConfig(String namespaceId, String group, String dataId, long revision) {
         OpenApiRequest request = historyConfigRequestBuilder(namespaceId, group, dataId, GET)
-                .queryParameter(REVISION_PARAM_NAME, revision)
+                .queryParameter(CONFIG_REVISION, revision)
                 .build();
         return responseHistoryConfig(request);
     }
 
     @Override
     public HistoryConfig getPreviousHistoryConfig(String namespaceId, String group, String dataId, String id) {
-        OpenApiRequest request = requestBuilder(HISTORY_PREVIOUS_ENDPOINT, namespaceId, group, dataId, GET)
-                .queryParameter(ID_PARAM_NAME, id)
+        OpenApiRequest request = requestBuilder(CONFIG_HISTORY_PREVIOUS_ENDPOINT, namespaceId, group, dataId, GET)
+                .queryParameter(CONFIG_ID, id)
                 .build();
         return responseHistoryConfig(request);
     }
 
     private OpenApiRequest buildGetConfigRequest(String namespaceId, String group, String dataId, boolean showDetails) {
         return configRequestBuilder(namespaceId, group, dataId, GET)
-                .queryParameter(SHOW_PARAM_NAME, showDetails ? "all" : null)
+                .queryParameter(SHOW, showDetails ? "all" : null)
                 .build();
     }
 
     private OpenApiRequest.Builder historyConfigRequestBuilder(String namespaceId, String group, String dataId, HttpMethod method) {
-        return requestBuilder(HISTORY_ENDPOINT, namespaceId, group, dataId, method);
+        return requestBuilder(CONFIG_HISTORY_ENDPOINT, namespaceId, group, dataId, method);
     }
 
     private OpenApiRequest.Builder configRequestBuilder(String namespaceId, String group, String dataId, HttpMethod method) {
@@ -253,9 +173,9 @@ public class OpenApiConfigClient implements ConfigClient {
 
     private OpenApiRequest.Builder requestBuilder(String endpoint, String namespaceId, String group, String dataId, HttpMethod method) {
         return OpenApiRequest.Builder.create(endpoint).method(method)
-                .queryParameter(TENANT_PARAM_NAME, namespaceId)
-                .queryParameter(GROUP_PARAM_NAME, group)
-                .queryParameter(DATA_ID_PARAM_NAME, dataId);
+                .queryParameter(CONFIG_TENANT, namespaceId)
+                .queryParameter(CONFIG_GROUP, group)
+                .queryParameter(CONFIG_DATA_ID, dataId);
     }
 
     private boolean responseBoolean(OpenApiRequest request) {
