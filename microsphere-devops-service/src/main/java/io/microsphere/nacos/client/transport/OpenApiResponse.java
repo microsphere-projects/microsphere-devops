@@ -22,8 +22,8 @@ import java.io.InputStream;
  * The Nacos Response for Open API
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see OpenApiHttpClient
  * @see OpenApiRequest
+ * @see OpenApiHttpClient
  * @since 1.0.0
  */
 public class OpenApiResponse {

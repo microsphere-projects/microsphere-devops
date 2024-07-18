@@ -19,14 +19,17 @@ package io.microsphere.nacos.client.transport;
 import io.microsphere.nacos.client.io.Deserializer;
 import io.microsphere.nacos.client.io.Serializer;
 
-import java.io.Serializable;
 import java.lang.reflect.Type;
 
 /**
  * The Nacos Client for Open API
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see AutoCloseable
+ * @see OpenApiRequest
+ * @see OpenApiRequestParam
+ * @see OpenApiResponse
+ * @see Serializer
+ * @see Deserializer
  * @since 1.0.0
  */
 public interface OpenApiClient extends AutoCloseable {
