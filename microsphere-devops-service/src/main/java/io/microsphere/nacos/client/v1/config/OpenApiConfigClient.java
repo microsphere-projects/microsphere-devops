@@ -34,7 +34,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import static io.microsphere.nacos.client.constants.Constants.LISTENING_CONFIG_FIELD_SEPARATOR_CHAR;
 import static io.microsphere.nacos.client.constants.Constants.SEARCH_PARAM_VALUE;
 import static io.microsphere.nacos.client.http.HttpMethod.DELETE;
 import static io.microsphere.nacos.client.http.HttpMethod.GET;
@@ -198,7 +197,10 @@ public class OpenApiConfigClient implements ConfigClient {
         Config config = getConfig(namespaceId, group, dataId);
         if (config == null) { // The config is not existed now
 
+        } else {
+
         }
+
     }
 
     private ConfigChangedListeners getConfigChangedListeners(String configId) {
@@ -241,7 +243,6 @@ public class OpenApiConfigClient implements ConfigClient {
             return thread;
         });
     }
-
 
 
     static class ListeningConfigTask {
