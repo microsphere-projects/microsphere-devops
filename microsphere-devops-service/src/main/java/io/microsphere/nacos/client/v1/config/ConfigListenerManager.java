@@ -301,5 +301,4 @@ class ConfigListenerManager {
             this.listeners.remove(listener);
         }
     }
-
 }
