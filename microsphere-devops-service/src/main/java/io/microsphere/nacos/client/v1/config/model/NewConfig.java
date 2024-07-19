@@ -28,7 +28,7 @@ import static java.util.Arrays.asList;
  * The {@link Model model} {@link Class} for Nacos Configuration to be published
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see GenericConfig
+ * @see BaseConfig
  * @since 1.0.0
  */
 public class NewConfig extends BaseConfig {
