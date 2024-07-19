@@ -164,6 +164,15 @@ public class ConfigChangedEvent extends EventObject {
         return this.current == null ? this.previous : this.current;
     }
 
+    @Override
+    public String toString() {
+        return "ConfigChangedEvent{" +
+                "previous=" + previous +
+                ", current=" + current +
+                ", kind=" + kind +
+                '}';
+    }
+
     /**
      * The kind of {@link ConfigChangedEvent}
      */

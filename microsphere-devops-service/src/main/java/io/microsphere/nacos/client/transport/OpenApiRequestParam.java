@@ -217,6 +217,11 @@ public enum OpenApiRequestParam {
      */
     CONFIG_ID("id"),
 
+    /**
+     * The request parameter of Nacos Configuration's Listening-Configs to listen for data packets
+     */
+    LISTENING_CONFIGS("Listening-Configs"),
+
     // Discovery
 
     /**
@@ -306,6 +311,7 @@ public enum OpenApiRequestParam {
             return toJSON(instances);
         }
     },
+
     ;
     /**
      * The request parameter name

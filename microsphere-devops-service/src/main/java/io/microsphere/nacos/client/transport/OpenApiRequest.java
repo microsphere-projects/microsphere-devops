@@ -83,6 +83,16 @@ public class OpenApiRequest {
         return queryParameters == null ? emptyMap() : unmodifiableMap(queryParameters);
     }
 
+    /**
+     * Get the headers
+     *
+     * @return non-null
+     */
+    public Map<String, String> getHeaders() {
+        Map<String, String> headers = this.headers;
+        return headers == null ? emptyMap() : unmodifiableMap(headers);
+    }
+
     @Override
     public String toString() {
         return this.method + " " + this.endpoint +
@@ -180,6 +190,7 @@ public class OpenApiRequest {
             Builder builder = create(request.endpoint);
             builder.method = request.method;
             builder.queryParameters = request.queryParameters;
+            builder.headers = request.headers;
             return builder;
         }
 

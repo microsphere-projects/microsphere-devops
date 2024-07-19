@@ -16,6 +16,7 @@
  */
 package io.microsphere.nacos.client.v1.config;
 
+import io.microsphere.nacos.client.NacosClientConfig;
 import io.microsphere.nacos.client.OpenApiTest;
 import io.microsphere.nacos.client.common.model.Page;
 import io.microsphere.nacos.client.v1.config.model.BaseConfig;
@@ -65,9 +66,21 @@ public class ConfigClientTest extends OpenApiTest {
 
     private static final ConfigType CONFIG_TYPE = ConfigType.TEXT;
 
+    private static final int LONG_POLLING_TIMEOUT = 5000;
+
+    @Override
+    protected void customize(NacosClientConfig nacosClientConfig) {
+        nacosClientConfig.setLongPollingTimeout(LONG_POLLING_TIMEOUT);
+    }
+
     @Test
-    public void test() {
+    public void test() throws Exception {
         ConfigClient client = new OpenApiConfigClient(this.openApiClient, this.nacosClientConfig);
+
+        // Test
+        client.addEventListener(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID, e -> {
+            System.out.println(e.getContent());
+        });
 
         // Test deleteConfig()
         assertTrue(client.deleteConfig(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID));
@@ -80,8 +93,12 @@ public class ConfigClientTest extends OpenApiTest {
         NewConfig newConfig = createNewConfig();
         assertTrue(client.publishConfig(newConfig));
 
+        Thread.sleep(LONG_POLLING_TIMEOUT * 2);
+
         // test publishConfigContent() to update the content
         assertTrue(client.publishConfigContent(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID, "Update Content"));
+
+        Thread.sleep(LONG_POLLING_TIMEOUT * 2);
 
         // test getHistoryConfigs()
         Page<HistoryConfig> page = client.getHistoryConfigs(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID);

@@ -70,12 +70,12 @@ public class OpenApiConfigClient implements ConfigClient {
 
     private final NacosClientConfig nacosClientConfig;
 
-    private final ConfigManager configManager;
+    private final ConfigListenerManager configListenerManager;
 
     public OpenApiConfigClient(OpenApiClient openApiClient, NacosClientConfig nacosClientConfig) {
         this.openApiClient = openApiClient;
         this.nacosClientConfig = nacosClientConfig;
-        this.configManager = new ConfigManager(this, nacosClientConfig);
+        this.configListenerManager = new ConfigListenerManager(this, openApiClient, nacosClientConfig);
     }
 
     @Override
@@ -166,12 +166,12 @@ public class OpenApiConfigClient implements ConfigClient {
 
     @Override
     public void addEventListener(String namespaceId, String group, String dataId, ConfigChangedListener listener) {
-        this.configManager.addEventListener(namespaceId, group, dataId, listener);
+        this.configListenerManager.addEventListener(namespaceId, group, dataId, listener);
     }
 
     @Override
     public void removeEventListener(String namespaceId, String group, String dataId, ConfigChangedListener listener) {
-        this.configManager.removeEventListener(namespaceId, group, dataId, listener);
+        this.configListenerManager.removeEventListener(namespaceId, group, dataId, listener);
     }
 
     private OpenApiRequest buildGetConfigRequest(String namespaceId, String group, String dataId, boolean showDetails) {

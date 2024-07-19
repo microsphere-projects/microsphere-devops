@@ -32,7 +32,7 @@ import static io.microsphere.nacos.client.constants.Constants.LISTENING_CONFIG_F
 public abstract class ConfigUtil {
 
     /**
-     * Generate the id of listening {@link Config config}
+     * Generate the data packet of listening {@link Config config}
      *
      * @param namespaceId {@link Namespace#getNamespaceId() the id of namespace}, a.k.a the "tenant" (optional).
      *                    if not specified, the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace} will be used.
@@ -41,7 +41,7 @@ public abstract class ConfigUtil {
      * @param contentMD5  the MD5 of {@link Config#getContent() the content}
      * @return dataId^2Group^2contentMD5^2tenant
      */
-    public static String buildListeningConfigId(String namespaceId, String group, String dataId, String contentMD5) {
+    public static String buildListeningConfigDataPacket(String namespaceId, String group, String dataId, String contentMD5) {
         return doBuildConfigId(dataId, group, contentMD5, namespaceId);
     }
 

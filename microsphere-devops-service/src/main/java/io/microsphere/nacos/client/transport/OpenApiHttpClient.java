@@ -147,7 +147,17 @@ public class OpenApiHttpClient extends AbstractOpenApiClient {
 
         URI uri = buildURI(request);
         httpRequest.setURI(uri);
+        setRequestHeaders(httpRequest, request);
         return httpRequest;
+    }
+
+    private void setRequestHeaders(HttpRequestBase httpRequest, OpenApiRequest request) {
+        Map<String, String> headers = request.getHeaders();
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            String name = entry.getKey();
+            String value = entry.getValue();
+            httpRequest.setHeader(name, value);
+        }
     }
 
     private Serializer loadSerializer(NacosClientConfig nacosClientConfig) {
