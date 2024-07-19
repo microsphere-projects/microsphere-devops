@@ -21,18 +21,11 @@ import io.microsphere.nacos.client.common.model.Page;
 import io.microsphere.nacos.client.http.HttpMethod;
 import io.microsphere.nacos.client.transport.OpenApiClient;
 import io.microsphere.nacos.client.transport.OpenApiRequest;
-import io.microsphere.nacos.client.v1.config.event.ConfigChangedEvent;
 import io.microsphere.nacos.client.v1.config.event.ConfigChangedListener;
 import io.microsphere.nacos.client.v1.config.model.Config;
 import io.microsphere.nacos.client.v1.config.model.HistoryConfig;
 import io.microsphere.nacos.client.v1.config.model.HistoryConfigPage;
 import io.microsphere.nacos.client.v1.config.model.NewConfig;
-
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import static io.microsphere.nacos.client.constants.Constants.SEARCH_PARAM_VALUE;
 import static io.microsphere.nacos.client.http.HttpMethod.DELETE;
@@ -57,7 +50,6 @@ import static io.microsphere.nacos.client.transport.OpenApiRequestParam.PAGE_NUM
 import static io.microsphere.nacos.client.transport.OpenApiRequestParam.PAGE_SIZE;
 import static io.microsphere.nacos.client.transport.OpenApiRequestParam.SHOW;
 import static io.microsphere.nacos.client.util.StringUtils.collectionToCommaDelimitedString;
-import static io.microsphere.nacos.client.v1.config.util.ConfigUtil.buildConfigId;
 
 /**
  * The {@link ConfigClient} for for <a href="https://nacos.io/en/docs/v1/open-api/#configuration-management">Open API</a>
@@ -78,15 +70,12 @@ public class OpenApiConfigClient implements ConfigClient {
 
     private final NacosClientConfig nacosClientConfig;
 
-    private final ScheduledExecutorService configChangedEventScheduler;
-
-    private final ConcurrentMap<String, ConfigChangedListeners> configChangedListenersCache;
+    private final ConfigManager configManager;
 
     public OpenApiConfigClient(OpenApiClient openApiClient, NacosClientConfig nacosClientConfig) {
         this.openApiClient = openApiClient;
         this.nacosClientConfig = nacosClientConfig;
-        this.configChangedEventScheduler = initConfigChangedEventScheduler();
-        this.configChangedListenersCache = new ConcurrentHashMap<>();
+        this.configManager = new ConfigManager(this, nacosClientConfig);
     }
 
     @Override
@@ -177,34 +166,12 @@ public class OpenApiConfigClient implements ConfigClient {
 
     @Override
     public void addEventListener(String namespaceId, String group, String dataId, ConfigChangedListener listener) {
-        handleEventListener(namespaceId, group, dataId, listener, false);
+        this.configManager.addEventListener(namespaceId, group, dataId, listener);
     }
 
     @Override
     public void removeEventListener(String namespaceId, String group, String dataId, ConfigChangedListener listener) {
-        handleEventListener(namespaceId, group, dataId, listener, true);
-    }
-
-    private void handleEventListener(String namespaceId, String group, String dataId, ConfigChangedListener listener,
-                                     boolean forRemoval) {
-        String configId = buildConfigId(namespaceId, group, dataId);
-        ConfigChangedListeners configChangedListeners = getConfigChangedListeners(configId);
-        if (forRemoval) {
-            configChangedListeners.removeListener(listener);
-        } else {
-            configChangedListeners.addListener(listener);
-        }
-        Config config = getConfig(namespaceId, group, dataId);
-        if (config == null) { // The config is not existed now
-
-        } else {
-
-        }
-
-    }
-
-    private ConfigChangedListeners getConfigChangedListeners(String configId) {
-        return configChangedListenersCache.computeIfAbsent(configId, k -> new ConfigChangedListeners());
+        this.configManager.removeEventListener(namespaceId, group, dataId, listener);
     }
 
     private OpenApiRequest buildGetConfigRequest(String namespaceId, String group, String dataId, boolean showDetails) {
@@ -235,42 +202,5 @@ public class OpenApiConfigClient implements ConfigClient {
     private HistoryConfig responseHistoryConfig(OpenApiRequest request) {
         return this.openApiClient.execute(request, HistoryConfig.class);
     }
-
-    private ScheduledExecutorService initConfigChangedEventScheduler() {
-        return Executors.newSingleThreadScheduledExecutor(task -> {
-            Thread thread = new Thread(task, "Nacos Client - ConfigChangedEvent Scheduler");
-            thread.setDaemon(true);
-            return thread;
-        });
-    }
-
-
-    static class ListeningConfigTask {
-
-
-    }
-
-    static class ConfigChangedListeners implements ConfigChangedListener {
-
-        private final CopyOnWriteArrayList<ConfigChangedListener> listeners;
-
-        public ConfigChangedListeners() {
-            this.listeners = new CopyOnWriteArrayList<>();
-        }
-
-        @Override
-        public void onEvent(ConfigChangedEvent event) {
-            listeners.forEach(listener -> listener.onEvent(event));
-        }
-
-        public void addListener(ConfigChangedListener listener) {
-            this.listeners.add(listener);
-        }
-
-        public void removeListener(ConfigChangedListener listener) {
-            this.listeners.remove(listener);
-        }
-    }
-
 }
 

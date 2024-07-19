@@ -16,11 +16,13 @@
  */
 package io.microsphere.nacos.client.v1.config.event;
 
-import io.microsphere.nacos.client.constants.Constants;
 import io.microsphere.nacos.client.v1.config.model.Config;
-import io.microsphere.nacos.client.v1.namespace.model.Namespace;
 
 import java.util.EventObject;
+
+import static io.microsphere.nacos.client.v1.config.event.ConfigChangedEvent.Kind.CREATED;
+import static io.microsphere.nacos.client.v1.config.event.ConfigChangedEvent.Kind.DELETED;
+import static io.microsphere.nacos.client.v1.config.event.ConfigChangedEvent.Kind.MODIFIED;
 
 /**
  * The {@link EventObject Event} raised when the Nacos {@link Config} is changed
@@ -32,62 +34,154 @@ import java.util.EventObject;
  */
 public class ConfigChangedEvent extends EventObject {
 
-    private final String namespaceId;
+    private final Config previous;
 
-    private final String group;
+    private final Config current;
 
-    private final String dataId;
+    private final Kind kind;
 
-    private final String content;
+    protected ConfigChangedEvent(Config previous, Config current, Kind kind) {
+        super(current == null ? previous : current);
+        this.previous = previous;
+        this.current = current;
+        this.kind = kind;
+    }
+
+    public static ConfigChangedEvent ofCreated(Config current) {
+        return new ConfigChangedEvent(null, current, CREATED);
+    }
+
+    public static ConfigChangedEvent ofModified(Config previous, Config current) {
+        return new ConfigChangedEvent(previous, current, MODIFIED);
+    }
+
+    public static ConfigChangedEvent ofDeleted(Config previous) {
+        return new ConfigChangedEvent(previous, null, DELETED);
+    }
 
     /**
-     * @param source      the event source
-     * @param namespaceId {@link Namespace#getNamespaceId() the id of namespace}, a.k.a the "tenant" (optional).
-     *                    if not specified, the {@link Constants#DEFAULT_NAMESPACE_ID "public" namespace} will be used.
-     * @param group       the group of {@link Config}
-     * @param dataId      the data id of {@link Config}
-     * @param content     the content of {@link Config}
+     * Get the previous {@link Config}
+     *
+     * @return <code>null</code> if {@link #isCreated()}
      */
-    public ConfigChangedEvent(Object source, String namespaceId, String group, String dataId, String content) {
-        super(source);
-        this.namespaceId = namespaceId;
-        this.group = group;
-        this.dataId = dataId;
-        this.content = content;
+    public Config getPrevious() {
+        return this.previous;
     }
 
+    /**
+     * Get the current {@link Config}
+     *
+     * @return <code>null</code> if {@link #isDeleted()}
+     */
+    public Config getCurrent() {
+        return this.current;
+    }
+
+    /**
+     * Get the {@link Kind}
+     *
+     * @return non-null
+     */
+    public Kind getKind() {
+        return this.kind;
+    }
+
+    /**
+     * Whether the {@link Config} was created
+     *
+     * @return <code>true</code> if the {@link Config} was created
+     */
+    public boolean isCreated() {
+        return CREATED.equals(getKind());
+    }
+
+    /**
+     * Whether the {@link Config} was modified
+     *
+     * @return <code>true</code> if the {@link Config} was modified
+     */
+    public boolean isModified() {
+        return MODIFIED.equals(getKind());
+    }
+
+    /**
+     * Whether the {@link Config} was deleted
+     *
+     * @return <code>true</code> if the {@link Config} was deleted
+     */
+    public boolean isDeleted() {
+        return DELETED.equals(getKind());
+    }
+
+    /**
+     * Get the {@link Config#getNamespaceId() namespaceId}
+     *
+     * @return non-null
+     */
     public String getNamespaceId() {
-        return namespaceId;
+        return getConfig().getNamespaceId();
     }
 
+    /**
+     * Get the {@link Config#getGroup() group}
+     *
+     * @return non-null
+     */
     public String getGroup() {
-        return group;
+        return getConfig().getGroup();
     }
 
+    /**
+     * Get the {@link Config#getDataId() dataId}
+     *
+     * @return non-null
+     */
     public String getDataId() {
-        return dataId;
+        return getConfig().getDataId();
     }
 
+    /**
+     * Get the {@link Config#getContent() content} of {@link #getPrevious() preious} or {@link #getCurrent() current}
+     * {@link Config}
+     *
+     * @return non-null
+     */
     public String getContent() {
-        return content;
+        return getConfig().getContent();
     }
 
-    @Override
-    public String toString() {
-        return "ConfigChangedEvent{" +
-                "namespaceId='" + namespaceId + '\'' +
-                ", group='" + group + '\'' +
-                ", dataId='" + dataId + '\'' +
-                ", content='" + content + '\'' +
-                '}';
+    /**
+     * Get the {@link Config#getLastModifiedTime() last modified time}  of {@link #getPrevious() preious} or
+     * {@link #getCurrent() current} {@link Config}
+     *
+     * @return non-null
+     */
+    public Long getLastModifiedTime() {
+        return getConfig().getLastModifiedTime();
     }
 
+    protected Config getConfig() {
+        return this.current == null ? this.previous : this.current;
+    }
+
+    /**
+     * The kind of {@link ConfigChangedEvent}
+     */
     public static enum Kind {
 
-        ADDED,
+        /**
+         * The {@link Config} was created in first time
+         */
+        CREATED,
 
+        /**
+         * The {@link Config} was modified
+         */
         MODIFIED,
 
+        /**
+         * The {@link Config} was deleted
+         */
         DELETED
     }
 }
