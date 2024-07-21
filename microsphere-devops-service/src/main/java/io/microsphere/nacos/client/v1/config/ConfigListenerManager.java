@@ -30,9 +30,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static io.microsphere.nacos.client.constants.Constants.LISTENING_CONFIG_SEPARATOR;
 import static io.microsphere.nacos.client.http.HttpMethod.POST;
@@ -74,6 +77,8 @@ class ConfigListenerManager {
 
     private final ScheduledExecutorService listeningConfigsScheduler;
 
+    private final ExecutorService publishingEventExecutor;
+
     ConfigListenerManager(ConfigClient configClient, OpenApiClient openApiClient, NacosClientConfig nacosClientConfig) {
         this.configClient = configClient;
         this.openApiClient = openApiClient;
@@ -83,6 +88,7 @@ class ConfigListenerManager {
         this.listeningConfigDataPackets = new CopyOnWriteArraySet();
         this.fetchingConfigsExecutor = initFetchingConfigsExecutor();
         this.listeningConfigsScheduler = initListeningConfigsScheduler();
+        this.publishingEventExecutor = initPublishingEventExecutor();
         // Add shutdown hook
         getRuntime().addShutdownHook(new Thread(this::destroy));
     }
@@ -90,6 +96,7 @@ class ConfigListenerManager {
     private void destroy() {
         this.fetchingConfigsExecutor.shutdown();
         this.listeningConfigsScheduler.shutdown();
+        this.publishingEventExecutor.shutdown();
         this.listeningConfigDataPackets.clear();
         this.fetchingConfigIds.clear();
         this.listeningConfigsCache.clear();
@@ -130,7 +137,7 @@ class ConfigListenerManager {
 
     private ExecutorService initFetchingConfigsExecutor() {
         ExecutorService executorService = newSingleThreadExecutor(task -> {
-            Thread thread = new Thread(task, "Nacos Client - Fetching Config Executor");
+            Thread thread = new Thread(task, this.nacosClientConfig.getFetchingConfigThreadName());
             thread.setDaemon(true);
             return thread;
         });
@@ -141,13 +148,23 @@ class ConfigListenerManager {
 
     private ScheduledExecutorService initListeningConfigsScheduler() {
         ScheduledExecutorService scheduledExecutor = newSingleThreadScheduledExecutor(task -> {
-            Thread thread = new Thread(task, "Nacos Client - Listening Config Scheduler");
+            Thread thread = new Thread(task, this.nacosClientConfig.getListenerConfigThreadName());
             thread.setDaemon(true);
             return thread;
         });
         int longPollingTimeout = nacosClientConfig.getLongPollingTimeout();
         scheduledExecutor.scheduleAtFixedRate(this::listen, longPollingTimeout, longPollingTimeout, TimeUnit.MILLISECONDS);
         return scheduledExecutor;
+    }
+
+
+    private ExecutorService initPublishingEventExecutor() {
+        ExecutorService executorService = newSingleThreadExecutor(task -> {
+            Thread thread = new Thread(task, this.nacosClientConfig.getPublishingConfigEventThreadName());
+            thread.setDaemon(true);
+            return thread;
+        });
+        return executorService;
     }
 
 
@@ -216,11 +233,7 @@ class ConfigListenerManager {
 
         if (listeningConfigs != null) {
             int longPollingTimeout = this.nacosClientConfig.getLongPollingTimeout();
-            OpenApiRequest request = OpenApiRequest.Builder.create(LISTENER_ENDPOINT)
-                    .method(POST)
-                    .queryParameter(LISTENING_CONFIGS, listeningConfigs)
-                    .header(LONG_PULLING_TIMEOUT, longPollingTimeout)
-                    .build();
+            OpenApiRequest request = OpenApiRequest.Builder.create(LISTENER_ENDPOINT).method(POST).queryParameter(LISTENING_CONFIGS, listeningConfigs).header(LONG_PULLING_TIMEOUT, longPollingTimeout).build();
             String changedConfigIdsContent = this.openApiClient.execute(request, String.class);
             changedConfigIds = changedConfigIdsContent == null ? null : changedConfigIdsContent.split(LISTENING_CONFIG_SEPARATOR);
         }
@@ -329,7 +342,7 @@ class ConfigListenerManager {
         }
     }
 
-    static class ConfigChangedListeners implements ConfigChangedListener {
+    class ConfigChangedListeners implements ConfigChangedListener {
 
         private final CopyOnWriteArrayList<ConfigChangedListener> listeners;
 
@@ -339,7 +352,19 @@ class ConfigListenerManager {
 
         @Override
         public void onEvent(ConfigChangedEvent event) {
-            listeners.forEach(listener -> listener.onEvent(event));
+            Future future = publishingEventExecutor.submit(() -> {
+                listeners.forEach(listener -> listener.onEvent(event));
+            });
+            int eventProcessingTimeout = nacosClientConfig.getEventProcessingTimeout();
+            try {
+                future.get(eventProcessingTimeout, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            } catch (TimeoutException e) {
+                future.cancel(true);
+            }
         }
 
         public void addListener(ConfigChangedListener listener) {

@@ -38,6 +38,11 @@ public interface Constants {
     String PROPERTY_NAME_PREFIX = "microsphere.nacos.client.";
 
     /**
+     * The prefix of the name of Nacos Client: "Nacos Client - "
+     */
+    String CLIENT_NAME_PREFIX = "Nacos Client - ";
+
+    /**
      * The property name of the maximum number of connections for Nacos Client: "microsphere.nacos.client.max-connections"
      */
     String MAX_CONNECTIONS_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "max-connections";
@@ -61,6 +66,11 @@ public interface Constants {
      * The property name of the long polling timeout for Nacos Client: "microsphere.nacos.client.long-polling-timeout"
      */
     String LONG_POLL_TIMEOUT_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "long-polling-timeout";
+
+    /**
+     * The property name of the event processing timeout for Nacos Client: "microsphere.nacos.client.event-processing-timeout"
+     */
+    String EVENT_PROCESSING_TIMEOUT_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "event-processing-timeout";
 
     /**
      * The property name of the file encoding: "microsphere.nacos.client.encoding"
@@ -101,6 +111,26 @@ public interface Constants {
      * The default value of the long polling timeout for Nacos Client : 30 seconds
      */
     int DEFAULT_LONG_POLLING_TIMEOUT = (int) SECONDS.toMicros(30);
+
+    /**
+     * The default value of the event processing timeout for Nacos Client : 30 seconds
+     */
+    int DEFAULT_EVENT_PROCESSING_TIMEOUT_PROPERTY_NAME = (int) SECONDS.toMicros(30);
+
+    /**
+     * The default value of the fetching config thread name : "Nacos Client - Fetching Config Executor"
+     */
+    String DEFAULT_FETCHING_CONFIG_THREAD_NAME = CLIENT_NAME_PREFIX + "Fetching Config Executor";
+
+    /**
+     * The default value of the listening config thread name : "Nacos Client - Listening Config Scheduler"
+     */
+    String DEFAULT_LISTENING_CONFIG_THREAD_NAME = CLIENT_NAME_PREFIX + "Listening Config Scheduler";
+
+    /**
+     * The default value of the publishing event thread name : "Nacos Client - Event Publisher"
+     */
+    String DEFAULT_PUBLISHING_CONFIG_EVENT_THREAD_NAME = CLIENT_NAME_PREFIX + "Config Event Publisher";
 
     /**
      * The default value of the file encoding : "UTF-8"
@@ -151,6 +181,11 @@ public interface Constants {
      * @see #DEFAULT_LONG_POLLING_TIMEOUT
      */
     int LONG_POLLING_TIMEOUT = getInteger(LONG_POLL_TIMEOUT_PROPERTY_NAME, DEFAULT_LONG_POLLING_TIMEOUT);
+
+    /**
+     * The event processing timeout for Nacos Client
+     */
+    int EVENT_PROCESSING_TIMEOUT = getInteger(EVENT_PROCESSING_TIMEOUT_PROPERTY_NAME, DEFAULT_EVENT_PROCESSING_TIMEOUT_PROPERTY_NAME);
 
     /**
      * The encoding for Nacos Client

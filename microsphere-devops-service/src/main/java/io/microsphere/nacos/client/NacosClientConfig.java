@@ -20,7 +20,11 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import static io.microsphere.nacos.client.constants.Constants.CONNECTION_TIMEOUT;
+import static io.microsphere.nacos.client.constants.Constants.DEFAULT_FETCHING_CONFIG_THREAD_NAME;
+import static io.microsphere.nacos.client.constants.Constants.DEFAULT_LISTENING_CONFIG_THREAD_NAME;
+import static io.microsphere.nacos.client.constants.Constants.DEFAULT_PUBLISHING_CONFIG_EVENT_THREAD_NAME;
 import static io.microsphere.nacos.client.constants.Constants.ENCODING;
+import static io.microsphere.nacos.client.constants.Constants.EVENT_PROCESSING_TIMEOUT;
 import static io.microsphere.nacos.client.constants.Constants.LONG_POLLING_TIMEOUT;
 import static io.microsphere.nacos.client.constants.Constants.MAX_CONNECTIONS;
 import static io.microsphere.nacos.client.constants.Constants.MAX_PER_ROUTE_CONNECTIONS;
@@ -95,6 +99,17 @@ public class NacosClientConfig implements Serializable {
      * The long polling timeout for Nacos Client
      */
     private int longPollingTimeout = LONG_POLLING_TIMEOUT;
+
+    /**
+     * The event processing timeout for Nacos Client
+     */
+    private int eventProcessingTimeout = EVENT_PROCESSING_TIMEOUT;
+
+    private String fetchingConfigThreadName = DEFAULT_FETCHING_CONFIG_THREAD_NAME;
+
+    private String listenerConfigThreadName = DEFAULT_LISTENING_CONFIG_THREAD_NAME;
+
+    private String publishingConfigEventThreadName = DEFAULT_PUBLISHING_CONFIG_EVENT_THREAD_NAME;
 
     /**
      * The encoding for Nacos Client
@@ -197,6 +212,38 @@ public class NacosClientConfig implements Serializable {
         this.longPollingTimeout = longPollingTimeout;
     }
 
+    public int getEventProcessingTimeout() {
+        return eventProcessingTimeout;
+    }
+
+    public void setEventProcessingTimeout(int eventProcessingTimeout) {
+        this.eventProcessingTimeout = eventProcessingTimeout;
+    }
+
+    public String getFetchingConfigThreadName() {
+        return fetchingConfigThreadName;
+    }
+
+    public void setFetchingConfigThreadName(String fetchingConfigThreadName) {
+        this.fetchingConfigThreadName = fetchingConfigThreadName;
+    }
+
+    public String getListenerConfigThreadName() {
+        return listenerConfigThreadName;
+    }
+
+    public void setListenerConfigThreadName(String listenerConfigThreadName) {
+        this.listenerConfigThreadName = listenerConfigThreadName;
+    }
+
+    public String getPublishingConfigEventThreadName() {
+        return publishingConfigEventThreadName;
+    }
+
+    public void setPublishingConfigEventThreadName(String publishingConfigEventThreadName) {
+        this.publishingConfigEventThreadName = publishingConfigEventThreadName;
+    }
+
     public String getEncoding() {
         return encoding;
     }
@@ -206,7 +253,7 @@ public class NacosClientConfig implements Serializable {
     }
 
     public boolean isAuthorizationEnabled() {
-        return this.username != null && this.password != null;
+        return username != null && password != null;
     }
 
     @Override
@@ -214,7 +261,23 @@ public class NacosClientConfig implements Serializable {
         if (this == o) return true;
         if (!(o instanceof NacosClientConfig that)) return false;
 
-        return maxConnections == that.maxConnections && maxPerRoute == that.maxPerRoute && connectionTimeout == that.connectionTimeout && readTimeout == that.readTimeout && longPollingTimeout == that.longPollingTimeout && Objects.equals(serverAddress, that.serverAddress) && Objects.equals(scheme, that.scheme) && Objects.equals(contextPath, that.contextPath) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(accessKey, that.accessKey) && Objects.equals(secretKey, that.secretKey) && Objects.equals(encoding, that.encoding);
+        return maxConnections == that.maxConnections &&
+                maxPerRoute == that.maxPerRoute &&
+                connectionTimeout == that.connectionTimeout &&
+                readTimeout == that.readTimeout &&
+                longPollingTimeout == that.longPollingTimeout &&
+                eventProcessingTimeout == that.eventProcessingTimeout &&
+                Objects.equals(serverAddress, that.serverAddress) &&
+                Objects.equals(scheme, that.scheme) &&
+                Objects.equals(contextPath, that.contextPath) &&
+                Objects.equals(username, that.username) &&
+                Objects.equals(password, that.password) &&
+                Objects.equals(accessKey, that.accessKey) &&
+                Objects.equals(secretKey, that.secretKey) &&
+                Objects.equals(fetchingConfigThreadName, that.fetchingConfigThreadName) &&
+                Objects.equals(listenerConfigThreadName, that.listenerConfigThreadName) &&
+                Objects.equals(publishingConfigEventThreadName, that.publishingConfigEventThreadName) &&
+                Objects.equals(encoding, that.encoding);
     }
 
     @Override
@@ -231,6 +294,10 @@ public class NacosClientConfig implements Serializable {
         result = 31 * result + connectionTimeout;
         result = 31 * result + readTimeout;
         result = 31 * result + longPollingTimeout;
+        result = 31 * result + eventProcessingTimeout;
+        result = 31 * result + Objects.hashCode(fetchingConfigThreadName);
+        result = 31 * result + Objects.hashCode(listenerConfigThreadName);
+        result = 31 * result + Objects.hashCode(publishingConfigEventThreadName);
         result = 31 * result + Objects.hashCode(encoding);
         return result;
     }
@@ -250,6 +317,10 @@ public class NacosClientConfig implements Serializable {
                 ", connectionTimeout=" + connectionTimeout +
                 ", readTimeout=" + readTimeout +
                 ", longPollingTimeout=" + longPollingTimeout +
+                ", eventProcessingTimeout=" + eventProcessingTimeout +
+                ", fetchingConfigThreadName='" + fetchingConfigThreadName + '\'' +
+                ", listenerConfigThreadName='" + listenerConfigThreadName + '\'' +
+                ", publishingConfigEventThreadName='" + publishingConfigEventThreadName + '\'' +
                 ", encoding='" + encoding + '\'' +
                 '}';
     }
