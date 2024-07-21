@@ -157,7 +157,8 @@ class ConfigListenerManager {
             synchronized (loadingConfigIds) {
                 while (loadingConfigIds.isEmpty()) {
                     try {
-                        loadingConfigIds.wait(); // Blocking if loadingConfigIds is empty
+                        // Blocking if loadingConfigIds is empty
+                        loadingConfigIds.wait();
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
@@ -169,10 +170,13 @@ class ConfigListenerManager {
                     String configId = iterator.next();
                     ListeningConfig listeningConfig = listeningConfigsCache.get(configId);
                     Config config = listeningConfig.config;
-                    if (config == null) { // try to fetch a new config
+                    if (config == null) {
+                        // try to fetch a new config
                         config = listeningConfig.fetch();
                     }
-                    if (config != null) { // The config was found
+                    if (config != null) {
+                        // The config was fetched completely,
+                        // the loading config id will be removed
                         listeningConfig.update(config);
                         iterator.remove();
                     }
@@ -191,7 +195,6 @@ class ConfigListenerManager {
         boolean updated = listeningConfig.update(config);
         return updated;
     }
-
 
     private void listen() {
         try {
