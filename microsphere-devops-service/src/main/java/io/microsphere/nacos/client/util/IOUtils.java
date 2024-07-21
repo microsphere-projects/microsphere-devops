@@ -18,6 +18,7 @@ package io.microsphere.nacos.client.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -197,5 +198,15 @@ public abstract class IOUtils {
     public static String readAsString(InputStream inputStream, Charset charset) throws IOException {
         byte[] bytes = readAsBytes(inputStream);
         return bytes == EMPTY_BYTE_ARRAY ? EMPTY_STRING : new String(bytes, charset);
+    }
+
+    public static String encode(String content, String encoding) {
+        String encodedContent = null;
+        try {
+            encodedContent = URLEncoder.encode(content, encoding);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return encodedContent;
     }
 }

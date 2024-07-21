@@ -19,6 +19,7 @@ package io.microsphere.nacos.client.v1.config;
 import io.microsphere.nacos.client.NacosClientConfig;
 import io.microsphere.nacos.client.OpenApiTest;
 import io.microsphere.nacos.client.common.model.Page;
+import io.microsphere.nacos.client.v1.config.event.ConfigChangedEvent;
 import io.microsphere.nacos.client.v1.config.model.BaseConfig;
 import io.microsphere.nacos.client.v1.config.model.Config;
 import io.microsphere.nacos.client.v1.config.model.HistoryConfig;
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -77,9 +79,10 @@ public class ConfigClientTest extends OpenApiTest {
     public void test() throws Exception {
         ConfigClient client = new OpenApiConfigClient(this.openApiClient, this.nacosClientConfig);
 
+        AtomicReference<ConfigChangedEvent> eventRef = new AtomicReference<>();
         // Test
         client.addEventListener(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID, e -> {
-            System.out.println(e.getContent());
+            eventRef.set(e);
         });
 
         // Test deleteConfig()
@@ -93,12 +96,16 @@ public class ConfigClientTest extends OpenApiTest {
         NewConfig newConfig = createNewConfig();
         assertTrue(client.publishConfig(newConfig));
 
-        Thread.sleep(LONG_POLLING_TIMEOUT * 2);
+        awaitEvent(eventRef);
+        assertConfigChangedEvent(eventRef, ConfigChangedEvent.Kind.CREATED, newConfig.getContent());
+
 
         // test publishConfigContent() to update the content
-        assertTrue(client.publishConfigContent(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID, "Update Content"));
+        String newContent = "New Content for testing...";
+        assertTrue(client.publishConfigContent(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID, newContent));
 
-        Thread.sleep(LONG_POLLING_TIMEOUT * 2);
+        awaitEvent(eventRef);
+        assertConfigChangedEvent(eventRef, ConfigChangedEvent.Kind.MODIFIED, newContent);
 
         // test getHistoryConfigs()
         Page<HistoryConfig> page = client.getHistoryConfigs(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID);
@@ -138,6 +145,25 @@ public class ConfigClientTest extends OpenApiTest {
 
         // Test deleteConfig()
         assertTrue(client.deleteConfig(TEST_NAMESPACE_ID, TEST_GROUP_NAME, TEST_DATA_ID));
+
+        awaitEvent(eventRef);
+        assertConfigChangedEvent(eventRef, ConfigChangedEvent.Kind.DELETED, newContent);
+    }
+
+    private void assertConfigChangedEvent(AtomicReference<ConfigChangedEvent> eventRef, ConfigChangedEvent.Kind kind, String content) {
+        ConfigChangedEvent event = eventRef.get();
+        assertEquals(TEST_NAMESPACE_ID, event.getNamespaceId());
+        assertEquals(TEST_GROUP_NAME, event.getGroup());
+        assertEquals(TEST_DATA_ID, event.getDataId());
+        assertEquals(content, event.getContent());
+        assertEquals(kind, event.getKind());
+        eventRef.set(null);
+    }
+
+    private void awaitEvent(AtomicReference<ConfigChangedEvent> eventRef) throws InterruptedException {
+        while (eventRef.get() == null) {
+            Thread.sleep(1000);
+        }
     }
 
     private void assertHistoryConfig(HistoryConfig historyConfig) {

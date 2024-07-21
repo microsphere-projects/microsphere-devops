@@ -23,15 +23,16 @@ import io.microsphere.nacos.client.v1.config.event.ConfigChangedEvent;
 import io.microsphere.nacos.client.v1.config.event.ConfigChangedListener;
 import io.microsphere.nacos.client.v1.config.model.Config;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static io.microsphere.nacos.client.constants.Constants.LISTENING_CONFIG_SEPARATOR;
 import static io.microsphere.nacos.client.http.HttpMethod.POST;
@@ -65,32 +66,32 @@ class ConfigListenerManager {
 
     private final ConcurrentMap<String, ListeningConfig> listeningConfigsCache;
 
-    private final CopyOnWriteArraySet<String> loadingConfigIds;
+    private final CopyOnWriteArraySet<String> fetchingConfigIds;
 
     private final CopyOnWriteArraySet<String> listeningConfigDataPackets;
 
-    private final ExecutorService listeningConfigsExecutor;
+    private final ExecutorService fetchingConfigsExecutor;
 
-    private final ScheduledExecutorService configChangedEventScheduler;
+    private final ScheduledExecutorService listeningConfigsScheduler;
 
     ConfigListenerManager(ConfigClient configClient, OpenApiClient openApiClient, NacosClientConfig nacosClientConfig) {
         this.configClient = configClient;
         this.openApiClient = openApiClient;
         this.nacosClientConfig = nacosClientConfig;
         this.listeningConfigsCache = new ConcurrentHashMap<>();
-        this.loadingConfigIds = new CopyOnWriteArraySet();
+        this.fetchingConfigIds = new CopyOnWriteArraySet();
         this.listeningConfigDataPackets = new CopyOnWriteArraySet();
-        this.listeningConfigsExecutor = createListeningConfigsExecutor();
-        this.configChangedEventScheduler = initConfigChangedEventScheduler(nacosClientConfig);
+        this.fetchingConfigsExecutor = initFetchingConfigsExecutor();
+        this.listeningConfigsScheduler = initListeningConfigsScheduler();
         // Add shutdown hook
         getRuntime().addShutdownHook(new Thread(this::destroy));
     }
 
     private void destroy() {
-        this.listeningConfigsExecutor.shutdown();
-        this.configChangedEventScheduler.shutdown();
+        this.fetchingConfigsExecutor.shutdown();
+        this.listeningConfigsScheduler.shutdown();
         this.listeningConfigDataPackets.clear();
-        this.loadingConfigIds.clear();
+        this.fetchingConfigIds.clear();
         this.listeningConfigsCache.clear();
     }
 
@@ -112,8 +113,11 @@ class ConfigListenerManager {
 
         if (config == null) {
             // The specified config is not existed now,
-            // it will be retrieved in next scheduled task
-            loadingConfigIds.add(listeningConfig.configId);
+            // it will be fetched in next scheduled task
+            fetchingConfigIds.add(listeningConfig.configId);
+            synchronized (fetchingConfigIds) {
+                fetchingConfigIds.notifyAll();
+            }
         } else {
             listeningConfig.addDataPacket(config);
         }
@@ -121,83 +125,112 @@ class ConfigListenerManager {
 
     private ListeningConfig getListeningConfig(String namespaceId, String group, String dataId) {
         String configId = buildConfigId(namespaceId, group, dataId);
-        Config config = getConfig(namespaceId, group, dataId);
-        return this.listeningConfigsCache.computeIfAbsent(configId, id -> new ListeningConfig(namespaceId, group, dataId, configId, config));
+        return this.listeningConfigsCache.computeIfAbsent(configId, id -> new ListeningConfig(namespaceId, group, dataId, configId));
     }
 
-    private ExecutorService createListeningConfigsExecutor() {
-        return newSingleThreadExecutor(task -> {
-            Thread thread = new Thread(task, "Nacos Client - Listening Config Executor");
+    private ExecutorService initFetchingConfigsExecutor() {
+        ExecutorService executorService = newSingleThreadExecutor(task -> {
+            Thread thread = new Thread(task, "Nacos Client - Fetching Config Executor");
             thread.setDaemon(true);
             return thread;
         });
+
+        executorService.execute(this::fetchConfigs);
+        return executorService;
     }
 
-    private ScheduledExecutorService initConfigChangedEventScheduler(NacosClientConfig nacosClientConfig) {
-        ScheduledExecutorService scheduledExecutorService = newSingleThreadScheduledExecutor(task -> {
-            Thread thread = new Thread(task, "Nacos Client - ConfigChangedEvent Scheduler");
+    private ScheduledExecutorService initListeningConfigsScheduler() {
+        ScheduledExecutorService scheduledExecutor = newSingleThreadScheduledExecutor(task -> {
+            Thread thread = new Thread(task, "Nacos Client - Listening Config Scheduler");
             thread.setDaemon(true);
             return thread;
         });
-        scheduledExecutorService.execute(this::loop);
-        return scheduledExecutorService;
+        int longPollingTimeout = nacosClientConfig.getLongPollingTimeout();
+        scheduledExecutor.scheduleAtFixedRate(this::listen, longPollingTimeout, longPollingTimeout, TimeUnit.MILLISECONDS);
+        return scheduledExecutor;
     }
 
-    private void loop() {
+
+    private void fetchConfigs() {
         while (true) {
-            this.load();
-            this.listen();
-        }
-    }
-
-    private void load() {
-        try {
-            Iterator<String> iterator = loadingConfigIds.iterator();
-            while (iterator.hasNext()) {
-                String configId = iterator.next();
-                ListeningConfig listeningConfig = listeningConfigsCache.get(configId);
-                Config config = listeningConfig.config;
-                if (config == null) {
-                    config = listeningConfig.getConfig();
-                }
-                if (listeningConfig.setConfig(config)) {
-                    iterator.remove();
+            Collection<String> loadingConfigIds = this.fetchingConfigIds;
+            synchronized (loadingConfigIds) {
+                while (loadingConfigIds.isEmpty()) {
+                    try {
+                        loadingConfigIds.wait(); // Blocking if loadingConfigIds is empty
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
             }
-        } catch (Throwable e) {
-            // Catch any exception
-            // TODO Log
+            try {
+                Iterator<String> iterator = loadingConfigIds.iterator();
+                while (iterator.hasNext()) {
+                    String configId = iterator.next();
+                    ListeningConfig listeningConfig = listeningConfigsCache.get(configId);
+                    Config config = listeningConfig.config;
+                    if (config == null) { // try to fetch a new config
+                        config = listeningConfig.fetch();
+                    }
+                    if (config != null) { // The config was found
+                        listeningConfig.update(config);
+                        iterator.remove();
+                    }
+                }
+            } catch (Throwable e) {
+                // Catch any exception
+                // TODO Log
+            }
         }
+
+    }
+
+    private boolean fetchAndUpdate(String configId) {
+        ListeningConfig listeningConfig = listeningConfigsCache.get(configId);
+        Config config = listeningConfig.fetch();
+        boolean updated = listeningConfig.update(config);
+        return updated;
     }
 
 
     private void listen() {
         try {
-            int longPollingTimeout = this.nacosClientConfig.getLongPollingTimeout();
-            String listeningConfigs = buildListeningConfigs();
-            if (listeningConfigs != null) {
-                OpenApiRequest request = OpenApiRequest.Builder.create(LISTENER_ENDPOINT)
-                        .method(POST)
-                        .queryParameter(LISTENING_CONFIGS, listeningConfigs)
-                        .header(LONG_PULLING_TIMEOUT, longPollingTimeout)
-                        .build();
-                String changedConfigIdsContent = this.openApiClient.execute(request, String.class);
-                if (changedConfigIdsContent != null) {
+            String[] changedConfigIds = getChangedConfigIds();
+            if (changedConfigIds != null) {
+                for (String changedConfigId : changedConfigIds) {
+                    fetchAndUpdate(changedConfigId);
                 }
             }
         } catch (Throwable e) {
             // Catch any exception
             // TODO Log
         }
+    }
+
+    private String[] getChangedConfigIds() {
+        String listeningConfigs = buildListeningConfigs();
+        String[] changedConfigIds = null;
+
+        if (listeningConfigs != null) {
+            int longPollingTimeout = this.nacosClientConfig.getLongPollingTimeout();
+            OpenApiRequest request = OpenApiRequest.Builder.create(LISTENER_ENDPOINT)
+                    .method(POST)
+                    .queryParameter(LISTENING_CONFIGS, listeningConfigs)
+                    .header(LONG_PULLING_TIMEOUT, longPollingTimeout)
+                    .build();
+            String changedConfigIdsContent = this.openApiClient.execute(request, String.class);
+            changedConfigIds = changedConfigIdsContent == null ? null : changedConfigIdsContent.split(LISTENING_CONFIG_SEPARATOR);
+        }
+        return changedConfigIds;
     }
 
     private String buildListeningConfigs() {
         if (listeningConfigDataPackets.isEmpty()) {
             return null;
         }
-        StringJoiner stringJoiner = new StringJoiner(LISTENING_CONFIG_SEPARATOR);
-        listeningConfigDataPackets.forEach(stringJoiner::add);
-        return stringJoiner.toString();
+        StringBuilder builder = new StringBuilder();
+        listeningConfigDataPackets.forEach(builder::append);
+        return builder.toString();
     }
 
     private Config getConfig(String namespaceId, String group, String dataId) {
@@ -218,12 +251,12 @@ class ConfigListenerManager {
 
         private final ConfigChangedListeners listeners;
 
-        ListeningConfig(String namespaceId, String group, String dataId, String configId, Config config) {
+        ListeningConfig(String namespaceId, String group, String dataId, String configId) {
             this.namespaceId = namespaceId;
             this.group = group;
             this.dataId = dataId;
             this.configId = configId;
-            this.config = config;
+            this.config = fetch();
             this.listeners = new ConfigChangedListeners();
         }
 
@@ -236,23 +269,22 @@ class ConfigListenerManager {
             }
         }
 
-        Config getConfig() {
+        Config fetch() {
             return ConfigListenerManager.this.getConfig(this.namespaceId, this.group, this.dataId);
         }
 
         /**
-         * Set a new {@link Config} and fire the event if needed
+         * Update a new {@link Config} and fire the event if needed
          *
          * @param config a new {@link Config}
          * @return {@code true} if the {@link Config} was changed, {@code false} otherwise
          */
-        boolean setConfig(Config config) {
+        boolean update(Config config) {
             Config previousConfig = this.config;
             if (previousConfig == null) {
                 if (config != null) {
                     // The Config was created in first time
                     listeners.onEvent(ofCreated(config));
-                    addDataPacket(config);
                 } else {
                     // otherwise does nothing
                     return false;
@@ -268,7 +300,15 @@ class ConfigListenerManager {
                     // The Config was modified
                     listeners.onEvent(ofModified(previousConfig, config));
                 }
+                // Remove the previous Data Package
+                removeDataPacket(previousConfig);
             }
+
+            if (config != null) {
+                // Add new Data Package
+                addDataPacket(config);
+            }
+
             this.config = config;
             return true;
         }
@@ -277,6 +317,12 @@ class ConfigListenerManager {
             String md5 = config.getMd5();
             String listenerConfigId = buildListeningConfigDataPacket(namespaceId, group, dataId, md5);
             listeningConfigDataPackets.add(listenerConfigId);
+        }
+
+        private void removeDataPacket(Config config) {
+            String md5 = config.getMd5();
+            String listenerConfigId = buildListeningConfigDataPacket(namespaceId, group, dataId, md5);
+            listeningConfigDataPackets.remove(listenerConfigId);
         }
     }
 

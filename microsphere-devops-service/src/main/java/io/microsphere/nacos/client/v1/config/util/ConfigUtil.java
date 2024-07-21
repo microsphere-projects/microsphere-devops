@@ -21,6 +21,8 @@ import io.microsphere.nacos.client.v1.config.model.Config;
 import io.microsphere.nacos.client.v1.namespace.model.Namespace;
 
 import static io.microsphere.nacos.client.constants.Constants.LISTENING_CONFIG_FIELD_SEPARATOR_CHAR;
+import static io.microsphere.nacos.client.constants.Constants.LISTENING_CONFIG_SEPARATOR_CHAR;
+import static io.microsphere.nacos.client.util.IOUtils.encode;
 
 /**
  * The Utility class for Nacos Configuration
@@ -55,7 +57,7 @@ public abstract class ConfigUtil {
      * @return tenant^2Group^2dataId
      */
     public static String buildConfigId(String namespaceId, String group, String dataId) {
-        return doBuildConfigId(namespaceId, group, dataId);
+        return doBuildConfigId(dataId, group, namespaceId);
     }
 
     private static String doBuildConfigId(String... fields) {
@@ -71,6 +73,8 @@ public abstract class ConfigUtil {
             }
         }
 
-        return idBuilder.toString();
+        idBuilder.append(LISTENING_CONFIG_SEPARATOR_CHAR);
+
+        return encode(idBuilder.toString(), "UTF-8");
     }
 }
