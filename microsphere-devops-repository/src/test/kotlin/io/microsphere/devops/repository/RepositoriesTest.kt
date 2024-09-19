@@ -37,8 +37,9 @@ class RepositoriesTest @Autowired constructor(
 
     @Test
     fun `Test ClusterRepository CRUD Operations`() {
+        var port = 1024;
         for (type in Cluster.Type.values()) {
-            var cluster = Cluster(type.value, type, "http://127.0.0.1");
+            var cluster = Cluster(type.value, type, "http://127.0.0.1:${port++}");
             cluster.description = type.description;
             clusterRepository.save(cluster);
         }
