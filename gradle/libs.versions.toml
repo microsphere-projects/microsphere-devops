@@ -1,7 +1,7 @@
 [versions]
-springBootVersion = "3.3.0"
-springCloudVersion = "2023.0.1"
-springCloudAlibabaVersion = "2023.0.1.0"
+springBootVersion = "3.3.4"
+springCloudVersion = "2023.0.3"
+springCloudAlibabaVersion = "2023.0.1.2"
 microsphereSpringCloudVersion = "0.0.1"
 
 commonsLang3Version = "3.14.0"
