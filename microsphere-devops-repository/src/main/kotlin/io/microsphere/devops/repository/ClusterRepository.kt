@@ -15,5 +15,7 @@ interface ClusterRepository : JpaRepository<Cluster, Long> {
     fun findByName(name: String): Cluster?;
 
     fun findAllByType(type: Cluster.Type): List<Cluster>;
+
+    fun findByUrl(url: String): Cluster?;
 }
 
