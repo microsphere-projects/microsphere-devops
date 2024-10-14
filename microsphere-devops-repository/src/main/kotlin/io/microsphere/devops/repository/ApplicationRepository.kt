@@ -16,4 +16,6 @@ interface ApplicationRepository : JpaRepository<Application, Long> {
 
     fun findAllByNamespaceId(namespaceId: Long, pageable: Pageable): Page<Application>;
 
+    fun findByName(name: String): Application?;
+
 }
