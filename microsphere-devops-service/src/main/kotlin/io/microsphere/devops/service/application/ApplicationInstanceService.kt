@@ -4,6 +4,7 @@ import io.microsphere.devops.api.entity.ApplicationInstance
 import io.microsphere.devops.repository.ApplicationInstanceRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * The {@link ApplicationInstance} Service
@@ -42,6 +43,24 @@ class ApplicationInstanceService(
         existedApplicationInstance.port = applicationInstance.port;
         existedApplicationInstance.uri = applicationInstance.uri;
         existedApplicationInstance.metadata = applicationInstance.metadata;
+
+        return applicationInstanceRepository.save(applicationInstance);
+    }
+
+    @Transactional
+    fun saveOrUpdateApplicationInstance(applicationInstance: ApplicationInstance): ApplicationInstance? {
+        val instanceId = applicationInstance.instanceId;
+        val actualApplicationInstance =
+            applicationInstanceRepository.findByInstanceId(instanceId) ?: applicationInstance;
+
+        if (actualApplicationInstance != applicationInstance) {
+            actualApplicationInstance.host = applicationInstance.host;
+            actualApplicationInstance.port = applicationInstance.port;
+            actualApplicationInstance.uri = applicationInstance.uri;
+            actualApplicationInstance.status = applicationInstance.status;
+            actualApplicationInstance.metadata = applicationInstance.metadata;
+            actualApplicationInstance.application = applicationInstance.application;
+        }
 
         return applicationInstanceRepository.save(applicationInstance);
     }
