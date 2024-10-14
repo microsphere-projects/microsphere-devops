@@ -47,5 +47,20 @@ class ApplicationService(
         return applicationRepository.save(existedApplication);
     }
 
+    @Transactional
+    fun saveOrUpdateApplication(application: Application): Application {
+        val name = application.name;
+        var actualApplication = applicationRepository.findByName(name) ?: application;
+
+        if (actualApplication != application) {
+            actualApplication.description = application.description;
+            actualApplication.updatedAt = currentTimeMillis();
+            actualApplication.namespace = application.namespace;
+        }
+
+        return applicationRepository.save(actualApplication);
+    }
+
+
     fun queryApplications(namespaceId: Long, pageable: Pageable) = findAllByNamespaceId(namespaceId, pageable);
 }
