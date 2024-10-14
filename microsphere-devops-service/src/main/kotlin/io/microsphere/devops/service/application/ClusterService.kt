@@ -33,4 +33,23 @@ class ClusterService(
         return existedCluster;
     }
 
+    @Transactional
+    fun saveOrUpdateCluster(cluster: Cluster): Cluster {
+        val url = cluster.url;
+
+        val actualCluster: Cluster = clusterRepository.findByUrl(url) ?: cluster;
+
+        if (actualCluster != cluster) {
+            actualCluster.name = cluster.name;
+            actualCluster.url = cluster.url;
+            actualCluster.type = cluster.type;
+            actualCluster.username = cluster.username;
+            actualCluster.password = cluster.password;
+            actualCluster.description = cluster.description;
+            actualCluster.updatedAt = currentTimeMillis();
+        }
+
+        return clusterRepository.saveAndFlush(actualCluster);
+    }
+
 }
