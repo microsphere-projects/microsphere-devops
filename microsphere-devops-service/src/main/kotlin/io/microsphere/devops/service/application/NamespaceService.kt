@@ -46,4 +46,17 @@ class NamespaceService(
         return namespaceRepository.save(existedNamespace);
     }
 
+    @Transactional
+    fun saveOrUpdateNamespace(namespace: Namespace): Namespace {
+        val name = namespace.name;
+        val actualNamespace = namespaceRepository.findByName(name) ?: namespace;
+        if (actualNamespace != namespace) {
+            actualNamespace.status = namespace.status;
+            actualNamespace.description = namespace.description;
+            actualNamespace.updatedAt = currentTimeMillis();
+            actualNamespace.cluster = namespace.cluster;
+        }
+        return namespaceRepository.saveAndFlush(actualNamespace);
+    }
+
 }
