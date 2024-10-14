@@ -10,4 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository
  * @see Namespace
  * @since 1.0.0
  */
-interface NamespaceRepository : JpaRepository<Namespace, Long>
+interface NamespaceRepository : JpaRepository<Namespace, Long> {
+
+    fun findByName(name: String): Namespace?;
+}
