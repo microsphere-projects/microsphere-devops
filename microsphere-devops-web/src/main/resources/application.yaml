@@ -2,11 +2,11 @@ spring:
   application:
     name: microsphere-devops
   cloud:
-    nacos:
-      discovery:
-        enabled: false
     service-registry:
       auto-registration:
+        enabled: false
+    nacos:
+      discovery:
         enabled: false
   jpa:
     show-sql: true
@@ -32,6 +32,9 @@ spring:
     activate:
       on-profile: nacos
   cloud:
+    service-registry:
+      auto-registration:
+        enabled: true
     nacos:
       discovery:
         enabled: true
