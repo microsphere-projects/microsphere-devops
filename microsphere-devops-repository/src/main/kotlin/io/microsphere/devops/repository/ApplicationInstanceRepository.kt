@@ -15,4 +15,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface ApplicationInstanceRepository : JpaRepository<ApplicationInstance, Long> {
 
     fun findAllByApplicationId(applicationId: Long, pageable: Pageable): Page<ApplicationInstance>;
+
+    fun findByInstanceId(instanceId: String): ApplicationInstance?;
 }
