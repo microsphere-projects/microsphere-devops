@@ -14,6 +14,7 @@ import java.lang.System.currentTimeMillis
  */
 @MappedSuperclass
 open class Entity(
+
     /**
      * ID property
      */
