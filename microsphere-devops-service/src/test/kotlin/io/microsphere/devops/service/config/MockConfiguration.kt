@@ -1,4 +1,4 @@
-package io.microsphere.devops.web.config
+package io.microsphere.devops.service.config
 
 import io.microsphere.devops.api.entity.Application
 import io.microsphere.devops.api.entity.ApplicationInstance
