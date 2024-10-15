@@ -19,6 +19,7 @@ dependencies {
 
     // Import the BOMs
     api(platform(libs.spring.cloud.alibaba.dependencies))
+    // api(platform(libs.microsphere.spring.boot.dependencies))
     api(platform(libs.microsphere.spring.cloud.dependencies))
 
     // Apache HTTP Client
