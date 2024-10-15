@@ -11,5 +11,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Profile("nacos")
-public @interface ConditionalOnNacosProfile {
+public @interface NacosProfile {
 }

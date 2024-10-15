@@ -11,5 +11,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Profile("standalone")
-public @interface ConditionalOnStandaloneProfile {
+public @interface StandaloneProfile {
 }

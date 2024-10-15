@@ -4,14 +4,14 @@ import com.alibaba.cloud.nacos.NacosDiscoveryProperties
 import com.alibaba.nacos.api.common.Constants.DEFAULT_NAMESPACE_ID
 import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.api.entity.Namespace
-import io.microsphere.devops.condition.ConditionalOnNacosProfile
+import io.microsphere.devops.condition.NacosProfile
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.util.StringUtils.hasText
 
-@ConditionalOnNacosProfile
+@NacosProfile
 @Configuration(proxyBeanMethods = false)
 class NacosConfiguration(val nacosDiscoveryProperties: NacosDiscoveryProperties) {
 
