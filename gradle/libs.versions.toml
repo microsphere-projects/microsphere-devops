@@ -2,6 +2,7 @@
 springBootVersion = "3.3.4"
 springCloudVersion = "2023.0.3"
 springCloudAlibabaVersion = "2023.0.1.2"
+microsphereSpringBootVersion = "0.0.3"
 microsphereSpringCloudVersion = "0.0.1"
 
 commonsLang3Version = "3.14.0"
@@ -28,6 +29,7 @@ managementPluginVersion = "1.1.4"
 spring-boot-dependencies = { group = "org.springframework.boot", name = "spring-boot-dependencies", version.ref = "springBootVersion" }
 spring-cloud-dependencies = { group = "org.springframework.cloud", name = "spring-cloud-dependencies", version.ref = "springCloudVersion" }
 spring-cloud-alibaba-dependencies = { group = "com.alibaba.cloud", name = "spring-cloud-alibaba-dependencies", version.ref = "springCloudAlibabaVersion" }
+microsphere-spring-boot-dependencies = { group = "io.github.microsphere-projects", name = "microsphere-spring-boot-dependencies", version.ref = "microsphereSpringBootVersion" }
 microsphere-spring-cloud-dependencies = { group = "io.github.microsphere-projects", name = "microsphere-spring-cloud-dependencies", version.ref = "microsphereSpringCloudVersion" }
 
 commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commonsLang3Version" }
