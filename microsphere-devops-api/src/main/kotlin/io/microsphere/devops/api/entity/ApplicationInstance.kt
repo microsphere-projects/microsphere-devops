@@ -1,6 +1,7 @@
 package io.microsphere.devops.api.entity
 
 import io.microsphere.devops.api.commons.Entity
+import jakarta.persistence.FetchType.LAZY
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.DynamicUpdate
@@ -31,7 +32,7 @@ open class ApplicationInstance(
 
     var status: Status = Status.UP,
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = LAZY)
     var application: Application? = null
 
 ) : Entity() {
