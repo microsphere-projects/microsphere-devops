@@ -1,6 +1,9 @@
 spring:
   application:
     name: microsphere-devops
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
   cloud:
     service-registry:
       auto-registration:
