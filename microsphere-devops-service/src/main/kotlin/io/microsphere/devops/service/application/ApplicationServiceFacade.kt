@@ -7,7 +7,6 @@ import io.microsphere.devops.api.entity.ApplicationInstance.Status
 import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.api.entity.Namespace
 import org.springframework.cloud.client.ServiceInstance
-import org.springframework.cloud.client.serviceregistry.Registration
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.net.URI
