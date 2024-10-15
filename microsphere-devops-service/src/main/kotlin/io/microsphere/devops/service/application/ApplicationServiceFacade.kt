@@ -26,6 +26,7 @@ class ApplicationServiceFacade(
         // Persist Namespace
         namespaceService.saveOrUpdateNamespace(namespace);
 
+        // Application
         val applicationName = serviceInstance.serviceId;
         val application = applicationService.saveOrUpdateApplication(Application(applicationName, namespace));
 
