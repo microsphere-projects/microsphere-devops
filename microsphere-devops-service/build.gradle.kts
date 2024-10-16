@@ -18,9 +18,14 @@ dependencies {
     api(project(":microsphere-devops-repository"))
 
     // Import the BOMs
+    // Microsphere Spring Cloud Alibaba Dependencies
     api(platform(libs.spring.cloud.alibaba.dependencies))
+    // Microsphere Spring Boot Dependencies
     // api(platform(libs.microsphere.spring.boot.dependencies))
+    // Microsphere Spring Cloud Dependencies
     api(platform(libs.microsphere.spring.cloud.dependencies))
+    // Nacos Open API
+    api(libs.microsphere.nacos.openapi)
 
     // Apache HTTP Client
     api("org.apache.httpcomponents:httpclient")
