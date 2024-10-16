@@ -4,6 +4,7 @@ springCloudVersion = "2023.0.3"
 springCloudAlibabaVersion = "2023.0.1.2"
 microsphereSpringBootVersion = "0.0.3"
 microsphereSpringCloudVersion = "0.0.1"
+microsphereNacosOpenapiVersion = "0.0.2-SNAPSHOT"
 
 commonsLang3Version = "3.14.0"
 commonsIOVersion = "2.16.1"
@@ -31,6 +32,7 @@ spring-cloud-dependencies = { group = "org.springframework.cloud", name = "sprin
 spring-cloud-alibaba-dependencies = { group = "com.alibaba.cloud", name = "spring-cloud-alibaba-dependencies", version.ref = "springCloudAlibabaVersion" }
 microsphere-spring-boot-dependencies = { group = "io.github.microsphere-projects", name = "microsphere-spring-boot-dependencies", version.ref = "microsphereSpringBootVersion" }
 microsphere-spring-cloud-dependencies = { group = "io.github.microsphere-projects", name = "microsphere-spring-cloud-dependencies", version.ref = "microsphereSpringCloudVersion" }
+microsphere-nacos-openapi = { group = "io.github.microsphere-projects", name = "microsphere-nacos-openapi", version.ref = "microsphereNacosOpenapiVersion" }
 
 commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commonsLang3Version" }
 commons-io = { group = "commons-io", name = "commons-io", version.ref = "commonsIOVersion" }
