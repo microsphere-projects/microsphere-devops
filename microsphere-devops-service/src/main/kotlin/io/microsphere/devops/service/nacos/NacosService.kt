@@ -27,7 +27,10 @@ import io.microsphere.nacos.client.v2.NacosClientV2
 import io.microsphere.nacos.client.v2.OpenApiNacosClientV2
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation.REQUIRES_NEW
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.transaction.event.TransactionPhase
+import org.springframework.transaction.event.TransactionalEventListener
 import org.springframework.util.StringUtils.hasText
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
@@ -45,13 +48,15 @@ class NacosService(
 ) : DisposableBean {
     private val nacosClientsCache: ConcurrentMap<String, NacosClientV2> = ConcurrentHashMap();
 
+    @Transactional
     fun initClusters(clusters: List<Cluster>) {
         for (cluster in clusters) {
             initCluster(cluster);
         }
     }
 
-    @Transactional
+    @Transactional(propagation = REQUIRES_NEW)
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     fun initCluster(cluster: Cluster) {
         val client = nacosClientsCache.computeIfAbsent(cluster.url) { url ->
             createNacosClient(cluster)
@@ -125,16 +130,6 @@ class NacosService(
             application.namespace = namespace;
             applicationService.saveOrUpdateApplication(application);
         }
-    }
-
-    private fun createApplications(serviceNames: List<String>, namespace: Namespace): List<Application> {
-        val applications = ArrayList<Application>(serviceNames.size);
-        for (serviceName in serviceNames) {
-            var application = Application(serviceName);
-            application.namespace = namespace;
-            applications.add(application);
-        }
-        return applications;
     }
 
     private fun createNamespace(
