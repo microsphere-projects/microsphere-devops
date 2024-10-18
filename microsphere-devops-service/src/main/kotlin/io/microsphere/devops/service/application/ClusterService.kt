@@ -2,6 +2,9 @@ package io.microsphere.devops.service.application
 
 import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.repository.ClusterRepository
+import org.springframework.context.ApplicationEventPublisher
+import org.springframework.data.domain.AfterDomainEventPublication
+import org.springframework.data.domain.DomainEvents
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -16,22 +19,9 @@ import java.lang.System.currentTimeMillis
  */
 @Service
 class ClusterService(
-    private val clusterRepository: ClusterRepository
+    private val clusterRepository: ClusterRepository,
+    private val applicationEventPublisher: ApplicationEventPublisher
 ) : ClusterRepository by clusterRepository {
-
-    @Transactional
-    fun updateCluster(cluster: Cluster): Cluster? {
-        val clusterId = cluster.id;
-        val existedCluster: Cluster? = clusterRepository.findByIdOrNull(clusterId);
-        if (existedCluster != null) {
-            existedCluster.name = cluster.name;
-            existedCluster.url = cluster.url;
-            existedCluster.description = cluster.description;
-            existedCluster.updatedAt = currentTimeMillis();
-            clusterRepository.save(existedCluster);
-        }
-        return existedCluster;
-    }
 
     @Transactional
     fun saveOrUpdateCluster(cluster: Cluster): Cluster {
@@ -49,7 +39,9 @@ class ClusterService(
             actualCluster.updatedAt = currentTimeMillis();
         }
 
-        return clusterRepository.saveAndFlush(actualCluster);
+        val result = clusterRepository.saveAndFlush(actualCluster);
+        applicationEventPublisher.publishEvent(result);
+        return result;
     }
 
 }
