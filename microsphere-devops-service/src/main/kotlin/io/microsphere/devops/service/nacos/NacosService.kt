@@ -16,12 +16,19 @@
  */
 package io.microsphere.devops.service.nacos
 
+import com.alibaba.nacos.api.common.Constants.DEFAULT_NAMESPACE_ID
+import io.microsphere.devops.api.entity.Application
 import io.microsphere.devops.api.entity.Cluster
+import io.microsphere.devops.api.entity.Namespace
 import io.microsphere.devops.service.application.ApplicationServiceFacade
 import io.microsphere.nacos.client.NacosClientConfig
+import io.microsphere.nacos.client.common.OpenApiTemplateClient
 import io.microsphere.nacos.client.v2.NacosClientV2
 import io.microsphere.nacos.client.v2.OpenApiNacosClientV2
+import org.springframework.beans.factory.DisposableBean
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.util.StringUtils.hasText
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 
@@ -35,16 +42,137 @@ import java.util.concurrent.ConcurrentMap
 @Service
 class NacosService(
     val applicationServiceFacade: ApplicationServiceFacade
-) {
+) : DisposableBean {
     private val nacosClientsCache: ConcurrentMap<String, NacosClientV2> = ConcurrentHashMap();
 
-    fun initNacosClients(clusters: List<Cluster>) {
-        clusters.filter { cluster -> cluster.type == Cluster.Type.NACOS }
-            .forEach { cluster ->
-                {
-                    var config = NacosClientConfig();
-                    var client = OpenApiNacosClientV2(config);
-                }
+    fun initClusters(clusters: List<Cluster>) {
+        for (cluster in clusters) {
+            initCluster(cluster);
+        }
+    }
+
+    @Transactional
+    fun initCluster(cluster: Cluster) {
+        val client = nacosClientsCache.computeIfAbsent(cluster.url) { url ->
+            createNacosClient(cluster)
+        };
+        initNamespaces(cluster, client);
+    }
+
+    internal fun initNamespaces(cluster: Cluster, client: NacosClientV2) {
+        var namespaceService = applicationServiceFacade.namespaceService;
+
+        val updatedNamespacesMap: MutableMap<String, Namespace> = mutableMapOf();
+
+        val allNamespaces = ArrayList<Namespace>();
+
+        for (namespace in namespaceService.findAllByClusterIdAndStatus(cluster.id!!)) {
+            updatedNamespacesMap[namespace.name] = namespace;
+        }
+
+        for (ns in client.allNamespaces) {
+            val namespaceId = resolveNamespaceId(ns.namespaceId);
+            var namespace = updatedNamespacesMap.remove(namespaceId);
+            if (namespace == null) {
+                namespace = createNamespace(namespaceId, ns, cluster);
             }
+            allNamespaces.add(namespace);
+        }
+
+        for (namespace in updatedNamespacesMap.values) {
+            namespace.status = Namespace.Status.UNKNOWN;
+            allNamespaces.add(namespace);
+        }
+
+        for (namespace in allNamespaces) {
+            namespaceService.saveOrUpdateNamespace(namespace);
+            when (namespace.status) {
+                Namespace.Status.ACTIVE -> initApplication(namespace, client)
+                else -> continue;
+            }
+        }
+    }
+
+    internal fun initApplication(namespace: Namespace, client: NacosClientV2) {
+        var applicationService = applicationServiceFacade.applicationService;
+
+        val removedApplicationsMap: MutableMap<String, Application> = mutableMapOf();
+
+        for (application in applicationService.findAllByNamespaceId(namespace.id!!)) {
+            removedApplicationsMap[application.name] = application;
+        }
+
+        val serviceNames = ArrayList<String>();
+        val namespaceId = namespace.name;
+        var pageNumber = 0;
+        val pageSize = 100;
+        var page = client.getServiceNames(namespaceId, pageNumber, pageSize);
+
+        serviceNames.addAll(page.elements);
+        while (page.hasNext()) {
+            pageNumber += pageSize;
+            page = client.getServiceNames(namespaceId, pageNumber, pageSize);
+            serviceNames.addAll(page.elements);
+        }
+
+        // Remove the unknown services
+        serviceNames.forEach { name -> removedApplicationsMap.remove(name) }
+
+        applicationService.deleteAll(removedApplicationsMap.values);
+
+        for (serviceName in serviceNames) {
+            var application = Application(serviceName);
+            application.namespace = namespace;
+            applicationService.saveOrUpdateApplication(application);
+        }
+    }
+
+    private fun createApplications(serviceNames: List<String>, namespace: Namespace): List<Application> {
+        val applications = ArrayList<Application>(serviceNames.size);
+        for (serviceName in serviceNames) {
+            var application = Application(serviceName);
+            application.namespace = namespace;
+            applications.add(application);
+        }
+        return applications;
+    }
+
+    private fun createNamespace(
+        namespaceId: String,
+        ns: io.microsphere.nacos.client.common.namespace.model.Namespace,
+        cluster: Cluster
+    ): Namespace {
+        val namespace = Namespace(namespaceId, Namespace.Status.ACTIVE);
+        namespace.description = ns.namespaceDesc;
+        namespace.cluster = cluster;
+        return namespace;
+    }
+
+    private fun resolveNamespaceId(namespaceId: String?): String {
+        if (hasText(namespaceId)) {
+            return namespaceId!!;
+        }
+        return DEFAULT_NAMESPACE_ID;
+    }
+
+    private fun createNacosClient(cluster: Cluster): NacosClientV2 {
+        var config = NacosClientConfig();
+        config.serverAddress = cluster.url;
+        if (hasText(cluster.username)) {
+            config.userName = cluster.username;
+        }
+        if (hasText(cluster.password)) {
+            config.password = cluster.password;
+        }
+        return OpenApiNacosClientV2(config);
+    }
+
+    override fun destroy() {
+        for (client in nacosClientsCache.values) {
+            if (client is OpenApiTemplateClient) {
+                client.openApiClient.close();
+            }
+        }
+        nacosClientsCache.clear();
     }
 }
