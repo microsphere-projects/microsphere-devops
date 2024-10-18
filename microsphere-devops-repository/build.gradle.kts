@@ -19,6 +19,9 @@ dependencies {
     // Kotlin
     api("org.jetbrains.kotlin:kotlin-reflect")
 
+    // Kotlin Coroutines
+    api(libs.kotlinx.coroutines.core)
+
     // Spring Boot
     api("org.springframework.boot:spring-boot-starter-data-jpa")
 
