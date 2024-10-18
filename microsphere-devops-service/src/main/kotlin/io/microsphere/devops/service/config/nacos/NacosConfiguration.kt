@@ -47,7 +47,7 @@ class NacosConfiguration(
         val nacosService: NacosService
     ) {
 
-        @Scheduled(fixedRate = 10 * 1000)
+        @Scheduled(fixedRate = 60 * 1000)
         fun sync() {
             val nacosClusters = clusterRepository.findAllByType(Cluster.Type.NACOS);
             nacosService.initClusters(nacosClusters);
