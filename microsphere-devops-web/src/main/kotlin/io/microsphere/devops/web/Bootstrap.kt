@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.support.beans
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.scheduling.annotation.AsyncAnnotationBeanPostProcessor.DEFAULT_TASK_EXECUTOR_BEAN_NAME
+import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 
 /**
@@ -35,6 +36,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
         "io.microsphere.devops.web"
     ]
 )
+@EnableScheduling
 @EnableAutoConfiguration
 @EnableDiscoveryClient
 open class Bootstrap
