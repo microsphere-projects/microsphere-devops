@@ -58,10 +58,15 @@ class NacosService(
     @Transactional(propagation = REQUIRES_NEW)
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     fun initCluster(cluster: Cluster) {
-        val client = nacosClientsCache.computeIfAbsent(cluster.url) { url ->
-            createNacosClient(cluster)
-        };
+        val client = getNacosClient(cluster);
         initNamespaces(cluster, client);
+    }
+
+    @Transactional(propagation = REQUIRES_NEW)
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    fun initNamespace(namespace: Namespace) {
+        val client = getNacosClient(namespace.cluster!!);
+        initNamespace(namespace, client);
     }
 
     internal fun initNamespaces(cluster: Cluster, client: NacosClientV2) {
@@ -90,11 +95,16 @@ class NacosService(
         }
 
         for (namespace in allNamespaces) {
-            namespaceService.saveOrUpdateNamespace(namespace);
-            when (namespace.status) {
-                Namespace.Status.ACTIVE -> initApplication(namespace, client)
-                else -> continue;
-            }
+            initNamespace(namespace, client);
+        }
+    }
+
+    internal fun initNamespace(namespace: Namespace, client: NacosClientV2) {
+        var namespaceService = applicationServiceFacade.namespaceService;
+        namespaceService.saveOrUpdateNamespace(namespace);
+        when (namespace.status) {
+            Namespace.Status.ACTIVE -> initApplication(namespace, client)
+            else -> return;
         }
     }
 
@@ -148,6 +158,12 @@ class NacosService(
             return namespaceId!!;
         }
         return DEFAULT_NAMESPACE_ID;
+    }
+
+    private fun getNacosClient(cluster: Cluster): NacosClientV2 {
+        return nacosClientsCache.computeIfAbsent(cluster.url) { url ->
+            createNacosClient(cluster)
+        };
     }
 
     private fun createNacosClient(cluster: Cluster): NacosClientV2 {
