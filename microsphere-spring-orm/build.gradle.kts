@@ -16,14 +16,13 @@ dependencies {
     api("io.github.microsphere-projects:microsphere-spring-context")
 
     // Jakarta EE
-    compileOnly("jakarta.validation:jakarta.validation-api")
-    compileOnly("jakarta.persistence:jakarta.persistence-api")
-    compileOnly("jakarta.transaction:jakarta.transaction-api")
+    implementation("jakarta.persistence:jakarta.persistence-api")
+    implementation("jakarta.transaction:jakarta.transaction-api")
 
     // Spring Framework
-    compileOnly("org.springframework:spring-context")
-    compileOnly("org.springframework:spring-aop")
-    compileOnly("org.springframework:spring-orm")
+    implementation("org.springframework:spring-context")
+    implementation("org.springframework:spring-aop")
+    implementation("org.springframework:spring-orm")
 
     // JPA Vender - Hibernate
     implementation("org.hibernate.orm:hibernate-core")
