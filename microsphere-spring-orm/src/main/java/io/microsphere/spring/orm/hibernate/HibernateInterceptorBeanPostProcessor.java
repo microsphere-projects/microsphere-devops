@@ -17,6 +17,8 @@
 package io.microsphere.spring.orm.hibernate;
 
 import io.microsphere.hibernate.CompositeInterceptor;
+import io.microsphere.logging.Logger;
+import io.microsphere.logging.LoggerFactory;
 import io.microsphere.spring.beans.factory.config.GenericBeanPostProcessorAdapter;
 import org.hibernate.Interceptor;
 import org.springframework.beans.BeansException;
@@ -48,6 +50,8 @@ import static java.util.Collections.singletonList;
  */
 public class HibernateInterceptorBeanPostProcessor extends GenericBeanPostProcessorAdapter<LocalSessionFactoryBean>
         implements ApplicationContextAware {
+
+    private static final Logger logger = LoggerFactory.getLogger(HibernateInterceptorBeanPostProcessor.class);
 
     private static final Class<Interceptor> INTERCEPTOR_CLASS = Interceptor.class;
 
@@ -115,7 +119,10 @@ public class HibernateInterceptorBeanPostProcessor extends GenericBeanPostProces
         Interceptor currentInterceptor = null;
         try {
             currentInterceptor = getFieldValue(bean, "entityInterceptor");
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            if (logger.isWarnEnabled()) {
+                logger.warn(e.getMessage());
+            }
         }
         return currentInterceptor;
     }
