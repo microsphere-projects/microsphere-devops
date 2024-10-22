@@ -32,7 +32,7 @@ import jakarta.persistence.*;
  * @see PreUpdate
  * @since 1.0.0
  */
-enum EntityLifecycleEventType {
+enum EntityLifecycleType {
 
     /**
      * @see PostLoad
