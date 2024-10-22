@@ -16,7 +16,14 @@
  */
 package io.microsphere.entity;
 
-import jakarta.persistence.*;
+import io.microsphere.jpa.event.LoggingEntityListener;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.util.Objects;
 
@@ -29,6 +36,9 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "users")
+@EntityListeners(value = {
+        LoggingEntityListener.class
+})
 public class User {
 
     /**
@@ -40,6 +50,9 @@ public class User {
 
     @Column(nullable = false)
     private String name;
+
+    @Column(name = "desc")
+    private String description;
 
     public User() {
         this(null);
@@ -70,17 +83,25 @@ public class User {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(name, user.name);
+        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(description, user.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, name, description);
     }
 
     @Override
@@ -88,6 +109,7 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }
