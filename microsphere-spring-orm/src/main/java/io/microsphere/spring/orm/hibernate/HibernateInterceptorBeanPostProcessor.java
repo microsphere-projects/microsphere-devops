@@ -17,52 +17,107 @@
 package io.microsphere.spring.orm.hibernate;
 
 import io.microsphere.hibernate.CompositeInterceptor;
-import io.microsphere.hibernate.DelegatingInterceptor;
-import io.microsphere.reflect.FieldUtils;
 import io.microsphere.spring.beans.factory.config.GenericBeanPostProcessorAdapter;
 import org.hibernate.Interceptor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static io.microsphere.reflect.FieldUtils.getFieldValue;
+import static io.microsphere.spring.util.BeanFactoryUtils.getBeans;
+import static io.microsphere.spring.util.BeanUtils.getBeanNames;
 import static io.microsphere.spring.util.SpringFactoriesLoaderUtils.loadFactories;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 /**
- * {@link LocalSessionFactoryBean} {@link BeanPostProcessor} uses {@link DelegatingInterceptor} wrapping the
- * associated {@link Interceptor}
+ * The {@link LocalSessionFactoryBean LocalSessionFactoryBean's} {@link BeanPostProcessor} composites all
+ * {@link Interceptor Interceptors} from {@link LocalSessionFactoryBean#setEntityInterceptor(Interceptor) the existed},
+ * Spring SPI and Spring Beans.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see LocalSessionFactoryBean
+ * @see CompositeInterceptor
  * @since 1.0.0
  */
 public class HibernateInterceptorBeanPostProcessor extends GenericBeanPostProcessorAdapter<LocalSessionFactoryBean>
         implements ApplicationContextAware {
 
+    private static final Class<Interceptor> INTERCEPTOR_CLASS = Interceptor.class;
+
     private ApplicationContext applicationContext;
 
     @Override
     protected void processBeforeInitialization(LocalSessionFactoryBean bean, String beanName) throws BeansException {
-        Interceptor currentInterceptor = FieldUtils.getFieldValue(bean, "entityInterceptor");
-        if (currentInterceptor instanceof DelegatingInterceptor) {
+
+        final List<Interceptor> existedInterceptors = getExistedInterceptors(bean);
+
+        // Load all Interceptors from Spring SPI
+        List<Interceptor> interceptors = loadFactories(this.applicationContext, INTERCEPTOR_CLASS);
+
+        // Load all Interceptors from Spring Beans
+        List<Interceptor> interceptorBeans = loadInterceptorBeans();
+
+        int size = existedInterceptors.size() + interceptors.size() + interceptorBeans.size();
+
+        if (size < 1) {
             return;
         }
 
-        CompositeInterceptor compositeInterceptor = new CompositeInterceptor();
-        // Add the current Interceptor
-        if (currentInterceptor != null) {
-            compositeInterceptor.addInterceptor(currentInterceptor);
-        }
+        List<Interceptor> allInterceptors = new ArrayList<>(size);
+
+        // Add existed Interceptors from Spring SPI
+        allInterceptors.addAll(existedInterceptors);
 
         // Add all Interceptors from Spring SPI
-        List<Interceptor> interceptors = loadFactories(this.applicationContext, Interceptor.class);
-        compositeInterceptor.addInterceptors(interceptors);
+        allInterceptors.addAll(interceptors);
 
-        // Change CompositeInterceptor
-        bean.setEntityInterceptor(compositeInterceptor);
+        // Add all Interceptor Beans
+        allInterceptors.addAll(interceptorBeans);
+
+        final Interceptor newInterceptor;
+
+        if (allInterceptors.size() == 1) {
+            newInterceptor = allInterceptors.get(0);
+        } else {
+            // Sort all Interceptors
+            AnnotationAwareOrderComparator.sort(allInterceptors);
+            newInterceptor = new CompositeInterceptor(allInterceptors);
+        }
+
+        // Change
+        bean.setEntityInterceptor(newInterceptor);
+    }
+
+    private List<Interceptor> getExistedInterceptors(LocalSessionFactoryBean bean) {
+        Interceptor currentInterceptor = getCurrentInterceptor(bean);
+
+        if (currentInterceptor instanceof CompositeInterceptor) {
+            return ((CompositeInterceptor) currentInterceptor).getInterceptors();
+        } else if (currentInterceptor != null) {
+            return singletonList(currentInterceptor);
+        }
+        return emptyList();
+    }
+
+    private List<Interceptor> loadInterceptorBeans() {
+        String[] beanNames = getBeanNames(this.applicationContext, INTERCEPTOR_CLASS, true);
+        return getBeans(this.applicationContext, beanNames, INTERCEPTOR_CLASS);
+    }
+
+    private Interceptor getCurrentInterceptor(LocalSessionFactoryBean bean) {
+        Interceptor currentInterceptor = null;
+        try {
+            currentInterceptor = getFieldValue(bean, "entityInterceptor");
+        } catch (Throwable ignored) {
+        }
+        return currentInterceptor;
     }
 
     @Override
