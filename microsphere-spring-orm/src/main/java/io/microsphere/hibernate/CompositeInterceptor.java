@@ -23,10 +23,16 @@ import org.hibernate.metamodel.RepresentationMode;
 import org.hibernate.metamodel.spi.EntityRepresentationStrategy;
 import org.hibernate.type.Type;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+import static java.util.Collections.emptyList;
 
 /**
  * The Composite {@link Interceptor} implementation.
@@ -41,7 +47,11 @@ public class CompositeInterceptor implements Interceptor {
     private final List<Interceptor> interceptors;
 
     public CompositeInterceptor() {
-        this.interceptors = new LinkedList<>();
+        this(new LinkedList<>());
+    }
+
+    public CompositeInterceptor(List<Interceptor> interceptors) {
+        this.interceptors = interceptors;
     }
 
     public CompositeInterceptor addInterceptor(Interceptor interceptor) {
@@ -58,19 +68,23 @@ public class CompositeInterceptor implements Interceptor {
         return this;
     }
 
+    public List<Interceptor> getInterceptors() {
+        return interceptors;
+    }
+
     @Override
     public boolean onLoad(Object entity, Object id, Object[] state, String[] propertyNames, Type[] types) throws CallbackException {
-        return forEach(e -> e.onLoad(entity, id, state, propertyNames, types), Boolean.FALSE::equals);
+        return forEach(e -> e.onLoad(entity, id, state, propertyNames, types), s -> s.findAny().orElse(false));
     }
 
     @Override
     public boolean onFlushDirty(Object entity, Object id, Object[] currentState, Object[] previousState, String[] propertyNames, Type[] types) throws CallbackException {
-        return forEach(e -> e.onFlushDirty(entity, id, currentState, previousState, propertyNames, types), Boolean.FALSE::equals);
+        return forEach(e -> e.onFlushDirty(entity, id, currentState, previousState, propertyNames, types), s -> s.findAny().orElse(false));
     }
 
     @Override
     public boolean onSave(Object entity, Object id, Object[] state, String[] propertyNames, Type[] types) throws CallbackException {
-        return forEach(e -> e.onSave(entity, id, state, propertyNames, types), Boolean.FALSE::equals);
+        return forEach(e -> e.onSave(entity, id, state, propertyNames, types), s -> s.findAny().orElse(false));
     }
 
     @Override
@@ -105,32 +119,32 @@ public class CompositeInterceptor implements Interceptor {
 
     @Override
     public Boolean isTransient(Object entity) {
-        return forEach(e -> e.isTransient(entity), Boolean.TRUE::equals);
+        return forEach(e -> e.isTransient(entity), s -> s.findAny().orElse(null));
     }
 
     @Override
     public int[] findDirty(Object entity, Object id, Object[] currentState, Object[] previousState, String[] propertyNames, Type[] types) {
-        return forEach(e -> e.findDirty(entity, id, currentState, previousState, propertyNames, types), Objects::nonNull);
+        return forEach(e -> e.findDirty(entity, id, currentState, previousState, propertyNames, types), s -> s.findAny().orElse(null));
     }
 
     @Override
     public Object instantiate(String entityName, EntityRepresentationStrategy representationStrategy, Object id) throws CallbackException {
-        return forEach(e -> e.instantiate(entityName, representationStrategy, id), Objects::nonNull);
+        return forEach(e -> e.instantiate(entityName, representationStrategy, id), s -> s.findAny().orElse(null));
     }
 
     @Override
     public Object instantiate(String entityName, RepresentationMode representationMode, Object id) throws CallbackException {
-        return forEach(e -> e.instantiate(entityName, representationMode, id), Objects::nonNull);
+        return forEach(e -> e.instantiate(entityName, representationMode, id), s -> s.findAny().orElse(null));
     }
 
     @Override
     public String getEntityName(Object object) throws CallbackException {
-        return forEach(e -> e.getEntityName(object), Objects::nonNull);
+        return forEach(e -> e.getEntityName(object), s -> s.findAny().orElse(null));
     }
 
     @Override
     public Object getEntity(String entityName, Object id) throws CallbackException {
-        return forEach(e -> e.getEntity(entityName, id), Objects::nonNull);
+        return forEach(e -> e.getEntity(entityName, id), s -> s.findAny().orElse(null));
     }
 
     @Override
@@ -148,19 +162,21 @@ public class CompositeInterceptor implements Interceptor {
         forEach(e -> e.afterTransactionCompletion(tx));
     }
 
-    private <T> T forEach(Function<Interceptor, T> function, Predicate<T> matcher) {
+    private <T> T forEach(Function<Interceptor, T> function, Function<Stream<T>, T> resultFunction) {
         int size = this.interceptors.size();
-        T result = null;
-        for (int i = 0; i < size; i++) {
-            Interceptor interceptor = this.interceptors.get(i);
-            if (interceptor != null) {
-                T returnValue = function.apply(interceptor);
-                if (result == null && matcher.test(returnValue)) {
-                    result = returnValue;
+        final List<T> results;
+        if (size < 1) {
+            results = emptyList();
+        } else {
+            results = new ArrayList<>(size);
+            for (int i = 0; i < size; i++) {
+                Interceptor interceptor = this.interceptors.get(i);
+                if (interceptor != null) {
+                    results.add(i, function.apply(interceptor));
                 }
             }
         }
-        return result;
+        return resultFunction.apply(results.stream());
     }
 
     private void forEach(Consumer<Interceptor> consumer) {
