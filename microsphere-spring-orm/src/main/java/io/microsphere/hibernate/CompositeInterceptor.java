@@ -172,7 +172,10 @@ public class CompositeInterceptor implements Interceptor {
             for (int i = 0; i < size; i++) {
                 Interceptor interceptor = this.interceptors.get(i);
                 if (interceptor != null) {
-                    results.add(i, function.apply(interceptor));
+                    T result = function.apply(interceptor);
+                    if (result != null) {
+                        results.add(i, result);
+                    }
                 }
             }
         }
