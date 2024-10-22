@@ -21,11 +21,17 @@ import io.microsphere.hibernate.MockInterceptor;
 import io.microsphere.logging.Logger;
 import io.microsphere.logging.LoggerFactory;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * {@link HibernateInterceptorBeanPostProcessor} Test
@@ -50,10 +56,30 @@ public class HibernateInterceptorBeanPostProcessorTest {
     @Test
     public void test() {
         sessionFactory.inTransaction(session -> {
-            session.persist(new User("mercyblitz"));
+            String entityName = "user";
+            User user = new User("mercyblitz");
+            // Save
+            session.persist(entityName, user);
+            // Flush
             session.flush();
-            User user = session.find(User.class, 1L);
-            logger.info("{}", user);
+            // Find one
+            user = session.find(User.class, user.getId());
+            // Update
+            session.merge(entityName, user);
+            // Find all
+            Query<User> query = session.createQuery("FROM User", User.class);
+            List<User> users = query.list();
+            assertEquals(1, users.size());
+            assertEquals(user, users.get(0));
+
+            // Get
+            user = session.get(User.class, user.getId());
+
+            // Delete
+            session.remove(user);
+
+            // Not exists
+            assertNull(session.get(User.class, user.getId()));
         });
     }
 
