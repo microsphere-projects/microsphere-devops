@@ -18,11 +18,11 @@ package io.microsphere.spring.orm.hibernate;
 
 import io.microsphere.entity.User;
 import io.microsphere.hibernate.MockInterceptor;
+import io.microsphere.logging.Logger;
+import io.microsphere.logging.LoggerFactory;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
