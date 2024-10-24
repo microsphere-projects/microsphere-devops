@@ -27,13 +27,12 @@ import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
 
 /**
- * {@link EntityListener} for Logging
+ * EntityListener for Logging
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see EntityListener
  * @since 1.0.0
  */
-public class LoggingEntityListener implements EntityListener {
+public class LoggingEntityListener {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

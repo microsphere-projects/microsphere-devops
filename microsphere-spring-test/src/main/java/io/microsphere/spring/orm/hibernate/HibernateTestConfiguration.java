@@ -20,7 +20,6 @@ import io.microsphere.entity.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
@@ -32,7 +31,6 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
  * @since 1.0.0
  */
 @Configuration(proxyBeanMethods = false)
-@Import(value = {HibernateInterceptorBeanPostProcessor.class})
 public class HibernateTestConfiguration {
 
     @Bean
@@ -42,5 +40,4 @@ public class HibernateTestConfiguration {
         factoryBean.setPackagesToScan(User.class.getPackageName());
         return factoryBean;
     }
-
 }
