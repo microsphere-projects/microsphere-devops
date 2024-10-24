@@ -33,7 +33,7 @@ dependencies {
     // Google Gson
     api("com.google.code.gson:gson")
 
-    // Bean Validation Vender - Hibernate Validator
+    // Bean Validation Vendor - Hibernate Validator
     api("org.hibernate.validator:hibernate-validator")
 
     // Spring Cloud Commons
