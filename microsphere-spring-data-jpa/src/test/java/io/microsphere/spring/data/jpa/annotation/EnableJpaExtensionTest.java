@@ -16,10 +16,15 @@
  */
 package io.microsphere.spring.data.jpa.annotation;
 
+import io.microsphere.entity.User;
+import io.microsphere.jpa.AbstractPersistenceTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * {@link EnableJpaExtension} Test
@@ -33,9 +38,30 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
         classes = EnableJpaExtensionTest.class
 )
 @EnableJpaExtension
-public class EnableJpaExtensionTest {
+public class EnableJpaExtensionTest extends AbstractPersistenceTest {
 
     @Test
     public void test() {
+
+        final User user = new User("mercyblitz");
+
+        doInEntityManager(entityManager -> {
+            // Save
+            entityManager.persist(user);
+            // Flush
+            entityManager.flush();
+        });
+
+        doInEntityManager(entityManager -> {
+            // Find one
+            assertNotNull(entityManager.find(User.class, user.getId()));
+        });
+
+        doInEntityManager(entityManager -> {
+            // Find one
+            entityManager.remove(user);
+            assertNull(entityManager.find(User.class, user.getId()));
+        });
+
     }
 }
