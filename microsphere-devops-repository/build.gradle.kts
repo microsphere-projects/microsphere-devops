@@ -28,7 +28,7 @@ dependencies {
     // Common Utils
     api(libs.commons.lang3)
 
-    // JPA Vender - Hibernate
+    // JPA Vendor - Hibernate
     api("org.hibernate.orm:hibernate-core")
 
     // Spring Cloud Commons
@@ -40,7 +40,7 @@ dependencies {
     // Testing
     // Spring Boot Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    // JPA Vender - Hibernate testing
+    // JPA Vendor - Hibernate testing
     testImplementation("org.hibernate.orm:hibernate-testing")
 
 }
