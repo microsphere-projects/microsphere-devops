@@ -11,6 +11,7 @@ plugins {
 rootProject.name = "microsphere-devops"
 
 include(
+    "microsphere-spring-test",
     "microsphere-spring-orm",
     "microsphere-spring-data-jpa",
     "microsphere-devops-api",
