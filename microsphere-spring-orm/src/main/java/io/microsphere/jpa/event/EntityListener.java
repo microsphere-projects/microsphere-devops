@@ -25,26 +25,26 @@ import jakarta.persistence.EntityListeners;
  * @see EntityListeners
  * @since 1.0.0
  */
-public interface EntityListener {
+public interface EntityListener<E> {
 
-    default void onPostLoad(Object entity) {
+    default void onPostLoad(E entity) {
     }
 
-    default void onPrePersist(Object entity) {
+    default void onPrePersist(E entity) {
     }
 
-    default void onPostPersist(Object entity) {
+    default void onPostPersist(E entity) {
     }
 
-    default void onPreUpdate(Object entity) {
+    default void onPreUpdate(E entity) {
     }
 
-    default void onPostUpdate(Object entity) {
+    default void onPostUpdate(E entity) {
     }
 
-    default void onPreRemove(Object entity) {
+    default void onPreRemove(E entity) {
     }
 
-    default void onPostRemove(Object entity) {
+    default void onPostRemove(E entity) {
     }
 }
