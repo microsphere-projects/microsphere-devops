@@ -28,7 +28,7 @@ dependencies {
     // Spring Cloud Commons
     compileOnly("org.springframework.cloud:spring-cloud-commons")
 
-    // JPA Vender - Hibernate
+    // JPA Vendor - Hibernate
     compileOnly("org.hibernate.orm:hibernate-core")
 }
 
