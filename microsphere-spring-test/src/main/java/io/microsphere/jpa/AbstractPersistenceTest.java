@@ -20,9 +20,12 @@ import io.microsphere.logging.Logger;
 import io.microsphere.logging.LoggerFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import org.hibernate.Hibernate;
 import org.junit.jupiter.api.BeforeEach;
+
+import java.util.function.Consumer;
 
 /**
  * The abstract test for JPA
@@ -42,5 +45,17 @@ public abstract class AbstractPersistenceTest {
         EntityManagerFactory entityManagerFactory =
                 Persistence.createEntityManagerFactory("io.microsphere.entity");
         this.entityManager = entityManagerFactory.createEntityManager();
+    }
+
+    protected void doInEntityManager(Consumer<EntityManager> entityManagerConsumer) {
+        EntityManager entityManager = this.entityManager;
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManagerConsumer.accept(entityManager);
+            transaction.commit();
+        } catch (Throwable e) {
+            transaction.rollback();
+        }
     }
 }
