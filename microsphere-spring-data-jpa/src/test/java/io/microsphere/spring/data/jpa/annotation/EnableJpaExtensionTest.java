@@ -18,6 +18,10 @@ package io.microsphere.spring.data.jpa.annotation;
 
 import io.microsphere.entity.User;
 import io.microsphere.jpa.AbstractPersistenceTest;
+import io.microsphere.jpa.event.EntityListener;
+import io.microsphere.jpa.event.LoggingEntityListener;
+import io.microsphere.logging.Logger;
+import io.microsphere.logging.LoggerFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -35,10 +39,32 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(
-        classes = EnableJpaExtensionTest.class
+        classes = {
+                EnableJpaExtensionTest.LoggingListener.class,
+                EnableJpaExtensionTest.UserListener.class,
+                EnableJpaExtensionTest.class
+        }
 )
 @EnableJpaExtension
 public class EnableJpaExtensionTest extends AbstractPersistenceTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(EnableJpaExtensionTest.class);
+
+    @Override
+    protected String getPersistenceUnitName() {
+        return "io.microsphere.entity";
+    }
+
+    static class UserListener implements EntityListener<User> {
+        @Override
+        public void onPrePersist(User entity) {
+            logger.info("onPrePersist({})", entity);
+        }
+    }
+
+    static class LoggingListener extends LoggingEntityListener implements EntityListener<Object> {
+
+    }
 
     @Test
     public void test() {
