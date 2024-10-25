@@ -1,5 +1,6 @@
 package io.microsphere.devops.web.config
 
+import io.microsphere.spring.data.jpa.annotation.EnableJpaExtension
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.support.beans
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 @EnableScheduling
 @EnableCaching
 @EnableTransactionManagement
+@EnableJpaExtension
 class DefaultConfiguration {
 
 }
