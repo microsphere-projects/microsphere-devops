@@ -13,6 +13,10 @@ plugins {
 }
 
 dependencies {
+    // Import BOMs
+    // Microsphere Spring Dependencies
+    api(platform(libs.microsphere.spring.dependencies))
+
     // Internal API
     api(project(":microsphere-devops-api"))
     api(project(":microsphere-spring-data-jpa"))
@@ -22,6 +26,9 @@ dependencies {
 
     // Kotlin Coroutines
     api(libs.kotlinx.coroutines.core)
+
+    // Microsphere Spring
+    api("io.github.microsphere-projects:microsphere-spring-context")
 
     // Spring Boot
     api("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -41,6 +48,9 @@ dependencies {
     // Testing
     // Spring Boot Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
     // JPA Vendor - Hibernate testing
     testImplementation("org.hibernate.orm:hibernate-testing")
 }
