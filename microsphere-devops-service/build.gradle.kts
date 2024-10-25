@@ -13,10 +13,6 @@ plugins {
 
 
 dependencies {
-
-    // Internal Project
-    api(project(":microsphere-devops-repository"))
-
     // Import the BOMs
     // Microsphere Spring Cloud Alibaba Dependencies
     api(platform(libs.spring.cloud.alibaba.dependencies))
@@ -24,6 +20,10 @@ dependencies {
     // api(platform(libs.microsphere.spring.boot.dependencies))
     // Microsphere Spring Cloud Dependencies
     api(platform(libs.microsphere.spring.cloud.dependencies))
+
+    // Internal Project
+    api(project(":microsphere-devops-repository"))
+
     // Nacos Open API
     api(libs.microsphere.nacos.openapi)
 
