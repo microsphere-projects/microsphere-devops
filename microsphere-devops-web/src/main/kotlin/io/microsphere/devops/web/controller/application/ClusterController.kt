@@ -3,8 +3,6 @@ package io.microsphere.devops.web.controller.application
 import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.service.application.ClusterService
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.http.HttpMethod.POST
-import org.springframework.http.HttpMethod.PUT
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
