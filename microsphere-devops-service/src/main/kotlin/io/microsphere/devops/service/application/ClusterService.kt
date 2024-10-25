@@ -3,9 +3,6 @@ package io.microsphere.devops.service.application
 import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.repository.ClusterRepository
 import org.springframework.context.ApplicationEventPublisher
-import org.springframework.data.domain.AfterDomainEventPublication
-import org.springframework.data.domain.DomainEvents
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.lang.System.currentTimeMillis
