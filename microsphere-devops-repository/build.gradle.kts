@@ -15,6 +15,7 @@ plugins {
 dependencies {
     // Internal API
     api(project(":microsphere-devops-api"))
+    api(project(":microsphere-spring-data-jpa"))
 
     // Kotlin
     api("org.jetbrains.kotlin:kotlin-reflect")
@@ -25,7 +26,7 @@ dependencies {
     // Spring Boot
     api("org.springframework.boot:spring-boot-starter-data-jpa")
 
-    // Common Utils
+    // Apache Common Lang
     api(libs.commons.lang3)
 
     // JPA Vendor - Hibernate
@@ -42,5 +43,4 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     // JPA Vendor - Hibernate testing
     testImplementation("org.hibernate.orm:hibernate-testing")
-
 }
