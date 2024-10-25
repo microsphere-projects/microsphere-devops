@@ -7,7 +7,9 @@ plugins {
 
 dependencies {
     // BOMs
+    // Spring Boot Dependencies
     implementation(platform(libs.spring.boot.dependencies))
+    // Microsphere Spring Dependencies
     implementation(platform(libs.microsphere.spring.dependencies))
 
     // Microsphere Spring
@@ -33,7 +35,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-test")
     implementation("org.jetbrains.kotlin:kotlin-test-junit5")
     runtimeOnly("org.junit.platform:junit-platform-launcher")
-    
+
     // H2 Database
     runtimeOnly("com.h2database:h2")
 }
