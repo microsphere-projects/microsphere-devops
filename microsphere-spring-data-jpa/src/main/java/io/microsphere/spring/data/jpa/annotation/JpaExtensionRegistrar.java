@@ -18,8 +18,11 @@ package io.microsphere.spring.data.jpa.annotation;
 
 import io.microsphere.spring.context.annotation.BeanCapableImportCandidate;
 import io.microsphere.spring.data.jpa.event.EntityLifecycleApplicationListener;
+import io.microsphere.spring.data.jpa.event.EventPublishingEntityListener;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
 
@@ -34,7 +37,7 @@ import static io.microsphere.spring.util.BeanRegistrar.registerBeanDefinition;
  * @see ImportBeanDefinitionRegistrar
  * @since 1.0.0
  */
-class JpaExtensionRegistrar extends BeanCapableImportCandidate implements ImportBeanDefinitionRegistrar {
+class JpaExtensionRegistrar extends BeanCapableImportCandidate implements ImportBeanDefinitionRegistrar, ApplicationEventPublisherAware {
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
@@ -45,4 +48,8 @@ class JpaExtensionRegistrar extends BeanCapableImportCandidate implements Import
         registerBeanDefinition(registry, EntityLifecycleApplicationListener.class);
     }
 
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        EventPublishingEntityListener.setApplicationEventPublisher(applicationEventPublisher);
+    }
 }
