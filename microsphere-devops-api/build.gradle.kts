@@ -14,16 +14,20 @@ plugins {
 }
 
 dependencies {
+    // Import the BOMs
+    // Spring Boot Dependencies
     api(platform(libs.spring.boot.dependencies))
+    // Spring Cloud Dependencies
     api(platform(libs.spring.cloud.dependencies))
 
+    // Apache Commons
     implementation(libs.commons.lang3)
     implementation(libs.commons.io)
 
     // Jakarta EE
-    compileOnly("jakarta.validation:jakarta.validation-api")
-    compileOnly("jakarta.persistence:jakarta.persistence-api")
-    compileOnly("jakarta.transaction:jakarta.transaction-api")
+    api("jakarta.validation:jakarta.validation-api")
+    api("jakarta.persistence:jakarta.persistence-api")
+    api("jakarta.transaction:jakarta.transaction-api")
 
     // Spring Cloud Commons
     compileOnly("org.springframework.cloud:spring-cloud-commons")
