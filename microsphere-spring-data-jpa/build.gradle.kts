@@ -7,14 +7,13 @@ plugins {
 
 dependencies {
     // BOMs
+    // Spring Boot Dependencies
     implementation(platform(libs.spring.boot.dependencies))
+    // Microsphere Spring Dependencies
     implementation(platform(libs.microsphere.spring.dependencies))
 
     // Internal API
     api(project(":microsphere-spring-orm"))
-
-    // Microsphere Spring
-    api("io.github.microsphere-projects:microsphere-spring-context")
 
     // Jakarta EE
     implementation("jakarta.persistence:jakarta.persistence-api")
