@@ -17,18 +17,22 @@ plugins {
 
 
 dependencies {
-
+    // Internal Project
     implementation(project(":microsphere-devops-service"))
 
+    // Apache Log4j2
     implementation(libs.log4j2.core)
 
-
+    // Spring Boot Framework
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+
+    // Microsphere Spring Boot
     implementation("io.github.microsphere-projects:microsphere-spring-boot-actuator")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
