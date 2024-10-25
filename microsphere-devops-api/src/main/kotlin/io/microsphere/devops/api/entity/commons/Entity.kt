@@ -1,7 +1,5 @@
 package io.microsphere.devops.api.commons
 
-import io.microsphere.devops.api.event.GenericEntityListener
-import jakarta.persistence.EntityListeners
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -15,8 +13,7 @@ import java.lang.System.currentTimeMillis
  * @since 1.0.0
  */
 @MappedSuperclass
-@EntityListeners(GenericEntityListener::class)
-open class Entity(
+class Entity(
 
     /**
      * ID property
