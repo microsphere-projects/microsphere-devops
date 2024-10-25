@@ -30,7 +30,6 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
  * @see Configuration
  * @since 1.0.0
  */
-@Configuration(proxyBeanMethods = false)
 public class HibernateTestConfiguration {
 
     @Bean
