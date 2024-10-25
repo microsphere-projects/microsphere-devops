@@ -7,7 +7,9 @@ plugins {
 
 dependencies {
     // BOMs
+    // Spring Boot Dependencies
     implementation(platform(libs.spring.boot.dependencies))
+    // Microsphere Spring Dependencies
     implementation(platform(libs.microsphere.spring.dependencies))
 
     // Microsphere Spring
