@@ -12,7 +12,7 @@ plugins {
     id("org.springframework.boot") version "3.3.0"
 
     // Apply the spring plugin to add support for Spring specific features
-    kotlin("plugin.spring") version "1.9.24"
+    kotlin("plugin.spring") version "2.0.21"
 }
 
 

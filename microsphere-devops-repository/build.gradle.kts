@@ -7,9 +7,9 @@
 plugins {
     id("buildlogic.kotlin-library-conventions")
     // Apply the spring plugin to add support for Spring specific features
-    kotlin("plugin.spring") version "1.9.24"
+    kotlin("plugin.spring") version "2.0.21"
     // Apply the JPA plugin to add support for JPA specific features
-    kotlin("plugin.jpa") version "1.9.24"
+    kotlin("plugin.jpa") version "2.0.21"
 }
 
 dependencies {

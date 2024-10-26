@@ -7,10 +7,10 @@ plugins {
     id("buildlogic.kotlin-library-conventions")
     // Apply the all-open plugin to add support for Java Library
     // https://kotlinlang.org/docs/all-open-plugin.html
-    kotlin("plugin.allopen") version "1.9.24"
+    kotlin("plugin.allopen") version "2.0.21"
     // Apply the no-arg plugin to add support for Java Library
     // https://kotlinlang.org/docs/no-arg-plugin.html
-    kotlin("plugin.noarg") version "1.9.24"
+    kotlin("plugin.noarg") version "2.0.21"
 }
 
 dependencies {
