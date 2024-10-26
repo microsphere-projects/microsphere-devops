@@ -22,7 +22,7 @@ dependencies {
     api(project(":microsphere-spring-data-jpa"))
 
     // Kotlin
-    api("org.jetbrains.kotlin:kotlin-reflect")
+    api(libs.kotlin.reflect)
 
     // Kotlin Coroutines
     api(libs.kotlinx.coroutines.core)
