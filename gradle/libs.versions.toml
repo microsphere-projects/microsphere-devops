@@ -53,6 +53,7 @@ log4j-api-kotlin = { group = ".apache.logging.log4j", name = "log4j-api-kotlin",
 apollo-java = { group = "com.ctrip.framework.apollo", name = "apollo-client", version.ref = "apolloJavaVersion" }
 apollo-openapi = { group = "com.ctrip.framework.apollo", name = "apollo-openapi", version.ref = "apolloJavaVersion" }
 
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlinVersion" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCoreVersion" }
 
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinPluginVersion" }
