@@ -21,11 +21,11 @@ annotationApiVersion = "1.3.2"
 
 apolloJavaVersion = "2.1.0"
 
-kotlinVersion = "1.9.24"
+kotlinVersion = "2.0.21"
 
-kotlinxCoroutinesCoreVersion = "1.8.1"
+kotlinxCoroutinesCoreVersion = "1.9.0"
 
-kotlinPluginVersion = "1.9.24"
+kotlinPluginVersion = "2.0.21"
 
 managementPluginVersion = "1.1.4"
 
