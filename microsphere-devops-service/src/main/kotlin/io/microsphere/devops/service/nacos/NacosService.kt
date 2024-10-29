@@ -20,6 +20,7 @@ import com.alibaba.nacos.api.common.Constants.DEFAULT_NAMESPACE_ID
 import io.microsphere.devops.api.entity.Application
 import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.api.entity.Namespace
+import io.microsphere.devops.condition.NacosProfile
 import io.microsphere.devops.service.application.ApplicationServiceFacade
 import io.microsphere.nacos.client.NacosClientConfig
 import io.microsphere.nacos.client.common.OpenApiTemplateClient
@@ -42,6 +43,7 @@ import java.util.concurrent.ConcurrentMap
  * @see Service
  * @since 1.0.0
  */
+@NacosProfile
 @Service
 class NacosService(
     val applicationServiceFacade: ApplicationServiceFacade
