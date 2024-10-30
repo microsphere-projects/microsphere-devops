@@ -1,4 +1,4 @@
-package io.microsphere.devops.service.config.nacos
+package io.microsphere.devops.service.nacos.config
 
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties
 import com.alibaba.nacos.api.common.Constants.DEFAULT_NAMESPACE_ID
