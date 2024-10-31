@@ -20,7 +20,6 @@ import com.alibaba.nacos.api.common.Constants.DEFAULT_NAMESPACE_ID
 import io.microsphere.devops.api.entity.Application
 import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.api.entity.Namespace
-import io.microsphere.devops.condition.NacosProfile
 import io.microsphere.devops.service.application.ApplicationServiceFacade
 import io.microsphere.nacos.client.NacosClientConfig
 import io.microsphere.nacos.client.common.OpenApiTemplateClient
@@ -43,11 +42,14 @@ import java.util.concurrent.ConcurrentMap
  * @see Service
  * @since 1.0.0
  */
-@NacosProfile
-@Service
+@Deprecated(
+    message = "Deprecated",
+    replaceWith = ReplaceWith("io.microsphere.devops.service.nacos.NacosClientV2ApplicationDataLoader")
+)
 class NacosService(
     val applicationServiceFacade: ApplicationServiceFacade
 ) : DisposableBean {
+
     private val nacosClientsCache: ConcurrentMap<String, NacosClientV2> = ConcurrentHashMap();
 
     @Transactional
@@ -127,7 +129,7 @@ class NacosService(
 
         serviceNames.addAll(page.elements);
         while (page.hasNext()) {
-            pageNumber += pageSize;
+            pageNumber++;
             page = client.getServiceNames(namespaceId, pageNumber, pageSize);
             serviceNames.addAll(page.elements);
         }
