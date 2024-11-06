@@ -40,6 +40,6 @@ public class EntityEventListenerFactory implements EventListenerFactory {
 
     @Override
     public ApplicationListener<?> createApplicationListener(String beanName, Class<?> type, Method method) {
-        return new EntityApplicationListenerAdapter(beanName, type, method);
+        return new EntityApplicationListenerMethodAdapter(beanName, type, method);
     }
 }
