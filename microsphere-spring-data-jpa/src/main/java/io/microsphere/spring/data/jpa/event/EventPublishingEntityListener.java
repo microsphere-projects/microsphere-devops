@@ -16,7 +16,7 @@
  */
 package io.microsphere.spring.data.jpa.event;
 
-import io.microsphere.jpa.event.EntityLifecycleType;
+import io.microsphere.jpa.event.EntityType;
 import io.microsphere.logging.Logger;
 import io.microsphere.logging.LoggerFactory;
 import jakarta.persistence.EntityListeners;
@@ -46,46 +46,46 @@ public class EventPublishingEntityListener {
 
     @PostLoad
     public void onPostLoad(Object entity) {
-        publishEvent(entity, EntityLifecycleType.POST_LOAD);
+        publishEvent(entity, EntityType.POST_LOAD);
     }
 
     @PrePersist
     public void onPrePersist(Object entity) {
-        publishEvent(entity, EntityLifecycleType.PRE_PERSIST);
+        publishEvent(entity, EntityType.PRE_PERSIST);
     }
 
     @PostPersist
     public void onPostPersist(Object entity) {
-        publishEvent(entity, EntityLifecycleType.POST_PERSIST);
+        publishEvent(entity, EntityType.POST_PERSIST);
     }
 
     @PreUpdate
     public void onPreUpdate(Object entity) {
-        publishEvent(entity, EntityLifecycleType.PRE_UPDATE);
+        publishEvent(entity, EntityType.PRE_UPDATE);
     }
 
     @PostUpdate
     public void onPostUpdate(Object entity) {
-        publishEvent(entity, EntityLifecycleType.POST_LOAD);
+        publishEvent(entity, EntityType.POST_LOAD);
     }
 
     @PreRemove
     public void onPreRemove(Object entity) {
-        publishEvent(entity, EntityLifecycleType.PRE_REMOVE);
+        publishEvent(entity, EntityType.PRE_REMOVE);
     }
 
     @PostRemove
     public void onPostRemove(Object entity) {
-        publishEvent(entity, EntityLifecycleType.POST_REMOVE);
+        publishEvent(entity, EntityType.POST_REMOVE);
     }
 
-    private void publishEvent(Object entity, EntityLifecycleType entityLifecycleType) {
+    private void publishEvent(Object entity, EntityType entityType) {
         ApplicationEventPublisher applicationEventPublisher = EventPublishingEntityListener.applicationEventPublisher;
         if (applicationEventPublisher == null) {
             logger.warn("No ApplicationEventPublisher set, Please inject ApplicationEventPublisher instance first!");
             return;
         }
-        EntityLifecycleEvent event = new EntityLifecycleEvent(entity, entityLifecycleType);
+        EntityEvent event = new EntityEvent(this, entity, entityType);
         applicationEventPublisher.publishEvent(event);
     }
 
