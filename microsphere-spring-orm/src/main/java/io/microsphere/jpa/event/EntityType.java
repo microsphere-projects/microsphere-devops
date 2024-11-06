@@ -38,7 +38,7 @@ import jakarta.persistence.PreUpdate;
  * @see PreUpdate
  * @since 1.0.0
  */
-public enum EntityLifecycleType {
+public enum EntityType {
 
     /**
      * @see PostLoad
