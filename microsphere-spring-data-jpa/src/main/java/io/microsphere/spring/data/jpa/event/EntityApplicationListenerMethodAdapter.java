@@ -43,13 +43,13 @@ import static org.springframework.core.annotation.AnnotatedElementUtils.findMerg
  * @see ApplicationListenerMethodAdapter
  * @since 1.0.0
  */
-class EntityApplicationListenerAdapter extends ApplicationListenerMethodAdapter {
+class EntityApplicationListenerMethodAdapter extends ApplicationListenerMethodAdapter {
 
-    private static final Logger logger = LoggerFactory.getLogger(EntityApplicationListenerAdapter.class);
+    private static final Logger logger = LoggerFactory.getLogger(EntityApplicationListenerMethodAdapter.class);
 
     private final EntityType[] entityTypes;
 
-    public EntityApplicationListenerAdapter(String beanName, Class<?> targetClass, Method method) {
+    public EntityApplicationListenerMethodAdapter(String beanName, Class<?> targetClass, Method method) {
         super(beanName, targetClass, method);
         this.entityTypes = resolveEntityLifecycleTypes();
     }
