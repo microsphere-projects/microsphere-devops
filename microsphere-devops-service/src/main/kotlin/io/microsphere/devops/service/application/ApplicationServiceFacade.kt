@@ -12,7 +12,6 @@ import io.microsphere.spring.data.jpa.annotation.EntityListener
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cloud.client.ServiceInstance
-import org.springframework.context.event.EventListener
 import org.springframework.core.task.AsyncTaskExecutor
 import org.springframework.scheduling.annotation.AsyncAnnotationBeanPostProcessor.DEFAULT_TASK_EXECUTOR_BEAN_NAME
 import org.springframework.stereotype.Service
