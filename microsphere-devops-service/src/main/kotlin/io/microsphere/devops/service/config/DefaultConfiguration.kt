@@ -1,8 +1,10 @@
 package io.microsphere.devops.web.config
 
+import io.microsphere.devops.repository.event.PublishingTransactionalEventEntityListener
 import io.microsphere.spring.data.jpa.annotation.EnableJpaExtension
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 import org.springframework.context.support.beans
 import org.springframework.scheduling.annotation.AsyncAnnotationBeanPostProcessor.DEFAULT_TASK_EXECUTOR_BEAN_NAME
 import org.springframework.scheduling.annotation.EnableAsync
