@@ -43,7 +43,8 @@ public class EntityEventListenerFactory implements EventListenerFactory, Ordered
     @Override
     public boolean supportsMethod(Method method) {
         return method.isAnnotationPresent(EntityListener.class)
-                && method.getParameterCount() == 1;
+                // Supports the listener method with no-argument or one argument
+                && method.getParameterCount() < 2;
     }
 
     @Override
