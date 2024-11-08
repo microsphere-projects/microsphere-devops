@@ -16,10 +16,10 @@
  */
 package io.microsphere.spring.orm.hibernate;
 
-import io.microsphere.test.entity.User;
-import io.microsphere.test.hibernate.MockInterceptor;
 import io.microsphere.logging.Logger;
 import io.microsphere.logging.LoggerFactory;
+import io.microsphere.test.entity.User;
+import io.microsphere.test.hibernate.MockInterceptor;
 import io.microsphere.test.spring.orm.hibernate.HibernateTestConfiguration;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
