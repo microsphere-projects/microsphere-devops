@@ -43,7 +43,7 @@ public class EntityEvent<E> extends PayloadApplicationEvent<E> {
     }
 
     public E getEntity() {
-        return (E) getPayload();
+        return getPayload();
     }
 
     @Override
