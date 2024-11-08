@@ -38,36 +38,42 @@ public class LoggingEntityListener {
 
     @PostLoad
     public void onPostLoad(Object entity) {
-        logger.info("onPostLoad({})", entity);
+        log("@PostLoad : {}", entity);
     }
 
     @PrePersist
     public void onPrePersist(Object entity) {
-        logger.info("onPrePersist({})", entity);
+        log("@PrePersist : {}", entity);
     }
 
     @PostPersist
     public void onPostPersist(Object entity) {
-        logger.info("onPostPersist({})", entity);
+        log("@PostPersist : {}", entity);
     }
 
     @PreUpdate
     public void onPreUpdate(Object entity) {
-        logger.info("onPreUpdate({})", entity);
+        log("@PreUpdate : {}", entity);
     }
 
     @PostUpdate
     public void onPostUpdate(Object entity) {
-        logger.info("onPostUpdate({})", entity);
+        log("@PostUpdate : {}", entity);
     }
 
     @PreRemove
     public void onPreRemove(Object entity) {
-        logger.info("onPreRemove({})", entity);
+        log("@PreRemove : {}", entity);
     }
 
     @PostRemove
     public void onPostRemove(Object entity) {
-        logger.info("onPostRemove({})", entity);
+        log("@PostRemove : {}", entity);
+    }
+
+    protected void log(String messagePattern, Object... args) {
+        if (logger.isDebugEnabled()) {
+            logger.debug(messagePattern, args);
+        }
     }
 }
