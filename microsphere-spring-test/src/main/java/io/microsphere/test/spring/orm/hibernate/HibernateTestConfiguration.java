@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.spring.orm.hibernate;
+package io.microsphere.test.spring.orm.hibernate;
 
-import io.microsphere.entity.User;
+import io.microsphere.test.entity.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

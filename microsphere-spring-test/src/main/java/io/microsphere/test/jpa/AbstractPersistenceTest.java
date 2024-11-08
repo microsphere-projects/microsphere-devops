@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.jpa;
+package io.microsphere.test.jpa;
 
 import io.microsphere.logging.Logger;
 import io.microsphere.logging.LoggerFactory;

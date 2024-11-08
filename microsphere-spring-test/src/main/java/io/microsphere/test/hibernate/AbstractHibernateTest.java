@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.hibernate;
+package io.microsphere.test.hibernate;
 
 import io.microsphere.logging.Logger;
 import io.microsphere.logging.LoggerFactory;
