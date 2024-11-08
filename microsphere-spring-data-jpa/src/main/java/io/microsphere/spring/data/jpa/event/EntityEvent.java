@@ -20,6 +20,8 @@ import io.microsphere.jpa.event.EntityType;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.PayloadApplicationEvent;
 
+import java.util.Date;
+
 /**
  * The Spring {@link ApplicationEvent Event} for JPA Entity Lifecycle
  *
@@ -38,5 +40,14 @@ public class EntityEvent<E> extends PayloadApplicationEvent<E> {
 
     public EntityType getType() {
         return type;
+    }
+
+    @Override
+    public String toString() {
+        return "EntityEvent[" +
+                "source = " + source +
+                ", entity = " + getPayload() +
+                ", type = " + type +
+                "] at " + new Date(getTimestamp());
     }
 }
