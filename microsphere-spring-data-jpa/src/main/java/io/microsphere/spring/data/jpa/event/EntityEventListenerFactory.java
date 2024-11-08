@@ -19,6 +19,8 @@ package io.microsphere.spring.data.jpa.event;
 import io.microsphere.spring.data.jpa.annotation.EntityListener;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListenerFactory;
+import org.springframework.core.Ordered;
+import org.springframework.transaction.event.TransactionalEventListenerFactory;
 
 import java.lang.reflect.Method;
 
@@ -28,9 +30,15 @@ import java.lang.reflect.Method;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see EventListenerFactory
  * @see EntityListener
+ * @see TransactionalEventListenerFactory
  * @since 1.0.0
  */
-public class EntityEventListenerFactory implements EventListenerFactory {
+public class EntityEventListenerFactory implements EventListenerFactory, Ordered {
+
+    /**
+     * The default order after {@link TransactionalEventListenerFactory#getOrder()}
+     */
+    private int order = 100;
 
     @Override
     public boolean supportsMethod(Method method) {
@@ -41,5 +49,14 @@ public class EntityEventListenerFactory implements EventListenerFactory {
     @Override
     public ApplicationListener<?> createApplicationListener(String beanName, Class<?> type, Method method) {
         return new EntityApplicationListenerMethodAdapter(beanName, type, method);
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
     }
 }
