@@ -60,7 +60,7 @@ public class EntityApplicationListener implements ApplicationListener<EntityEven
             }
             return;
         }
-        
+
         Object entity = event.getPayload();
         EntityType type = event.getType();
 
