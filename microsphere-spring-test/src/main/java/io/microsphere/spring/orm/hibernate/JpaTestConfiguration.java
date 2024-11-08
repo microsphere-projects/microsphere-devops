@@ -34,7 +34,6 @@ public class JpaTestConfiguration {
     public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean() {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setPersistenceProvider(new HibernatePersistenceProvider());
-        factoryBean.setPackagesToScan("io.microsphere.entity");
         return factoryBean;
     }
 }
