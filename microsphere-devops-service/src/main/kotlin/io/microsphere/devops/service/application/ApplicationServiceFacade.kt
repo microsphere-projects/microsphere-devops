@@ -6,16 +6,17 @@ import io.microsphere.devops.api.entity.ApplicationInstance
 import io.microsphere.devops.api.entity.ApplicationInstance.Status
 import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.api.entity.Namespace
+import io.microsphere.jpa.event.EntityType
+import io.microsphere.logging.LoggerFactory
+import io.microsphere.spring.data.jpa.annotation.EntityListener
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cloud.client.ServiceInstance
+import org.springframework.context.event.EventListener
 import org.springframework.core.task.AsyncTaskExecutor
 import org.springframework.scheduling.annotation.AsyncAnnotationBeanPostProcessor.DEFAULT_TASK_EXECUTOR_BEAN_NAME
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Propagation.REQUIRES_NEW
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.transaction.event.TransactionPhase
-import org.springframework.transaction.event.TransactionalEventListener
 import java.net.URI
 
 @Service
@@ -28,6 +29,8 @@ class ApplicationServiceFacade(
     @Qualifier(DEFAULT_TASK_EXECUTOR_BEAN_NAME)
     val asyncTaskExecutor: AsyncTaskExecutor
 ) : InitializingBean {
+
+    private val logger = LoggerFactory.getLogger(this::class.qualifiedName);
 
     private val discoveryServicesCache = HashMap<Cluster.Type, DiscoveryService>(Cluster.Type.values().size + 1);
 
@@ -54,25 +57,17 @@ class ApplicationServiceFacade(
         applicationInstanceService.saveOrUpdateApplicationInstance(applicationInstance);
     }
 
-    fun refreshApplicationData() {
-
-    }
-
     fun refreshClusters() {
         val clusters = clusterService.findAll();
         refreshClusters(clusters);
     }
 
     fun refreshClusters(clusters: List<Cluster>) {
-        clusters.forEach { cluster ->
-            async {
-                refreshCluster(cluster)
-            }
-        }
+        clusters.forEach { this::refreshCluster }
     }
 
-    @Transactional(propagation = REQUIRES_NEW)
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional
+    @EntityListener(type = [EntityType.POST_PERSIST])
     fun refreshCluster(cluster: Cluster) {
         refreshNamespaces(cluster);
     }
@@ -84,43 +79,38 @@ class ApplicationServiceFacade(
         val newNamespaces = discoveryService.getNamespaces(cluster);
 
         if (newNamespaces.isEmpty()) {
+            logger.warn("No Namespace was found in the cluster[url : {}]!", cluster.url);
             return;
         }
 
-        val updatedNamespacesMap: MutableMap<String, Namespace> = mutableMapOf();
+        val existedNamespaces = namespaceService.findAllByClusterIdAndStatus(cluster.id!!);
+
+        val existedNamespacesMap = HashMap<String, Namespace>(existedNamespaces.size);
 
         val allNamespaces = ArrayList<Namespace>();
 
         // Find all namespaces of the specified cluster from the persistence
-        for (namespace in namespaceService.findAllByClusterIdAndStatus(cluster.id!!)) {
-            updatedNamespacesMap[namespace.name] = namespace;
-        }
+        existedNamespaces.forEach { namespace -> existedNamespacesMap[namespace.name] = namespace }
 
         // Remove the duplicated namespaces if found
-        for (ns in newNamespaces) {
-            val namespaceId = ns.name;
-            var duplicatedNamespace = updatedNamespacesMap.remove(namespaceId);
-            if (duplicatedNamespace != null) {
-                allNamespaces.add(duplicatedNamespace);
+        for (newNamespace in newNamespaces) {
+            val namespaceId = newNamespace.name;
+            var duplicatedNamespace = existedNamespacesMap.remove(namespaceId);
+            if (duplicatedNamespace == null) {
+                allNamespaces.add(newNamespace);
             }
         }
 
         // Add the other existed namespaces
-        for (existedNamespace in updatedNamespacesMap.values) {
+        for (existedNamespace in existedNamespacesMap.values) {
             existedNamespace.status = Namespace.Status.UNKNOWN;
             allNamespaces.add(existedNamespace);
         }
 
-        // refresh echo namespace in async
-        allNamespaces.forEach { it ->
-            async {
-                refreshNamespace(it)
-            }
-        }
+        // refresh echo namespace
+        allNamespaces.forEach { this::refreshNamespace }
     }
 
-    @Transactional(propagation = REQUIRES_NEW)
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     fun refreshNamespace(namespace: Namespace) {
         namespaceService.saveOrUpdateNamespace(namespace);
         when (namespace.status) {
@@ -129,8 +119,8 @@ class ApplicationServiceFacade(
         }
     }
 
-    @Transactional(propagation = REQUIRES_NEW)
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional
+    @EntityListener(type = [EntityType.POST_PERSIST])
     fun refreshApplications(namespace: Namespace) {
         val discoveryService = getDiscoveryService(namespace);
 
@@ -138,25 +128,30 @@ class ApplicationServiceFacade(
         val newApplications = discoveryService.getApplications(namespace);
 
         if (newApplications.isEmpty()) {
+            logger.info(
+                "No Application was found in the namespace[id : {} , cluster url : {}]!",
+                namespace.name,
+                namespace.cluster!!.url
+            );
             return;
         }
 
+        val existedApplications = applicationService.findAllByNamespaceId(namespace.id!!);
+
         // The temp cache for applications that will be removed
-        val removedApplicationsMap: MutableMap<String, Application> = mutableMapOf();
+        val removedApplicationsMap = HashMap<String, Application>(existedApplications.size);
 
         // Find all applications of the specified namespace from the persistence
-        for (application in applicationService.findAllByNamespaceId(namespace.id!!)) {
-            removedApplicationsMap[application.name] = application;
+        for (existedApplication in existedApplications) {
+            removedApplicationsMap[existedApplication.name] = existedApplication;
         }
 
-        newApplications.forEach { application ->
-            {
-                // Remove any duplicated application if found
-                removedApplicationsMap.remove(application.name)
-                application.namespace = namespace;
-                // Refresh each application
-                refreshApplication(application);
-            }
+        for (newApplication in newApplications) {
+            // Remove any duplicated application if found
+            removedApplicationsMap.remove(newApplication.name)
+            newApplication.namespace = namespace;
+            // Refresh each application
+            refreshApplication(newApplication);
         }
 
         // Remove the unknown applications
@@ -164,20 +159,26 @@ class ApplicationServiceFacade(
     }
 
     fun refreshApplication(application: Application) {
-        async {
-            // Save or Update each application
-            applicationService.saveOrUpdateApplication(application);
-            // refresh all application instances of the specified application
-            refreshApplicationInstances(application);
-        }
+        // Save or Update each application
+        applicationService.saveOrUpdateApplication(application);
+        // refresh all application instances of the specified application
+        refreshApplicationInstances(application);
     }
 
+    @Transactional
+    @EntityListener(type = [EntityType.POST_PERSIST])
     fun refreshApplicationInstances(application: Application) {
         val discoveryService = getDiscoveryService(application);
         // Load all instances of the specified application from the target infrastructure
         val newInstances = discoveryService.getApplicationInstances(application);
 
         if (newInstances.isEmpty()) {
+            logger.warn(
+                "No Application Instance was found in the application[name : '{}' , namespace: '{}' , cluster: '{}']",
+                application.name,
+                application.namespace!!.name,
+                application.namespace!!.cluster!!.url,
+            );
             return;
         }
 
@@ -204,10 +205,8 @@ class ApplicationServiceFacade(
     }
 
     fun refreshApplicationInstance(instance: ApplicationInstance) {
-        async {
-            // Save or Update each instance
-            applicationInstanceService.saveOrUpdateApplicationInstance(instance);
-        }
+        // Save or Update each instance
+        applicationInstanceService.saveOrUpdateApplicationInstance(instance);
     }
 
     override fun afterPropertiesSet() {
@@ -215,10 +214,8 @@ class ApplicationServiceFacade(
     }
 
     private fun initDiscoveryServicesCache() {
-        discoveryServices.forEach { clusterDataLoader ->
-            {
-                discoveryServicesCache.put(clusterDataLoader.getClusterType(), clusterDataLoader);
-            }
+        for (discoveryService in discoveryServices) {
+            discoveryServicesCache.put(discoveryService.getClusterType(), discoveryService);
         }
         discoveryServicesCache.put(Cluster.Type.NONE, DummyDiscoveryService());
     }
