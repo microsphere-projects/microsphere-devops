@@ -28,7 +28,8 @@ class ApplicationService(
             return null;
         }
         application.namespace = namespace;
-        return applicationRepository.save(application);
+        val result = applicationRepository.save(application);
+        return result;
     }
 
     @Transactional
@@ -58,7 +59,9 @@ class ApplicationService(
             actualApplication.namespace = application.namespace;
         }
 
-        return applicationRepository.save(actualApplication);
+        actualApplication = applicationRepository.saveAndFlush(actualApplication);
+
+        return actualApplication;
     }
 
 
