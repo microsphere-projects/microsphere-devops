@@ -42,6 +42,10 @@ public class EntityEvent<E> extends PayloadApplicationEvent<E> {
         return type;
     }
 
+    public E getEntity() {
+        return (E) getPayload();
+    }
+
     @Override
     public String toString() {
         return "EntityEvent[" +
