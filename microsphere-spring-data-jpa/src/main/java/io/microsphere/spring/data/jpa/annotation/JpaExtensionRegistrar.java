@@ -16,6 +16,7 @@
  */
 package io.microsphere.spring.data.jpa.annotation;
 
+import io.microsphere.spring.data.jpa.LocalContainerEntityManagerFactoryBeanPostProcessor;
 import io.microsphere.spring.context.annotation.BeanCapableImportCandidate;
 import io.microsphere.spring.data.jpa.event.EntityApplicationListener;
 import io.microsphere.spring.data.jpa.event.EntityEventListenerFactory;
@@ -42,10 +43,14 @@ class JpaExtensionRegistrar extends BeanCapableImportCandidate implements Import
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
+        registerLocalContainerEntityManagerFactoryBeanPostProcessor(registry);
         registerEntityApplicationListener(registry);
         registerEntityEventListenerFactory(registry);
     }
 
+    private void registerLocalContainerEntityManagerFactoryBeanPostProcessor(BeanDefinitionRegistry registry) {
+        registerBeanDefinition(registry, LocalContainerEntityManagerFactoryBeanPostProcessor.class);
+    }
 
     private void registerEntityApplicationListener(BeanDefinitionRegistry registry) {
         registerBeanDefinition(registry, EntityApplicationListener.class);
