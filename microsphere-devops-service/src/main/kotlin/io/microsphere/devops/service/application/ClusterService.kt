@@ -2,7 +2,6 @@ package io.microsphere.devops.service.application
 
 import io.microsphere.devops.api.entity.Cluster
 import io.microsphere.devops.repository.ClusterRepository
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.lang.System.currentTimeMillis
@@ -16,8 +15,7 @@ import java.lang.System.currentTimeMillis
  */
 @Service
 class ClusterService(
-    private val clusterRepository: ClusterRepository,
-    private val applicationEventPublisher: ApplicationEventPublisher
+    private val clusterRepository: ClusterRepository
 ) : ClusterRepository by clusterRepository {
 
     @Transactional
@@ -36,9 +34,7 @@ class ClusterService(
             actualCluster.updatedAt = currentTimeMillis();
         }
 
-        val result = clusterRepository.saveAndFlush(actualCluster);
-        applicationEventPublisher.publishEvent(result);
-        return result;
+        return clusterRepository.saveAndFlush(actualCluster);
     }
 
 }
