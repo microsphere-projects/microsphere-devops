@@ -16,8 +16,8 @@
  */
 package io.microsphere.spring.data.jpa.event;
 
-import io.microsphere.jpa.event.EntityType;
 import io.microsphere.jpa.event.EntityListener;
+import io.microsphere.jpa.event.EntityType;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.context.ApplicationContext;
