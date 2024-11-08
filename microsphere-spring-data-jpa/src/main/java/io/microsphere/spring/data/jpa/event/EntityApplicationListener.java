@@ -18,6 +18,8 @@ package io.microsphere.spring.data.jpa.event;
 
 import io.microsphere.jpa.event.EntityListener;
 import io.microsphere.jpa.event.EntityType;
+import io.microsphere.logging.Logger;
+import io.microsphere.logging.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.context.ApplicationContext;
@@ -44,12 +46,21 @@ import static org.springframework.core.annotation.AnnotationAwareOrderComparator
 public class EntityApplicationListener implements ApplicationListener<EntityEvent>, ApplicationContextAware,
         SmartInitializingSingleton {
 
+    private static final Logger logger = LoggerFactory.getLogger(EntityApplicationListener.class);
+
     private final List<EntityListener> entityListeners = new LinkedList<>();
 
     private ApplicationContext applicationContext;
 
     @Override
     public void onApplicationEvent(EntityEvent event) {
+        if (entityListeners.isEmpty()) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("No EntityListener instance was found, event callback will be ignored!");
+            }
+            return;
+        }
+        
         Object entity = event.getPayload();
         EntityType type = event.getType();
 
