@@ -111,7 +111,7 @@ class EntityApplicationListenerMethodAdapter extends ApplicationListenerMethodAd
         if (parameterType.isInstance(event)) {
             argument = event;
         } else {
-            Object entity = event.getPayload();
+            Object entity = event.getEntity();
             if (parameterType.isInstance(entity)) {
                 argument = entity;
             }
