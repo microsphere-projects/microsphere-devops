@@ -20,6 +20,7 @@ import io.microsphere.jpa.event.EntityType;
 import io.microsphere.logging.Logger;
 import io.microsphere.logging.LoggerFactory;
 import io.microsphere.spring.data.jpa.annotation.EntityListener;
+import io.microsphere.util.ArrayUtils;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ApplicationListenerMethodAdapter;
@@ -66,7 +67,7 @@ class EntityApplicationListenerMethodAdapter extends ApplicationListenerMethodAd
 
     @Override
     public boolean supportsEventType(ResolvableType eventType) {
-        return eventType.isAssignableFrom(EntityEvent.class);
+        return eventType.getRawClass().equals(EntityEvent.class);
     }
 
     public boolean supportsAsyncExecution() {
@@ -85,28 +86,30 @@ class EntityApplicationListenerMethodAdapter extends ApplicationListenerMethodAd
 
         int parameterCount = method.getParameterCount();
 
-        if (parameterCount != 1) {
+        if (parameterCount == 0) {
             return EMPTY_OBJECT_ARRAY;
-        }
-
-        if (event instanceof EntityEvent) {
+        } else if (parameterCount == 1 && event instanceof EntityEvent) {
             EntityEvent entityEvent = (EntityEvent) event;
             if (matchesEntityLifecycleType(entityEvent)) {
                 Type[] parameterTypes = method.getGenericParameterTypes();
-                Object[] arguments = new Object[parameterCount];
-                for (int i = 0; i < parameterCount; i++) {
-                    ResolvableType parameterType = forType(parameterTypes[i]);
-                    if (parameterType.isInstance(entityEvent)) {
-                        arguments[i] = entityEvent;
-                    } else {
-                        Object entity = entityEvent.getPayload();
-                        if (parameterType.isInstance(entity)) {
-                            arguments[i] = entity;
-                        }
+                ResolvableType parameterType = forType(parameterTypes[0]);
+                Object argument = null;
+                if (parameterType.isInstance(entityEvent)) {
+                    argument = entityEvent;
+                } else {
+                    Object entity = entityEvent.getPayload();
+                    if (parameterType.isInstance(entity)) {
+                        argument = entity;
                     }
                 }
-                return arguments;
+                if (argument != null) {
+                    return ArrayUtils.of(argument);
+                }
             }
+        }
+        // Otherwise, no argument returns.
+        if (logger.isDebugEnabled()) {
+            logger.debug("No Argument can be resolved from the Spring Event : {}", event);
         }
         return null;
     }
