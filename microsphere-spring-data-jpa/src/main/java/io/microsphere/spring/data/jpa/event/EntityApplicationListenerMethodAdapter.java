@@ -82,28 +82,18 @@ class EntityApplicationListenerMethodAdapter extends ApplicationListenerMethodAd
      */
     @Nullable
     protected Object[] resolveArguments(ApplicationEvent event) {
-        Method method = this.getTargetMethod();
+        Method listenerMethod = this.getTargetMethod();
 
-        int parameterCount = method.getParameterCount();
+        int parameterCount = listenerMethod.getParameterCount();
 
         if (parameterCount == 0) {
             return EMPTY_OBJECT_ARRAY;
         } else if (parameterCount == 1 && event instanceof EntityEvent) {
             EntityEvent entityEvent = (EntityEvent) event;
             if (matchesEntityLifecycleType(entityEvent)) {
-                Type[] parameterTypes = method.getGenericParameterTypes();
-                ResolvableType parameterType = forType(parameterTypes[0]);
-                Object argument = null;
-                if (parameterType.isInstance(entityEvent)) {
-                    argument = entityEvent;
-                } else {
-                    Object entity = entityEvent.getPayload();
-                    if (parameterType.isInstance(entity)) {
-                        argument = entity;
-                    }
-                }
-                if (argument != null) {
-                    return ArrayUtils.of(argument);
+                Object entity = resolveEntity(entityEvent, listenerMethod);
+                if (entity != null) {
+                    return ArrayUtils.of(entity);
                 }
             }
         }
@@ -113,6 +103,22 @@ class EntityApplicationListenerMethodAdapter extends ApplicationListenerMethodAd
         }
         return null;
     }
+
+    private Object resolveEntity(EntityEvent event, Method listenerMethod) {
+        Type[] parameterTypes = listenerMethod.getGenericParameterTypes();
+        ResolvableType parameterType = forType(parameterTypes[0]);
+        Object argument = null;
+        if (parameterType.isInstance(event)) {
+            argument = event;
+        } else {
+            Object entity = event.getPayload();
+            if (parameterType.isInstance(entity)) {
+                argument = entity;
+            }
+        }
+        return argument;
+    }
+
 
     private boolean matchesEntityLifecycleType(EntityEvent event) {
         EntityType[] entityTypes = this.entityTypes;
