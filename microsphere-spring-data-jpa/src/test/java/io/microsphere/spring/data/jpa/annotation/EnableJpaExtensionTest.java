@@ -16,10 +16,10 @@
  */
 package io.microsphere.spring.data.jpa.annotation;
 
-import io.microsphere.test.entity.User;
-import io.microsphere.test.jpa.event.LoggingEntityListener;
 import io.microsphere.logging.Logger;
 import io.microsphere.logging.LoggerFactory;
+import io.microsphere.test.entity.User;
+import io.microsphere.test.jpa.event.LoggingEntityListener;
 import io.microsphere.test.spring.orm.hibernate.JpaTestConfiguration;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
