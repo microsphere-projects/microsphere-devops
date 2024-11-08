@@ -16,8 +16,8 @@
  */
 package io.microsphere.spring.data.jpa.annotation;
 
-import io.microsphere.spring.data.jpa.LocalContainerEntityManagerFactoryBeanPostProcessor;
 import io.microsphere.spring.context.annotation.BeanCapableImportCandidate;
+import io.microsphere.spring.data.jpa.LocalContainerEntityManagerFactoryBeanPostProcessor;
 import io.microsphere.spring.data.jpa.event.EntityApplicationListener;
 import io.microsphere.spring.data.jpa.event.EntityEventListenerFactory;
 import io.microsphere.spring.data.jpa.event.EventPublishingEntityListener;
