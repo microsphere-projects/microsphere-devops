@@ -19,7 +19,8 @@ package io.microsphere.spring.boot.configuration.metadata;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 /**
  * {@link ConfigurationMetadataReader} Test
