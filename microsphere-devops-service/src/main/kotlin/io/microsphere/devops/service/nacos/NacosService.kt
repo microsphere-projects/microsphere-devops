@@ -45,9 +45,14 @@ import java.util.concurrent.ConcurrentMap
  */
 @NacosProfile
 @Service
+@Deprecated(
+    message = "Deprecated",
+    replaceWith = ReplaceWith("io.microsphere.devops.service.nacos.NacosClientV2ApplicationDataLoader")
+)
 class NacosService(
     val applicationServiceFacade: ApplicationServiceFacade
 ) : DisposableBean {
+
     private val nacosClientsCache: ConcurrentMap<String, NacosClientV2> = ConcurrentHashMap();
 
     @Transactional
@@ -127,7 +132,7 @@ class NacosService(
 
         serviceNames.addAll(page.elements);
         while (page.hasNext()) {
-            pageNumber += pageSize;
+            pageNumber++;
             page = client.getServiceNames(namespaceId, pageNumber, pageSize);
             serviceNames.addAll(page.elements);
         }

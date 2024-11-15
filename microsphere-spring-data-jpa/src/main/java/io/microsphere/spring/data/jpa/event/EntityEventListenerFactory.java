@@ -1,0 +1,63 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.microsphere.spring.data.jpa.event;
+
+import io.microsphere.spring.data.jpa.annotation.EntityListener;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.EventListenerFactory;
+import org.springframework.core.Ordered;
+import org.springframework.transaction.event.TransactionalEventListenerFactory;
+
+import java.lang.reflect.Method;
+
+/**
+ * The {@link EventListenerFactory} class for {@link EntityListener}
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @see EventListenerFactory
+ * @see EntityListener
+ * @see TransactionalEventListenerFactory
+ * @since 1.0.0
+ */
+public class EntityEventListenerFactory implements EventListenerFactory, Ordered {
+
+    /**
+     * The default order after {@link TransactionalEventListenerFactory#getOrder()}
+     */
+    private int order = 100;
+
+    @Override
+    public boolean supportsMethod(Method method) {
+        return method.isAnnotationPresent(EntityListener.class)
+                // Supports the listener method with no-argument or one argument
+                && method.getParameterCount() < 2;
+    }
+
+    @Override
+    public ApplicationListener<?> createApplicationListener(String beanName, Class<?> type, Method method) {
+        return new EntityApplicationListenerMethodAdapter(beanName, type, method);
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+}

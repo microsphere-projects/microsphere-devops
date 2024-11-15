@@ -30,6 +30,7 @@ dependencies {
 
     // JPA Vendor - Hibernate
     implementation("org.hibernate.orm:hibernate-core")
+    implementation("org.hibernate.orm:hibernate-testing")
 
     // Testing
     implementation("org.springframework.boot:spring-boot-starter-test")

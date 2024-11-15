@@ -3,7 +3,6 @@ package io.microsphere.devops.service.application
 import io.microsphere.devops.api.entity.Namespace
 import io.microsphere.devops.repository.ClusterRepository
 import io.microsphere.devops.repository.NamespaceRepository
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -19,9 +18,8 @@ import java.lang.System.currentTimeMillis
 @Service
 class NamespaceService(
     private val clusterRepository: ClusterRepository,
-    private val namespaceRepository: NamespaceRepository,
-    private val applicationEventPublisher: ApplicationEventPublisher
-) : NamespaceRepository by namespaceRepository, ApplicationEventPublisher by applicationEventPublisher {
+    private val namespaceRepository: NamespaceRepository
+) : NamespaceRepository by namespaceRepository {
 
     @Transactional
     fun saveNamespace(namespace: Namespace, clusterId: Long): Namespace? {
@@ -30,7 +28,7 @@ class NamespaceService(
         if (cluster == null) {
             return null;
         }
-        return saveNamespace(namespace);
+        return saveAndFlush(namespace);
     }
 
     @Transactional
@@ -44,7 +42,7 @@ class NamespaceService(
         existedNamespace.status = namespace.status;
         existedNamespace.description = namespace.description;
         existedNamespace.updatedAt = currentTimeMillis();
-        return saveNamespace(existedNamespace);
+        return saveAndFlush(existedNamespace);
     }
 
     @Transactional
@@ -57,13 +55,6 @@ class NamespaceService(
             actualNamespace.updatedAt = currentTimeMillis();
             actualNamespace.cluster = namespace.cluster;
         }
-        return saveNamespace(actualNamespace);
+        return saveAndFlush(actualNamespace);
     }
-
-    fun saveNamespace(namespace: Namespace): Namespace {
-        val result = saveAndFlush(namespace);
-        publishEvent(result);
-        return result;
-    }
-
 }

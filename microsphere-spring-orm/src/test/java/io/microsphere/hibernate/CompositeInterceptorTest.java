@@ -16,7 +16,9 @@
  */
 package io.microsphere.hibernate;
 
-import io.microsphere.entity.User;
+import io.microsphere.test.entity.User;
+import io.microsphere.test.hibernate.AbstractHibernateTest;
+import io.microsphere.test.hibernate.MockInterceptor;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;

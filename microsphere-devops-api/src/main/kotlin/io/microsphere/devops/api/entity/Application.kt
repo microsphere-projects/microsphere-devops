@@ -2,9 +2,11 @@ package io.microsphere.devops.api.entity
 
 import io.microsphere.devops.api.commons.Entity
 import io.microsphere.devops.api.commons.Named
+import jakarta.persistence.Column
 import jakarta.persistence.FetchType.LAZY
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import jakarta.validation.constraints.NotNull
 import org.hibernate.annotations.DynamicUpdate
 
 /**
@@ -18,6 +20,8 @@ import org.hibernate.annotations.DynamicUpdate
 @Table(name = "applications")
 @DynamicUpdate
 open class Application(
+    @NotNull
+    @Column(nullable = false)
     override var name: String,
     @ManyToOne(optional = false, fetch = LAZY)
     var namespace: Namespace? = null

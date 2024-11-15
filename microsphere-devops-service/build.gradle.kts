@@ -17,9 +17,9 @@ dependencies {
     // Microsphere Spring Cloud Alibaba Dependencies
     api(platform(libs.spring.cloud.alibaba.dependencies))
     // Microsphere Spring Boot Dependencies
-    // api(platform(libs.microsphere.spring.boot.dependencies))
+    api(platform(libs.microsphere.spring.boot.dependencies))
     // Microsphere Spring Cloud Dependencies
-    api(platform(libs.microsphere.spring.cloud.dependencies))
+    // api(platform(libs.microsphere.spring.cloud.dependencies))
 
     // Internal Project
     api(project(":microsphere-devops-repository"))
@@ -36,6 +36,9 @@ dependencies {
     // Bean Validation Vendor - Hibernate Validator
     api("org.hibernate.validator:hibernate-validator")
 
+    // Spring Boot
+    api("org.springframework.boot:spring-boot-configuration-processor")
+
     // Spring Cloud Commons
     api("org.springframework.cloud:spring-cloud-commons")
 
@@ -46,4 +49,5 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testRuntimeOnly("ch.qos.logback:logback-classic")
 }

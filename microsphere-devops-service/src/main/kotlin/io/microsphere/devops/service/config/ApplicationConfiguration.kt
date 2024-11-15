@@ -19,7 +19,7 @@ class ApplicationConfiguration(
 ) {
 
     @EventListener(InstancePreRegisteredEvent::class)
-    fun onInstanceRegisteredEvent(event: InstancePreRegisteredEvent) {
+    fun onInstancePreRegisteredEvent(event: InstancePreRegisteredEvent) {
         applicationServiceFacade.saveOrUpdate(clusterProvider.ifUnique, namespaceProvider.ifUnique, event.registration);
     }
 }

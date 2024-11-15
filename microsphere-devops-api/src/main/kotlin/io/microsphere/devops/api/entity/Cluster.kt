@@ -70,5 +70,7 @@ open class Cluster(
         ),
 
 
+        NONE("None", "", "")
+
     }
 }

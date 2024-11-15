@@ -7,7 +7,7 @@
     <persistence-unit-metadata>
         <persistence-unit-defaults>
             <entity-listeners>
-                <entity-listener class="io.microsphere.jpa.event.LoggingEntityListener"/>
+                <entity-listener class="io.microsphere.test.jpa.event.LoggingEntityListener"/>
             </entity-listeners>
         </persistence-unit-defaults>
     </persistence-unit-metadata>

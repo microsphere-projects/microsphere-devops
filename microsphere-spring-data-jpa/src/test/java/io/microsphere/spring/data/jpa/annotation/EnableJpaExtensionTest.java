@@ -16,17 +16,24 @@
  */
 package io.microsphere.spring.data.jpa.annotation;
 
-import io.microsphere.entity.User;
-import io.microsphere.jpa.AbstractPersistenceTest;
-import io.microsphere.jpa.event.EntityListener;
-import io.microsphere.jpa.event.LoggingEntityListener;
 import io.microsphere.logging.Logger;
 import io.microsphere.logging.LoggerFactory;
+import io.microsphere.test.entity.User;
+import io.microsphere.test.jpa.event.LoggingEntityListener;
+import io.microsphere.test.spring.orm.hibernate.JpaTestConfiguration;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.function.Consumer;
+
+import static io.microsphere.jpa.event.EntityType.PRE_PERSIST;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -38,32 +45,41 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @since 1.0.0
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(
-        classes = {
-                EnableJpaExtensionTest.LoggingListener.class,
-                EnableJpaExtensionTest.UserListener.class,
-                EnableJpaExtensionTest.class
-        }
-)
+@ContextConfiguration(classes = {
+        JpaTestConfiguration.class,
+        EnableJpaExtensionTest.LoggingListener.class,
+        EnableJpaExtensionTest.UserListener.class,
+        EnableJpaExtensionTest.class
+})
 @EnableJpaExtension
-public class EnableJpaExtensionTest extends AbstractPersistenceTest {
+public class EnableJpaExtensionTest {
 
     private static final Logger logger = LoggerFactory.getLogger(EnableJpaExtensionTest.class);
 
-    @Override
-    protected String getPersistenceUnitName() {
-        return "io.microsphere.entity";
+    @Autowired
+    private EntityManagerFactory entityManagerFactory;
+
+    private EntityManager entityManager;
+
+    @BeforeEach
+    public void init() {
+        this.entityManager = entityManagerFactory.createEntityManager();
     }
 
-    static class UserListener implements EntityListener<User> {
+    static class UserListener implements io.microsphere.jpa.event.EntityListener<User> {
+
         @Override
         public void onPrePersist(User entity) {
             logger.info("onPrePersist({})", entity);
         }
     }
 
-    static class LoggingListener extends LoggingEntityListener implements EntityListener<Object> {
+    static class LoggingListener extends LoggingEntityListener implements io.microsphere.jpa.event.EntityListener<Object> {
 
+        @EntityListener(type = PRE_PERSIST)
+        public void onPrePersist(User entity) {
+            logger.info("@EntityListener(type = PRE_PERSIST)", entity);
+        }
     }
 
     @Test
@@ -89,5 +105,18 @@ public class EnableJpaExtensionTest extends AbstractPersistenceTest {
             assertNull(entityManager.find(User.class, user.getId()));
         });
 
+    }
+
+    private void doInEntityManager(Consumer<EntityManager> entityManagerConsumer) {
+        EntityManager entityManager = this.entityManager;
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManagerConsumer.accept(entityManager);
+            transaction.commit();
+        } catch (Throwable e) {
+            logger.warn(e.getMessage(), e);
+            transaction.rollback();
+        }
     }
 }
