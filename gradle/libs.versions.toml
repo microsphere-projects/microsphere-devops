@@ -1,5 +1,5 @@
 [versions]
-springBootVersion = "3.3.4"
+springBootVersion = "3.3.5"
 springCloudVersion = "2023.0.3"
 springCloudAlibabaVersion = "2023.0.1.2"
 
