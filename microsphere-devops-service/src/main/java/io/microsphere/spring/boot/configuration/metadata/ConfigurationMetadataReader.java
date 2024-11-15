@@ -18,7 +18,6 @@ package io.microsphere.spring.boot.configuration.metadata;
 
 import io.microsphere.logging.Logger;
 import io.microsphere.logging.LoggerFactory;
-import io.microsphere.util.StringUtils;
 import org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata;
 import org.springframework.boot.configurationprocessor.metadata.JsonMarshaller;
 import org.springframework.core.io.Resource;
