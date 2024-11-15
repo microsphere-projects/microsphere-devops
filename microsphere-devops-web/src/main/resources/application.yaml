@@ -24,10 +24,6 @@ management:
     web:
       exposure:
         include: '*'
-    jmx:
-      exposure:
-        include: '*'
-
 
 ---
 spring:
@@ -42,3 +38,20 @@ spring:
       discovery:
         enabled: true
         server-addr: 127.0.0.1:8848
+
+---
+spring:
+  config:
+    activate:
+      on-profile: jmx
+  jmx:
+    enabled: true
+    unique-names: true
+
+management:
+  endpoints:
+    enabled-by-default: true
+    jmx:
+      domain: io.microsphere.devops
+    exposure:
+      include: '*'
